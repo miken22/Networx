@@ -5,19 +5,23 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -26,7 +30,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
-import BuildTools.MainCompiler;
+import BuildTools.CompileButtonListener;
+import BuildTools.OpenButtonListener;
+import BuildTools.SaveFileListener;
 
 public class MainPane {
 
@@ -37,6 +43,12 @@ public class MainPane {
 	private JScrollPane outputScroll;
 	private JTextPane worksheet;
 	private JTextArea output;
+	
+	private JPanel toolbar;
+	private JButton newFile;
+	private JButton compiler;
+	private JButton saveFile;
+	private JButton openFile;
 
 	private StyledDocument textarea;
 	private Style workStyle;
@@ -49,6 +61,7 @@ public class MainPane {
 	private JMenuItem save;
 	private JMenuItem open;
 	private JMenuItem buildScript;
+	
 
 	public void loadWorkbench() {
 		worksheet = new JTextPane();
@@ -70,11 +83,9 @@ public class MainPane {
 		save.addActionListener(new MenuListener(1));
 		open.addActionListener(new MenuListener(2));
 		exit.addActionListener(new MenuListener(3));
-		
 		buildScript.addActionListener(new MenuListener(4));
 
 		createFrame();
-
 	}
 
 	private void createFrame() {
@@ -101,10 +112,10 @@ public class MainPane {
 		
 		menu.add(build);
 		build.add(buildScript);
-		
+
 		mainContainer = frame.getContentPane();
 		mainContainer.setBackground(new Color(240, 240, 240));
-
+		
 		// Main font theme
 		try {
 			font = Font.createFont(0, this.getClass().getResourceAsStream("/Trebuchet MS.ttf"));
@@ -116,12 +127,12 @@ public class MainPane {
 
 		// Create the script area
 		worksheet.setEditable(true);
-		worksheet.setContentType("text/html");
+		worksheet.setContentType("text");
 		font = font.deriveFont(Font.PLAIN, 14);
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
 		worksheet.setBackground(new Color(252, 252, 252));
-		mainScroll.setBounds(2, 4, frame.getWidth() - (int)(width/4),  (int)(height/1.4));
+		mainScroll.setBounds(2, 25, frame.getWidth() - (int)(width/4),  (int)(height/1.4)-25);
 		mainScroll.setBackground(new Color(240, 240, 240));
 		mainScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
 		mainContainer.add(mainScroll);
@@ -138,11 +149,78 @@ public class MainPane {
 		
 		mainContainer.add(outputScroll);
 
+		buildToolbar();
+		
 		// Reveal the frame
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		worksheet.requestFocus();
 
+	}
+	
+	private void buildToolbar() {
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = screenSize.getWidth();
+		
+		toolbar = new JPanel();
+		newFile = new JButton();
+		openFile = new JButton();
+		saveFile = new JButton();
+		compiler = new JButton();
+		
+		toolbar.setBounds(0, 0, (int)width, 25);
+		toolbar.setLayout(null);
+
+		// Setup compiler listener
+		newFile.addActionListener(new NewFileListener());
+		openFile.addActionListener(new OpenButtonListener());
+		saveFile.addActionListener(new SaveFileListener());
+		compiler.addActionListener(new CompileButtonListener(worksheet, output));
+
+		try {
+		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
+		    newFile.setIcon(new ImageIcon(img));
+		} catch (IOException ex) {
+			
+		}
+		newFile.setBounds(2, 0, 20, 20);
+		newFile.setToolTipText("New File");
+		toolbar.add(newFile);
+		
+		try {
+		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
+		    saveFile.setIcon(new ImageIcon(img));
+		} catch (IOException ex) {
+			
+		}
+		saveFile.setBounds(22, 0, 20, 20);
+		saveFile.setToolTipText("Save File As");
+		toolbar.add(saveFile);
+		
+		try {
+		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
+		    openFile.setIcon(new ImageIcon(img));
+		} catch (IOException ex) {
+			
+		}
+		openFile.setBounds(44, 0, 20, 20);
+		openFile.setToolTipText("Open File");
+		toolbar.add(openFile);
+		
+		try {
+		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
+		    compiler.setIcon(new ImageIcon(img));
+		} catch (IOException ex) {
+			
+		}
+		compiler.setBounds(66, 0, 20, 20);
+		compiler.setToolTipText("Compile Script");
+		toolbar.add(compiler);		
+		mainContainer.add(toolbar);
+		
+		// Add buttons for other common actions (new, open, save)
+		
 	}
 
 	/**
@@ -179,12 +257,16 @@ public class MainPane {
 			} else if (listenerType == 3) {
 				System.exit(0);
 			} else if (listenerType == 4) {
-				
-				MainCompiler compiler = new MainCompiler();
-				compiler.buildScript(worksheet.getText());
-				
+				compiler.doClick();
 			}
 		}
 
+	}
+	public class NewFileListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent click) {
+			worksheet.setText("");
+		}
 	}
 }
