@@ -62,6 +62,8 @@ public class MainPane {
 	private JMenuItem open;
 	private JMenuItem buildScript;
 	
+	private String fileName = "";
+	private boolean isSaved = false;
 
 	public void loadWorkbench() {
 		worksheet = new JTextPane();
@@ -174,8 +176,8 @@ public class MainPane {
 
 		// Setup compiler listener
 		newFile.addActionListener(new NewFileListener());
-		openFile.addActionListener(new OpenButtonListener());
-		saveFile.addActionListener(new SaveFileListener());
+		openFile.addActionListener(new OpenButtonListener(worksheet));
+		saveFile.addActionListener(new SaveFileListener(worksheet));
 		compiler.addActionListener(new CompileButtonListener(worksheet, output));
 
 		try {
@@ -222,6 +224,14 @@ public class MainPane {
 		// Add buttons for other common actions (new, open, save)
 		
 	}
+	
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
 
 	/**
 	 * Main menu listener for the File options
@@ -243,17 +253,10 @@ public class MainPane {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (listenerType == 1) {
-				String name = (String) JOptionPane.showInputDialog(null,
-						"Save As:\n", "Set File Name",
-						JOptionPane.PLAIN_MESSAGE, null, null, "");
-				try {
-					SaveText.saveWorksheet(name, worksheet.getText());
-				} catch (FileNotFoundException e) {
-					System.exit(0);
-				}
+				saveFile.doClick();
 			} else if (listenerType == 2) {
 				// TODO: Load script into worksheet
-				
+				openFile.doClick();
 			} else if (listenerType == 3) {
 				System.exit(0);
 			} else if (listenerType == 4) {

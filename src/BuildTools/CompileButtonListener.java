@@ -30,8 +30,6 @@ public class CompileButtonListener implements ActionListener {
 	private JTextArea buildlog;
 
 	private String script = "";
-	private String scriptName = "";
-	private String className = "";
 
 	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog) {
 		this.worksheet = worksheet;
@@ -56,17 +54,26 @@ public class CompileButtonListener implements ActionListener {
 
 	private void compileScript() {
 
-		if (scriptName == "") {
-			buildlog.setText("No file specified to compile!");
-			return;
-		}
-
+		File userFile = new File("UserScript.java");
+		String fileName = userFile.getName();
+		String className = fileName.substring(0, fileName.lastIndexOf('.'));
+		
 		try {
-			runProcess("javac " + scriptName);
-			runProcess("java " + className);
+			
+			// Compile code
+			buildlog.append("Building script...\r\n");
+			runProcess("javac " + fileName);
+			buildlog.append("Complete.\r\n");
+			buildlog.append("---------------------------------------.\r\n");
+			
+			// Execute.
+			runProcess("java " +  className);
+			buildlog.append("---------------------------------------.\r\n");
+			buildlog.append("Process complete");
+			
 		} catch (Exception e) {
 			String error = e.getMessage();
-			buildlog.setText(error);
+			buildlog.append(error);
 		}
 
 	}
@@ -92,24 +99,16 @@ public class CompileButtonListener implements ActionListener {
 	private void buildScript(String theScript) {
 
 		try {
+			
+			File userFile = new File("UserScript.java");
+			Writer outputStream = new FileWriter(userFile);
 
-			JFileChooser fileChooser = new JFileChooser();
-			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
-				
-				File userScript = fileChooser.getSelectedFile();
-				Writer outputStream = new FileWriter(userScript);
-
-				scriptName = userScript.getName();
-				className = scriptName.substring(0, scriptName.lastIndexOf('.'));
-				
-				// TODO: More complex parsing of the script to add necessary imports, move methods out of main method.
-				
-				outputStream.write("public class " + className + " { \r\n");
-				outputStream.write("public static void main(String[] args) { \r\n");
-				outputStream.write(theScript + "\r\n}\r\n}");
-				outputStream.close();
-
-			}
+			// TODO: More complex parsing of the script to add necessary imports, move methods out of main method.
+			
+			outputStream.write("public class UserScript { \r\n");
+			outputStream.write("public static void main(String[] args) { \r\n");
+			outputStream.write(theScript + "\r\n}\r\n}");
+			outputStream.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
