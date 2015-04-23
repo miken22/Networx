@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 import javax.swing.JFileChooser;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 
 public class SaveFileListener  implements ActionListener {
 
@@ -24,7 +24,12 @@ public class SaveFileListener  implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		
-		String theScript = worksheet.getText();
+		String theScript = "";
+		try {
+			theScript = worksheet.getStyledDocument().getText(0, worksheet.getStyledDocument().getLength());
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
 		
 		try {
 

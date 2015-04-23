@@ -9,7 +9,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -20,15 +19,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
 
 import BuildTools.CompileButtonListener;
 import BuildTools.OpenButtonListener;
@@ -50,8 +46,8 @@ public class MainPane {
 	private JButton saveFile;
 	private JButton openFile;
 
-	private StyledDocument textarea;
-	private Style workStyle;
+	// Custom style for editor environment
+	private TextEditorDocument textarea;
 	private Font font;
 
 	private JMenuBar menu;
@@ -63,16 +59,15 @@ public class MainPane {
 	private JMenuItem buildScript;
 	
 	private String fileName = "";
-	private boolean isSaved = false;
 
 	public void loadWorkbench() {
-		worksheet = new JTextPane();
+		textarea = new TextEditorDocument();
+
+		worksheet = new JTextPane(textarea);
 		output = new JTextArea();
 		mainScroll = new JScrollPane(worksheet);
 		outputScroll = new JScrollPane(output);
-
-		workStyle = worksheet.addStyle("workStyle", null);
-
+		
 		menu = new JMenuBar();
 		file = new JMenu("File");
 		open = new JMenuItem("Load Script");
@@ -103,6 +98,7 @@ public class MainPane {
 		frame.setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize((int) width, (int) height);
+		frame.setExtendedState(frame.getExtendedState()|JFrame.MAXIMIZED_BOTH);
 		frame.setResizable(true);
 		frame.setJMenuBar(menu);
 
@@ -120,7 +116,7 @@ public class MainPane {
 		
 		// Main font theme
 		try {
-			font = Font.createFont(0, this.getClass().getResourceAsStream("/Trebuchet MS.ttf"));
+			font = Font.createFont(0, this.getClass().getResourceAsStream("/resources/Trebuchet MS.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -129,7 +125,7 @@ public class MainPane {
 
 		// Create the script area
 		worksheet.setEditable(true);
-		worksheet.setContentType("text");
+		//worksheet.setContentType("text/html");
 		font = font.deriveFont(Font.PLAIN, 14);
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
@@ -152,6 +148,8 @@ public class MainPane {
 		mainContainer.add(outputScroll);
 
 		buildToolbar();
+		
+		textarea.addDocumentListener(new WorkSheetParser());
 		
 		// Reveal the frame
 		frame.setLocationRelativeTo(null);

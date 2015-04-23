@@ -11,9 +11,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
 
-import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
 
 /**
  * Class that implements the compiling functionality. Saves the script, calls javac
@@ -30,6 +30,7 @@ public class CompileButtonListener implements ActionListener {
 	private JTextArea buildlog;
 
 	private String script = "";
+	private boolean buildFailed = false;
 
 	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog) {
 		this.worksheet = worksheet;
@@ -45,7 +46,11 @@ public class CompileButtonListener implements ActionListener {
 			return;
 		} else {
 			buildlog.setText("");
-			script = worksheet.getText();
+			try {
+				script = worksheet.getStyledDocument().getText(0, worksheet.getStyledDocument().getLength());
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
 			buildScript(script);
 			compileScript();
 
@@ -62,13 +67,19 @@ public class CompileButtonListener implements ActionListener {
 			
 			// Compile code
 			buildlog.append("Building script...\r\n");
-			runProcess("javac " + fileName);
-			buildlog.append("Complete.\r\n");
-			buildlog.append("---------------------------------------.\r\n");
+			runProcess("javac " + fileName + " src/graphcomponents/vertex.java");
 			
-			// Execute.
+			if (buildFailed) {
+				buildlog.append("Script could not be compiled.");
+				return;
+			}
+
+			buildlog.append("Complete.\r\n");
+			buildlog.append("---------------------------------------\r\n");
+			
+			// Execute. Need to find a way to skip if there is a build failure.
 			runProcess("java " +  className);
-			buildlog.append("---------------------------------------.\r\n");
+			buildlog.append("---------------------------------------\r\n");
 			buildlog.append("Process complete");
 			
 		} catch (Exception e) {
@@ -91,7 +102,18 @@ public class CompileButtonListener implements ActionListener {
 	private void runProcess(String command) throws Exception {
 		Process pro = Runtime.getRuntime().exec(command);
 		printLines(pro.getInputStream());
-		printLines(pro.getErrorStream());
+		
+		InputStream errorStream = pro.getErrorStream();
+		BufferedReader errorLines = new BufferedReader(new InputStreamReader(errorStream));
+		String errorMessage = errorLines.readLine();
+		if (errorMessage != null) {
+			buildFailed = true;	
+			buildlog.append(errorMessage + "\n");
+			pro.waitFor();
+			return;
+		}
+		buildFailed = false;
+		
 		pro.waitFor();
 	}
 
@@ -104,7 +126,7 @@ public class CompileButtonListener implements ActionListener {
 			Writer outputStream = new FileWriter(userFile);
 
 			// TODO: More complex parsing of the script to add necessary imports, move methods out of main method.
-			
+			outputStream.write("import graphcomponents.Vertex;\r\n");
 			outputStream.write("public class UserScript { \r\n");
 			outputStream.write("public static void main(String[] args) { \r\n");
 			outputStream.write(theScript + "\r\n}\r\n}");
