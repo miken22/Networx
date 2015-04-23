@@ -45,7 +45,6 @@ public class SaveFileListener  implements ActionListener {
 				
 				File userScript = fileChooser.getSelectedFile();
 				
-
 				Writer outputStream = new FileWriter(userScript);
 				outputStream.write(theScript);
 				outputStream.close();

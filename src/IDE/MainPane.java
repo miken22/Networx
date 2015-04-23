@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -25,6 +27,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.text.BadLocationException;
 
 import BuildTools.CompileButtonListener;
 import BuildTools.OpenButtonListener;
@@ -39,7 +42,7 @@ public class MainPane {
 	private JScrollPane outputScroll;
 	private JTextPane worksheet;
 	private JTextArea output;
-	
+
 	private JPanel toolbar;
 	private JButton newFile;
 	private JButton compiler;
@@ -57,7 +60,7 @@ public class MainPane {
 	private JMenuItem save;
 	private JMenuItem open;
 	private JMenuItem buildScript;
-	
+
 	private String fileName = "";
 
 	public void loadWorkbench() {
@@ -67,13 +70,13 @@ public class MainPane {
 		output = new JTextArea();
 		mainScroll = new JScrollPane(worksheet);
 		outputScroll = new JScrollPane(output);
-		
+
 		menu = new JMenuBar();
 		file = new JMenu("File");
 		open = new JMenuItem("Load Script");
 		save = new JMenuItem("Save Script");
 		exit = new JMenuItem("Exit");
-		
+
 		build = new JMenu("Build Tools");
 		buildScript = new JMenuItem("Build Script");
 
@@ -107,13 +110,13 @@ public class MainPane {
 		file.add(open);
 		file.add(save);
 		file.add(exit);
-		
+
 		menu.add(build);
 		build.add(buildScript);
 
 		mainContainer = frame.getContentPane();
 		mainContainer.setBackground(new Color(240, 240, 240));
-		
+
 		// Main font theme
 		try {
 			font = Font.createFont(0, this.getClass().getResourceAsStream("/resources/Trebuchet MS.ttf"));
@@ -125,7 +128,7 @@ public class MainPane {
 
 		// Create the script area
 		worksheet.setEditable(true);
-		//worksheet.setContentType("text/html");
+		worksheet.addKeyListener(new KeyStrokeListener());
 		font = font.deriveFont(Font.PLAIN, 14);
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
@@ -144,12 +147,9 @@ public class MainPane {
 		outputScroll.setBounds(4, (int)(height/1.4), frame.getWidth() - (int)(width/4), frame.getHeight() - (int)(height/1.28));
 		outputScroll.setBackground(new Color(240, 240, 240));
 		outputScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
-		
 		mainContainer.add(outputScroll);
 
 		buildToolbar();
-		
-		textarea.addDocumentListener(new WorkSheetParser());
 		
 		// Reveal the frame
 		frame.setLocationRelativeTo(null);
@@ -157,18 +157,18 @@ public class MainPane {
 		worksheet.requestFocus();
 
 	}
-	
+
 	private void buildToolbar() {
-		
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
-		
+
 		toolbar = new JPanel();
 		newFile = new JButton();
 		openFile = new JButton();
 		saveFile = new JButton();
 		compiler = new JButton();
-		
+
 		toolbar.setBounds(0, 0, (int)width, 25);
 		toolbar.setLayout(null);
 
@@ -179,54 +179,54 @@ public class MainPane {
 		compiler.addActionListener(new CompileButtonListener(worksheet, output));
 
 		try {
-		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
-		    newFile.setIcon(new ImageIcon(img));
+			Image img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
+			newFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-			
+
 		}
 		newFile.setBounds(2, 0, 20, 20);
 		newFile.setToolTipText("New File");
 		toolbar.add(newFile);
-		
+
 		try {
-		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
-		    saveFile.setIcon(new ImageIcon(img));
+			Image img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
+			saveFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-			
+
 		}
 		saveFile.setBounds(22, 0, 20, 20);
 		saveFile.setToolTipText("Save File As");
 		toolbar.add(saveFile);
-		
+
 		try {
-		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
-		    openFile.setIcon(new ImageIcon(img));
+			Image img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
+			openFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-			
+
 		}
 		openFile.setBounds(44, 0, 20, 20);
 		openFile.setToolTipText("Open File");
 		toolbar.add(openFile);
-		
+
 		try {
-		    Image img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
-		    compiler.setIcon(new ImageIcon(img));
+			Image img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
+			compiler.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-			
+
 		}
 		compiler.setBounds(66, 0, 20, 20);
 		compiler.setToolTipText("Compile Script");
 		toolbar.add(compiler);		
 		mainContainer.add(toolbar);
-		
+
 		// Add buttons for other common actions (new, open, save)
-		
+
 	}
-	
+
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 	public String getFileName() {
 		return fileName;
 	}
@@ -240,7 +240,7 @@ public class MainPane {
 	public class MenuListener implements ActionListener {
 
 		private int listenerType;
-		
+
 		// TODO: Make a variable for the pane, pass instance of "this" in to the constructor
 		// and move this class into it's own file.
 
@@ -263,11 +263,51 @@ public class MainPane {
 		}
 
 	}
+	/**
+	 * Trivial listener to create a new file
+	 * 
+	 * @author Michael
+	 *
+	 */
 	public class NewFileListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent click) {
 			worksheet.setText("");
 		}
+	}
+
+	/**
+	 * Trivial key listener to insert four spaces when the tab key
+	 * is pressed
+	 * 
+	 * @author Michael
+	 *
+	 */
+	private class KeyStrokeListener implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent key) {
+			if (key.getKeyCode() == KeyEvent.VK_TAB) {
+				try {
+					textarea.insertString(worksheet.getCaretPosition(), "    ", null);
+					key.consume();
+					return;
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+
+		}
+
 	}
 }

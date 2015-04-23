@@ -1,7 +1,6 @@
 package IDE;
 
 import java.awt.Color;
-
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.BadLocationException;
@@ -30,10 +29,10 @@ public class TextEditorDocument extends DefaultStyledDocument {
     	StyleConstants.setForeground(quotations, Color.BLUE);
     	StyleConstants.setBold(quotations, false);
     	StyleConstants.setItalic(quotations, false);
-
+    	
     }
     
-	public void insertString (int offset, String str, AttributeSet a) throws BadLocationException {
+	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
 
         String text = getText(0, getLength());
@@ -59,13 +58,13 @@ public class TextEditorDocument extends DefaultStyledDocument {
         }
     }
 
-    public void remove (int offs, int len) throws BadLocationException {
-        super.remove(offs, len);
+    public void remove(int offset, int length) throws BadLocationException {
+        super.remove(offset, length);
 
         String text = getText(0, getLength());
-        int before = findLastNonWordChar(text, offs);
+        int before = findLastNonWordChar(text, offset);
         if (before < 0) before = 0;
-        int after = findFirstNonWordChar(text, offs);
+        int after = findFirstNonWordChar(text, offset);
 
         if (text.substring(before, after).matches("(\\W)*(private|public|protected|int|final|super|if|while|do|void|String|double|true|null|false|else|System)")) {
             setCharacterAttributes(before, after - before, reservedWords, false);
@@ -96,5 +95,4 @@ public class TextEditorDocument extends DefaultStyledDocument {
         }
         return index;
     }
-	
 }
