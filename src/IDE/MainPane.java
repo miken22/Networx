@@ -63,9 +63,14 @@ public class MainPane {
 
 	private String fileName = "";
 
+	/**
+	 * Main method to call to launch the application
+	 */
 	public void loadWorkbench() {
+		
+		frame = new JFrame("Networx Graph Editor");
+		
 		textarea = new TextEditorDocument();
-
 		worksheet = new JTextPane(textarea);
 		output = new JTextArea();
 		mainScroll = new JScrollPane(worksheet);
@@ -97,7 +102,6 @@ public class MainPane {
 		double height = screenSize.getHeight();
 
 		// Initialize frame and add the menu items
-		frame = new JFrame("Networx Graph Editor");
 		frame.setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize((int) width, (int) height);
@@ -218,8 +222,6 @@ public class MainPane {
 		compiler.setToolTipText("Compile Script");
 		toolbar.add(compiler);		
 		mainContainer.add(toolbar);
-
-		// Add buttons for other common actions (new, open, save)
 
 	}
 

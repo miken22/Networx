@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -60,14 +59,15 @@ public class CompileButtonListener implements ActionListener {
 	private void compileScript() {
 
 		File userFile = new File("UserScript.java");
+		userFile.deleteOnExit();
 		String fileName = userFile.getName();
 		String className = fileName.substring(0, fileName.lastIndexOf('.'));
 		
 		try {
-			
+						
 			// Compile code
 			buildlog.append("Building script...\r\n");
-			runProcess("javac " + fileName + " src/graphcomponents/vertex.java");
+			runProcess("javac -classpath .;libraries/networxlib.jar " + fileName);
 			
 			if (buildFailed) {
 				buildlog.append("Script could not be compiled.");
@@ -76,9 +76,13 @@ public class CompileButtonListener implements ActionListener {
 
 			buildlog.append("Complete.\r\n");
 			buildlog.append("---------------------------------------\r\n");
+		
+			File application = new File("UserScript.class");
+			application.deleteOnExit();
 			
-			// Execute. Need to find a way to skip if there is a build failure.
-			runProcess("java " +  className);
+			// Execute.
+			runProcess("java -classpath .;libraries/networxlib.jar " +  className);
+			
 			buildlog.append("---------------------------------------\r\n");
 			buildlog.append("Process complete");
 			
@@ -126,10 +130,16 @@ public class CompileButtonListener implements ActionListener {
 			Writer outputStream = new FileWriter(userFile);
 
 			// TODO: More complex parsing of the script to add necessary imports, move methods out of main method.
-			outputStream.write("import graphcomponents.Vertex;\r\n");
+
+			// Import needed files from JARs
+			outputStream.write("import components.Vertex;\r\n");
+			// User class
 			outputStream.write("public class UserScript { \r\n");
-			outputStream.write("public static void main(String[] args) { \r\n");
-			outputStream.write(theScript + "\r\n}\r\n}");
+			// Main entry
+			outputStream.write("	public static void main(String[] args) { \r\n");
+			
+			// TODO: Need to extract 
+			outputStream.write("		" + theScript + "\r\n	}\r\n}");
 			outputStream.close();
 
 		} catch (FileNotFoundException e) {

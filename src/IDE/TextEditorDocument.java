@@ -57,7 +57,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
             wordR++;
         }
     }
-
+	
     public void remove(int offset, int length) throws BadLocationException {
         super.remove(offset, length);
 
