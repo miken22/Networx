@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
+
+import IDE.Properties;
 
 /**
  * Class that implements the compiling functionality. Saves the script, calls javac
@@ -27,13 +30,22 @@ public class CompileButtonListener implements ActionListener {
 	// The IDE's notepad and outputs
 	private JTextPane worksheet;
 	private JTextArea buildlog;
+	private Properties properties;
 
 	private String script = "";
 	private boolean buildFailed = false;
+	
+	/**
+	 * All libraries to be included on the build path.
+	 */
+	private final String libraries = "libraries/networxlib.jar;libraries/collections-generic-4.01.jar;libraries/colt-1.2.0.jar;libraries/concurrent-1.3.4.jar;libraries/j3d-core-1.3.1.jar"
+										+ ";libraries/jung-algorithms-2.0.1.jar;libraries/jung-api-2.0.1.jar;libraries/jung-graph-impl-2.0.1.jar;libraries/jung-io.2.0.1.jar;libraries/jung-jai-2.0.1.jar"
+										+ ";libraries/jung-visualization-2.0.1.jar;libraries/stax-api-1.0.1.jar;libraries/vecmath-1.3.1.jar;libraries/wstx-asl-3.2.6.jar ";
 
-	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog) {
+	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog, Properties properties) {
 		this.worksheet = worksheet;
 		this.buildlog = buildlog;
+		this.properties = properties;
 	}
 
 	@Override
@@ -67,7 +79,7 @@ public class CompileButtonListener implements ActionListener {
 						
 			// Compile code
 			buildlog.append("Building script...\r\n");
-			runProcess("javac -classpath .;libraries/networxlib.jar " + fileName);
+			runProcess("javac -classpath .;" + libraries + fileName);
 			
 			if (buildFailed) {
 				buildlog.append("Script could not be compiled.");
@@ -81,7 +93,7 @@ public class CompileButtonListener implements ActionListener {
 			application.deleteOnExit();
 			
 			// Execute.
-			runProcess("java -classpath .;libraries/networxlib.jar " +  className);
+			runProcess("java -classpath .;" + libraries +  className);
 			
 			buildlog.append("---------------------------------------\r\n");
 			buildlog.append("Process complete");
@@ -130,9 +142,11 @@ public class CompileButtonListener implements ActionListener {
 			Writer outputStream = new FileWriter(userFile);
 
 			// TODO: More complex parsing of the script to add necessary imports, move methods out of main method.
+			// TODO: Handle imports using properties settings
 
 			// Import needed files from JARs
 			outputStream.write("import components.Vertex;\r\n");
+			outputStream.write("import edu.uci.ics.jung.graph.SparseMultigraph;\r\n");
 			// User class
 			outputStream.write("public class UserScript { \r\n");
 			// Main entry

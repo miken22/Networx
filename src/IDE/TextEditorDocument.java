@@ -44,7 +44,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
         while (wordR <= after) {
             if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
-                if (text.substring(wordL, wordR).matches("(\\W)*(private|public|protected|int|final|super|if|while|do|void|String|double|true|null|false|else|System)")) {
+                if (text.substring(wordL, wordR).matches("(\\W)*(private|public|protected|final|super|if|while|do|void|true|null|false|else|System)")) {
                     setCharacterAttributes(wordL, wordR - wordL, reservedWords, false);
                 } else {
                     setCharacterAttributes(wordL, wordR - wordL, defaultColour, false);
@@ -58,6 +58,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
         }
     }
 	
+	//TODO: Ignore parenthesis when highlighting text
+	
     public void remove(int offset, int length) throws BadLocationException {
         super.remove(offset, length);
 
@@ -66,7 +68,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
         if (before < 0) before = 0;
         int after = findFirstNonWordChar(text, offset);
 
-        if (text.substring(before, after).matches("(\\W)*(private|public|protected|int|final|super|if|while|do|void|String|double|true|null|false|else|System)")) {
+        if (text.substring(before, after).matches("(\\W)*(private|public|protected|final|super|if|while|do|void|true|null|false|else|System)")) {
             setCharacterAttributes(before, after - before, reservedWords, false);
         } else {
             setCharacterAttributes(before, after - before, defaultColour, false);

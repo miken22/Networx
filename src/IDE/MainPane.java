@@ -31,6 +31,7 @@ import javax.swing.text.BadLocationException;
 
 import BuildTools.CompileButtonListener;
 import BuildTools.OpenButtonListener;
+import BuildTools.PropertiesButtonListener;
 import BuildTools.SaveFileListener;
 
 public class MainPane {
@@ -60,13 +61,18 @@ public class MainPane {
 	private JMenuItem save;
 	private JMenuItem open;
 	private JMenuItem buildScript;
+	private JMenuItem buildProperties;
 
+	private Properties properties;
+	
 	private String fileName = "";
 
 	/**
 	 * Main method to call to launch the application
 	 */
 	public void loadWorkbench() {
+		
+		properties = new Properties();
 		
 		frame = new JFrame("Networx Graph Editor");
 		
@@ -84,11 +90,13 @@ public class MainPane {
 
 		build = new JMenu("Build Tools");
 		buildScript = new JMenuItem("Build Script");
+		buildProperties = new JMenuItem("Build Configuration");
 
 		save.addActionListener(new MenuListener(1));
 		open.addActionListener(new MenuListener(2));
 		exit.addActionListener(new MenuListener(3));
 		buildScript.addActionListener(new MenuListener(4));
+		buildProperties.addActionListener(new PropertiesButtonListener(properties));
 
 		createFrame();
 	}
@@ -117,6 +125,7 @@ public class MainPane {
 
 		menu.add(build);
 		build.add(buildScript);
+		build.add(buildProperties);
 
 		mainContainer = frame.getContentPane();
 		mainContainer.setBackground(new Color(240, 240, 240));
@@ -180,7 +189,7 @@ public class MainPane {
 		newFile.addActionListener(new NewFileListener());
 		openFile.addActionListener(new OpenButtonListener(worksheet));
 		saveFile.addActionListener(new SaveFileListener(worksheet));
-		compiler.addActionListener(new CompileButtonListener(worksheet, output));
+		compiler.addActionListener(new CompileButtonListener(worksheet, output, properties));
 
 		try {
 			Image img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
