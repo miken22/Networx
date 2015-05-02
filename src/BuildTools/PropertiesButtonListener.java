@@ -18,7 +18,5 @@ public class PropertiesButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		BuildConfiguration bc = new BuildConfiguration(properties);
 		bc.createFrame();
-		
 	}
-
 }

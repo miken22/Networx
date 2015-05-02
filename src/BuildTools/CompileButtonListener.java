@@ -141,18 +141,20 @@ public class CompileButtonListener implements ActionListener {
 			File userFile = new File("UserScript.java");
 			Writer outputStream = new FileWriter(userFile);
 
-			// TODO: More complex parsing of the script to add necessary imports, move methods out of main method.
-			// TODO: Handle imports using properties settings
-
+			// TODO: Move methods out of main method.
+		
 			// Import needed files from JARs
-			outputStream.write("import components.Vertex;\r\n");
-			outputStream.write("import edu.uci.ics.jung.graph.SparseMultigraph;\r\n");
+			addJUNGPackageImports(outputStream);
+			addNetworxPackages(outputStream);
+	
+			findUserMethods(theScript);
+			
 			// User class
 			outputStream.write("public class UserScript { \r\n");
 			// Main entry
 			outputStream.write("	public static void main(String[] args) { \r\n");
 			
-			// TODO: Need to extract 
+			// TODO: Need to extract methods
 			outputStream.write("		" + theScript + "\r\n	}\r\n}");
 			outputStream.close();
 
@@ -163,4 +165,23 @@ public class CompileButtonListener implements ActionListener {
 		}
 	}
 
+	private void findUserMethods(String theScript) {
+		
+		
+		
+	}
+
+	private void addNetworxPackages(Writer outputStream) throws IOException {
+		
+		outputStream.write("import components.Vertex;\r\n");
+		
+	}
+
+	private void addJUNGPackageImports(Writer outputStream) throws IOException {
+
+		for (String packageToImport : properties.getPackagesToImport()) {
+			outputStream.write("import " + packageToImport + ".*;\r\n");
+		}
+		
+	}
 }

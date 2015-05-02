@@ -1,5 +1,8 @@
 package IDE;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Simple class to store the list of packages a user wants to include in the script
  * 
@@ -8,6 +11,18 @@ package IDE;
  */
 public class Properties {
 
-	// TODO: Find all packages to automate imports
+	List<String> packagesToImport;
+	
+	public Properties() {
+		packagesToImport = new ArrayList<>();
+	}
+	
+	public void addPackage(String jungPackage) {
+		packagesToImport.add(jungPackage);
+	}
+	
+	public List<String> getPackagesToImport() {
+		return packagesToImport;
+	}
 	
 }

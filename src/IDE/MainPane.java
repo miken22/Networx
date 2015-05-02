@@ -68,10 +68,10 @@ public class MainPane {
 	private String fileName = "";
 
 	/**
-	 * Main method to call to launch the application
+	 * Main method to call to load the application frame
 	 */
 	public void loadWorkbench() {
-		
+			    
 		properties = new Properties();
 		
 		frame = new JFrame("Networx Graph Editor");
@@ -97,7 +97,7 @@ public class MainPane {
 		exit.addActionListener(new MenuListener(3));
 		buildScript.addActionListener(new MenuListener(4));
 		buildProperties.addActionListener(new PropertiesButtonListener(properties));
-
+		
 		createFrame();
 	}
 
@@ -264,7 +264,6 @@ public class MainPane {
 			if (listenerType == 1) {
 				saveFile.doClick();
 			} else if (listenerType == 2) {
-				// TODO: Load script into worksheet
 				openFile.doClick();
 			} else if (listenerType == 3) {
 				System.exit(0);

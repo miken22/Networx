@@ -35,13 +35,14 @@ public class OpenButtonListener implements ActionListener {
 			fileChooser.setFileFilter(scriptFilter);
 			
 			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
+				
+				worksheet.setText("");
+				
 				File userScript = fileChooser.getSelectedFile();	
 			
 				FileReader reader = new FileReader(userScript);
 				BufferedReader bw = new BufferedReader(reader);
 				
-				// TODO: Need to find a way to only get code within the main method, or user defined
-				// methods....
 				Document doc = worksheet.getStyledDocument();
 				fileText = bw.readLine();
 				while (fileText != null) {
