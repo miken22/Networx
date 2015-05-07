@@ -1,4 +1,6 @@
-package BuildTools;
+package buildtools;
+
+import ide.Properties;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,8 +16,6 @@ import java.io.Writer;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-
-import IDE.Properties;
 
 /**
  * Class that implements the compiling functionality. Saves the script, calls javac

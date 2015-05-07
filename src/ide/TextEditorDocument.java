@@ -1,4 +1,4 @@
-package IDE;
+package ide;
 
 import java.awt.Color;
 import javax.swing.text.AttributeSet;

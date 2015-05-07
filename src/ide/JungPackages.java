@@ -1,4 +1,4 @@
-package IDE;
+package ide;
 
 public class JungPackages {
 

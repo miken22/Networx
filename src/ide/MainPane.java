@@ -1,4 +1,4 @@
-package IDE;
+package ide;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -29,10 +29,10 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
 
-import BuildTools.CompileButtonListener;
-import BuildTools.OpenButtonListener;
-import BuildTools.PropertiesButtonListener;
-import BuildTools.SaveFileListener;
+import buildtools.CompileButtonListener;
+import buildtools.OpenButtonListener;
+import buildtools.PropertiesButtonListener;
+import buildtools.SaveFileListener;
 
 public class MainPane {
 
@@ -112,8 +112,8 @@ public class MainPane {
 		// Initialize frame and add the menu items
 		frame.setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize((int) width, (int) height);
-		frame.setExtendedState(frame.getExtendedState()|JFrame.MAXIMIZED_BOTH);
+		frame.setSize((int) width/2, (int)(height/1.2));
+//		frame.setExtendedState(frame.getExtendedState()|JFrame.MAXIMIZED_BOTH);
 		frame.setResizable(true);
 		frame.setJMenuBar(menu);
 
@@ -146,7 +146,7 @@ public class MainPane {
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
 		worksheet.setBackground(new Color(252, 252, 252));
-		mainScroll.setBounds(2, 25, frame.getWidth() - (int)(width/4),  (int)(height/1.4)-25);
+		mainScroll.setBounds(2, 25, frame.getWidth(),  (int)(frame.getH)-25);
 		mainScroll.setBackground(new Color(240, 240, 240));
 		mainScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
 		mainContainer.add(mainScroll);

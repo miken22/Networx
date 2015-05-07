@@ -1,7 +1,7 @@
-package Launcher;
+package launcher;
 
-import IDE.LoadingScreen;
-import IDE.MainPane;
+import ide.LoadingScreen;
+import ide.MainPane;
 
 public class Launch {
 

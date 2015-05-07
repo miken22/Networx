@@ -1,4 +1,4 @@
-package IDE;
+package ide;
 
 import java.util.ArrayList;
 import java.util.List;

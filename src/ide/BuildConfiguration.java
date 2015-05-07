@@ -1,4 +1,4 @@
-package IDE;
+package ide;
 
 import java.awt.Checkbox;
 import java.awt.Container;

@@ -1,10 +1,10 @@
-package BuildTools;
+package buildtools;
+
+import ide.BuildConfiguration;
+import ide.Properties;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import IDE.BuildConfiguration;
-import IDE.Properties;
 
 public class PropertiesButtonListener implements ActionListener {
 
