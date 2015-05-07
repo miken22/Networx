@@ -146,7 +146,7 @@ public class MainPane {
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
 		worksheet.setBackground(new Color(252, 252, 252));
-		mainScroll.setBounds(2, 25, frame.getWidth(),  (int)(frame.getH)-25);
+		mainScroll.setBounds(2, 25, frame.getWidth(),  (int)(frame.getHeight())-25);
 		mainScroll.setBackground(new Color(240, 240, 240));
 		mainScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
 		mainContainer.add(mainScroll);
