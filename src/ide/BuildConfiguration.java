@@ -1,6 +1,7 @@
 package ide;
 
 import java.awt.Checkbox;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
@@ -30,6 +32,7 @@ public class BuildConfiguration {
 	JButton ok;
 	JButton cancel;
 	
+	JLabel header;
 	JPanel packagePanel;
 	
 	List<Checkbox> packageGroup;
@@ -47,20 +50,25 @@ public class BuildConfiguration {
 		configurationFrame = new JFrame("Build Properties");
 		ok = new JButton("OK");
 		cancel = new JButton("Cancel");
+		header = new JLabel("Select JAR's needed for script.");
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				
 		configurationFrame.setSize(400, 700);
 		configurationFrame.setResizable(false);
 		configurationFrame.setLocationRelativeTo(null);
+		configurationFrame.setLayout(null);
+
+		header.setBounds(5, 5, 380, 45);
+		header.setBackground(new Color(217, 217, 217));
 		
-		packagePanel.setBounds(5, 5, 380, 600);
+		packagePanel.setBounds(5, 50, 380, 550);
 		packagePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		packagePanel.setLayout(new GridLayout(0,1));
 		
 		JScrollPane scrollPane = new JScrollPane(packagePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBounds(5, 5, 380, 600);
+        scrollPane.setBounds(5, 50, 380, 550);
         
         addPanelPackageList();
 		
@@ -69,12 +77,14 @@ public class BuildConfiguration {
 		cancel.setBounds(200, 620, 100, 25);
 		cancel.addActionListener(new CancelListener());
 		
-		configurationFrame.setLayout(null);
-		
 		Container c = configurationFrame.getContentPane();
 		c.add(ok);
 		c.add(cancel);
+		c.add(header);
 		c.add(packagePanel);
+		
+		c.setBackground(new Color(217, 217, 217));
+		
 		configurationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		configurationFrame.setVisible(true);
 	}
