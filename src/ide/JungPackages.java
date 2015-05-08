@@ -1,6 +1,6 @@
 package ide;
 
-public class JungPackages {
+public interface JungPackages {
 
 	static final String[] packages = {
 		"edu.uci.ics.jung.algorithms.blockmodel", 

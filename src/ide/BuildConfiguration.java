@@ -54,6 +54,8 @@ public class BuildConfiguration {
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				
+		int rows = JungPackages.packages.length;
+		
 		configurationFrame.setSize(400, 700);
 		configurationFrame.setResizable(false);
 		configurationFrame.setLocationRelativeTo(null);
@@ -64,13 +66,13 @@ public class BuildConfiguration {
 		
 		packagePanel.setBounds(5, 50, 380, 550);
 		packagePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-		packagePanel.setLayout(new GridLayout(0,1));
+		packagePanel.setLayout(new GridLayout(rows,1));
 		
+        addPanelPackageList();
+        
 		JScrollPane scrollPane = new JScrollPane(packagePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setBounds(5, 50, 380, 550);
-        
-        addPanelPackageList();
 		
 		ok.setBounds(50, 620, 100, 25);
 		ok.addActionListener(new SavePackageListener(packageGroup, properties));
