@@ -1,2 +1,2 @@
-# Networx
-Project to build a script style application to visualize and manipulate graphs and networks.
+# fuzzy-octogon
+Do things that don't make sense.
