@@ -287,7 +287,7 @@ public class CompileButtonListener implements ActionListener {
 		// Store starting index of method.
 		int startLocation = position;
 		int braceCounter = 0;
-		// Find first occurence of open brace
+		// Find first occurrence of open brace
 		position = theScript.indexOf("{", position);
 		
 		// Update the counter, shift to next index in string

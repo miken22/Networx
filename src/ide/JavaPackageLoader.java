@@ -38,10 +38,10 @@ public class JavaPackageLoader {
 	 * Initialize the frame and all its components.
 	 */
 	public void createFrame() {
-		configurationFrame = new JFrame("Build Properties");
+		configurationFrame = new JFrame("Java Import Settings");
 		ok = new JButton("OK");
 		cancel = new JButton("Cancel");
-		header = new JLabel("Select JAR's needed for script.");
+		header = new JLabel("Select imports needed for script.");
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				

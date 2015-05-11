@@ -2,7 +2,7 @@ package ide;
 
 public interface JavaPackages {
 
-	public final String[] javaPackages = {"java.beans",	"java.beans.beancontext", "java.io", "java.lang", "java.lang.annotation",
+	public static final String[] javaPackages = { "java.beans", "java.beans.beancontext", "java.io", "java.lang", "java.lang.annotation",
 			"java.lang.instrument", "java.lang.invoke",	"java.lang.management",
 			"java.lang.ref",
 			"java.lang.reflect",

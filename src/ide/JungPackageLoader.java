@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -47,10 +46,10 @@ public class JungPackageLoader {
 	 * Initialize the frame and all its components.
 	 */
 	public void createFrame() {
-		configurationFrame = new JFrame("Build Properties");
+		configurationFrame = new JFrame("JUNG2 Import Settings");
 		ok = new JButton("OK");
 		cancel = new JButton("Cancel");
-		header = new JLabel("Select JAR's needed for script.");
+		header = new JLabel("Select imports needed for script.");
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				
@@ -95,7 +94,7 @@ public class JungPackageLoader {
 	 * Create the checkboxes, add them to the panel and a list to iterate over late
 	 */
 	private void addPanelPackageList() {
-
+		
 		for (String jungPackage : JungPackages.packages) {
 			Checkbox packageBox = new Checkbox(jungPackage, false);
 			packageGroup.add(packageBox);
