@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -35,17 +37,28 @@ public class CompileButtonListener implements ActionListener {
 	private String script = "";
 	private boolean buildFailed = false;
 	
+	private ArrayList<String> userMethods;
+
 	/**
-	 * All libraries to be included on the build path.
+	 * All libraries to be included on the build path using windows file separators
 	 */
-	private final String libraries = "libraries/networxlib.jar;libraries/collections-generic-4.01.jar;libraries/colt-1.2.0.jar;libraries/concurrent-1.3.4.jar;libraries/j3d-core-1.3.1.jar"
-										+ ";libraries/jung-algorithms-2.0.1.jar;libraries/jung-api-2.0.1.jar;libraries/jung-graph-impl-2.0.1.jar;libraries/jung-io.2.0.1.jar;libraries/jung-jai-2.0.1.jar"
-										+ ";libraries/jung-visualization-2.0.1.jar;libraries/stax-api-1.0.1.jar;libraries/vecmath-1.3.1.jar;libraries/wstx-asl-3.2.6.jar ";
+	private final String windowsLibraries = "libraries/networxlib.jar;libraries/collections-generic-4.01.jar;libraries/colt-1.2.0.jar;libraries/concurrent-1.3.4.jar;libraries/j3d-core-1.3.1.jar"
+			+ ";libraries/jung-algorithms-2.0.1.jar;libraries/jung-api-2.0.1.jar;libraries/jung-graph-impl-2.0.1.jar;libraries/jung-io.2.0.1.jar;libraries/jung-jai-2.0.1.jar"
+			+ ";libraries/jung-visualization-2.0.1.jar;libraries/stax-api-1.0.1.jar;libraries/vecmath-1.3.1.jar;libraries/wstx-asl-3.2.6.jar ";
+
+	/**
+	 * All libraries to be included on the build path using Unix file separators
+	 */
+	private final String linuxLibraries = "libraries/networxlib.jar:libraries/collections-generic-4.01.jar:libraries/colt-1.2.0.jar:libraries/concurrent-1.3.4.jar:libraries/j3d-core-1.3.1.jar"
+			+ ":libraries/jung-algorithms-2.0.1.jar:libraries/jung-api-2.0.1.jar:libraries/jung-graph-impl-2.0.1.jar:libraries/jung-io.2.0.1.jar:libraries/jung-jai-2.0.1.jar"
+			+ ":libraries/jung-visualization-2.0.1.jar:libraries/stax-api-1.0.1.jar:libraries/vecmath-1.3.1.jar:libraries/wstx-asl-3.2.6.jar ";
+
 
 	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog, Properties properties) {
 		this.worksheet = worksheet;
 		this.buildlog = buildlog;
 		this.properties = properties;
+		userMethods = new ArrayList<>();
 	}
 
 	@Override
@@ -64,7 +77,6 @@ public class CompileButtonListener implements ActionListener {
 			}
 			buildScript(script);
 			compileScript();
-
 		}
 	}
 
@@ -72,37 +84,82 @@ public class CompileButtonListener implements ActionListener {
 
 		File userFile = new File("UserScript.java");
 		userFile.deleteOnExit();
+		
 		String fileName = userFile.getName();
 		String className = fileName.substring(0, fileName.lastIndexOf('.'));
-		
+
+		String OS = getOperatingSystem();
+
 		try {
-						
-			// Compile code
-			buildlog.append("Building script...\r\n");
-			runProcess("javac -classpath .;" + libraries + fileName);
-			
-			if (buildFailed) {
-				buildlog.append("Script could not be compiled.");
-				return;
+
+			// TODO: Determine OS at load and store in a variable instead of checking each compile
+
+			if (OS.startsWith("Windows")) {
+				windowsCompile(fileName, className);
+			} else if (OS.startsWith("Linux")) {
+				unixCompile(fileName, className);
+			} else {
+				JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
+				System.exit(-1);
 			}
 
-			buildlog.append("Complete.\r\n");
-			buildlog.append("---------------------------------------\r\n");
-		
-			File application = new File("UserScript.class");
-			application.deleteOnExit();
-			
-			// Execute.
-			runProcess("java -classpath .;" + libraries +  className);
-			
-			buildlog.append("---------------------------------------\r\n");
-			buildlog.append("Process complete");
-			
 		} catch (Exception e) {
 			String error = e.getMessage();
 			buildlog.append(error);
 		}
 
+	}
+
+	private void unixCompile(String fileName, String className) throws Exception {
+		// Compile code
+		buildlog.append("Building script...\r\n");
+		runProcess("javac -classpath .:" + linuxLibraries + fileName);
+
+		if (buildFailed) {
+			buildlog.append("Script could not be compiled.");
+			return;
+		}
+
+		buildlog.append("Complete.\r\n");
+		buildlog.append("---------------------------------------\r\n");
+
+		File application = new File("UserScript.class");
+		application.deleteOnExit();
+
+		// Execute.
+		runProcess("java -classpath .:" + linuxLibraries +  className);
+
+		buildlog.append("---------------------------------------\r\n");
+		buildlog.append("Process complete");
+
+	}
+
+	private void windowsCompile(String fileName, String className) throws Exception {
+		// Compile code
+		buildlog.append("Building script...\r\n");
+		runProcess("javac -classpath .;" + windowsLibraries + fileName);
+
+		if (buildFailed) {
+			buildlog.append("Script could not be compiled.");
+			return;
+		}
+
+		buildlog.append("Complete.\r\n");
+		buildlog.append("---------------------------------------\r\n");
+
+		File application = new File("UserScript.class");
+		application.deleteOnExit();
+
+		// Execute.
+		runProcess("java -classpath .;" + windowsLibraries +  className);
+
+		buildlog.append("---------------------------------------\r\n");
+		buildlog.append("Process complete");
+
+	}
+
+	private String getOperatingSystem() {
+		return System.getProperty("os.name");
 	}
 
 	// Write any file outputs
@@ -118,7 +175,7 @@ public class CompileButtonListener implements ActionListener {
 	private void runProcess(String command) throws Exception {
 		Process pro = Runtime.getRuntime().exec(command);
 		printLines(pro.getInputStream());
-		
+
 		InputStream errorStream = pro.getErrorStream();
 		BufferedReader errorLines = new BufferedReader(new InputStreamReader(errorStream));
 		String errorMessage = errorLines.readLine();
@@ -129,7 +186,7 @@ public class CompileButtonListener implements ActionListener {
 			return;
 		}
 		buildFailed = false;
-		
+
 		pro.waitFor();
 	}
 
@@ -137,25 +194,31 @@ public class CompileButtonListener implements ActionListener {
 	private void buildScript(String theScript) {
 
 		try {
-			
+
 			File userFile = new File("UserScript.java");
 			Writer outputStream = new FileWriter(userFile);
 
 			// TODO: Move methods out of main method.
-		
+
 			// Import needed files from JARs
 			addJUNGPackageImports(outputStream);
 			addNetworxPackages(outputStream);
-	
+
+			userMethods.clear();
 			findUserMethods(theScript);
-			
-			// User class
+
+			// User class and open user class bracket
 			outputStream.write("public class UserScript { \r\n");
-			// Main entry
+			// Main method for program entry, open method bracket
 			outputStream.write("	public static void main(String[] args) { \r\n");
+			// Write user code for main method and close main method bracket
+			outputStream.write("		" + script + "\r\n}");
 			
-			// TODO: Need to extract methods
-			outputStream.write("		" + theScript + "\r\n	}\r\n}");
+			// Add supporting user methods
+			insertUserMethods(outputStream);
+			
+			// Close class bracket
+			outputStream.write("\r\n}");
 			outputStream.close();
 
 		} catch (FileNotFoundException e) {
@@ -165,16 +228,10 @@ public class CompileButtonListener implements ActionListener {
 		}
 	}
 
-	private void findUserMethods(String theScript) {
-		
-		
-		
-	}
-
 	private void addNetworxPackages(Writer outputStream) throws IOException {
-		
+
 		outputStream.write("import components.Vertex;\r\n");
-		
+
 	}
 
 	private void addJUNGPackageImports(Writer outputStream) throws IOException {
@@ -182,6 +239,91 @@ public class CompileButtonListener implements ActionListener {
 		for (String packageToImport : properties.getPackagesToImport()) {
 			outputStream.write("import " + packageToImport + ".*;\r\n");
 		}
+
+	}
+
+
+	private void findUserMethods(String theScript) {
+
+		int position = script.indexOf("public");
+		this.script = theScript;		
+		
+		
+		if (position != -1) {
+			this.script = extractUserMethod(script, position);		// Global copy of trimmed String
+			findUserMethods(script);	// Continue to search for more methods
+		}
+		
+		position = script.indexOf("private");
+		if (position != -1) {
+			this.script = extractUserMethod(script, position);
+			findUserMethods(script);
+		}
+		
+		position = script.indexOf("protected");
+		if (position != -1) {
+			this.script = extractUserMethod(script, position);
+			findUserMethods(script);
+		}
+		
+		
 		
 	}
+	
+	private String extractUserMethod(String theScript, int position) {
+
+		// Store starting index of method.
+		int startLocation = position;
+		int braceCounter = 0;
+		// Find first occurence of open brace
+		position = theScript.indexOf("{", position);
+		
+		// Update the counter, shift to next index in string
+		braceCounter++;
+		position++;
+				
+		while (braceCounter > 0) {
+			
+			for (int i = position; i < theScript.length(); i++) {
+				char c = theScript.charAt(i);
+			
+				if (c == '{') {
+					braceCounter++;
+				} else if (c == '}') {
+					braceCounter--;
+				}					
+				
+				if (braceCounter == 0) {
+					position = i;
+					break;
+				}
+			}
+		}
+		
+		userMethods.add(theScript.substring(startLocation, position+1));
+		
+		String remainingCode = "";
+		// Store remaining code (if any)
+		try {
+			remainingCode = theScript.substring(position+1);
+		} catch (IndexOutOfBoundsException e) {
+			// Means we are ok, reached the end of the script
+			theScript = theScript.substring(0, startLocation);
+			theScript += "\r\n" + remainingCode;
+			return theScript;
+		}
+		
+		theScript = theScript.substring(0, startLocation);
+		theScript += "\r\n" + remainingCode;
+		// Otherwise more code to examine.
+		return theScript;
+	}
+
+	private void insertUserMethods(Writer outputStream) throws IOException {
+	
+		for (String userMethod : userMethods) {
+			outputStream.write(userMethod + "\r\n");
+		}
+		
+	}	
 }

@@ -13,12 +13,14 @@ public class TextEditorDocument extends DefaultStyledDocument {
     private SimpleAttributeSet reservedWords;
     private SimpleAttributeSet defaultColour;
     private SimpleAttributeSet quotations;
+    private SimpleAttributeSet comments;
     
     public TextEditorDocument() {
     	
     	reservedWords = new SimpleAttributeSet();
     	defaultColour = new SimpleAttributeSet();
     	quotations = new SimpleAttributeSet();
+    	comments = new SimpleAttributeSet();
     	
     	StyleConstants.setForeground(reservedWords, Color.RED);
     	StyleConstants.setBold(reservedWords, true);
@@ -29,6 +31,10 @@ public class TextEditorDocument extends DefaultStyledDocument {
     	StyleConstants.setForeground(quotations, Color.BLUE);
     	StyleConstants.setBold(quotations, false);
     	StyleConstants.setItalic(quotations, false);
+    	
+    	StyleConstants.setForeground(comments, Color.GREEN);
+    	StyleConstants.setBold(quotations, false);
+    	StyleConstants.setItalic(quotations, true);  	
     	
     }
     
@@ -44,13 +50,10 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
         while (wordR <= after) {
             if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
-                if (text.substring(wordL, wordR).matches("(\\W)*(private|public|protected|final|super|if|while|do|void|true|null|false|else|System)")) {
+                if (text.substring(wordL, wordR).matches("(\\W)*(private|public|protected|final|super|if|while|do|void|true|null|false|else|System|static)")) {
                     setCharacterAttributes(wordL, wordR - wordL, reservedWords, false);
                 } else {
                     setCharacterAttributes(wordL, wordR - wordL, defaultColour, false);
-                }
-                if (text.substring(wordL, wordR).contains("\"")) {
-                	setCharacterAttributes(wordL, wordR - wordL, quotations, false);
                 }
                 wordL = wordR;
             }
@@ -58,7 +61,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
         }
     }
 	
-	//TODO: Ignore parenthesis when highlighting text
+	//TODO: Fix colouring of quoted text, add comment colouring
 	
     public void remove(int offset, int length) throws BadLocationException {
         super.remove(offset, length);
@@ -68,15 +71,12 @@ public class TextEditorDocument extends DefaultStyledDocument {
         if (before < 0) before = 0;
         int after = findFirstNonWordChar(text, offset);
 
-        if (text.substring(before, after).matches("(\\W)*(private|public|protected|final|super|if|while|do|void|true|null|false|else|System)")) {
+        if (text.substring(before, after).matches("(\\W)*(private|public|protected|final|super|if|while|do|void|true|null|false|else|System|static)")) {
             setCharacterAttributes(before, after - before, reservedWords, false);
         } else {
             setCharacterAttributes(before, after - before, defaultColour, false);
         }
         
-        if (text.startsWith("\"") && text.endsWith("\"")) {
-        	setCharacterAttributes(before, after - before, quotations, false);
-        } 
     }
 	
     private int findLastNonWordChar(String text, int index) {
