@@ -61,7 +61,8 @@ public class MainPane {
 	private JMenuItem save;
 	private JMenuItem open;
 	private JMenuItem buildScript;
-	private JMenuItem buildProperties;
+	private JMenuItem jungPackageLoader;
+	private JMenuItem javaPackageLoader;
 
 	private Properties properties;
 	
@@ -90,14 +91,15 @@ public class MainPane {
 
 		build = new JMenu("Build Tools");
 		buildScript = new JMenuItem("Build Script");
-		buildProperties = new JMenuItem("Build Configuration");
+		javaPackageLoader = new JMenuItem("Add Java Imports");
+		jungPackageLoader = new JMenuItem("Add JUNG2 Packages");
 
 		save.addActionListener(new MenuListener(1));
 		open.addActionListener(new MenuListener(2));
 		exit.addActionListener(new MenuListener(3));
 		buildScript.addActionListener(new MenuListener(4));
-		buildProperties.addActionListener(new PropertiesButtonListener(properties));
-		
+		javaPackageLoader.addActionListener(new PropertiesButtonListener(properties, 0));
+		jungPackageLoader.addActionListener(new PropertiesButtonListener(properties, 1));
 		createFrame();
 	}
 
@@ -125,7 +127,8 @@ public class MainPane {
 
 		menu.add(build);
 		build.add(buildScript);
-		build.add(buildProperties);
+		build.add(javaPackageLoader);
+		build.add(jungPackageLoader);
 
 		mainContainer = frame.getContentPane();
 		mainContainer.setBackground(new Color(240, 240, 240));

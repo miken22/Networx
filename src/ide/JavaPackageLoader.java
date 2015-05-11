@@ -17,17 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
+public class JavaPackageLoader {
 
-/**
- * Class that controls a frame to get the user to select the packages to import
- * for their script. This could be extended to make each package expandable, make
- * the classes the check-boxes, rather than importing the whole package.
- * 
- * @author Michael Nowicki
- *
- */
-public class BuildConfiguration {
-	
 	JFrame configurationFrame;
 	JButton ok;
 	JButton cancel;
@@ -39,7 +30,7 @@ public class BuildConfiguration {
 	
 	Properties properties;
 	
-	public BuildConfiguration(Properties properties) {
+	public JavaPackageLoader(Properties properties) {
 		this.properties = properties;
 	}
 
@@ -54,7 +45,7 @@ public class BuildConfiguration {
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				
-		int rows = JungPackages.packages.length;
+		int rows = JavaPackages.javaPackages.length;
 		
 		configurationFrame.setSize(400, 700);
 		configurationFrame.setResizable(false);
@@ -96,7 +87,7 @@ public class BuildConfiguration {
 	 */
 	private void addPanelPackageList() {
 
-		for (String jungPackage : JungPackages.packages) {
+		for (String jungPackage : JavaPackages.javaPackages) {
 			Checkbox packageBox = new Checkbox(jungPackage, false);
 			packageGroup.add(packageBox);
 			packagePanel.add(packageBox);

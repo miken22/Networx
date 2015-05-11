@@ -43,6 +43,8 @@ public class CompileButtonListener implements ActionListener {
 	   once use of custom classes added. */
 	private String programFiles = "UserScript.java";
 	private String programClasses = "UserScript";
+
+	String OS = "";
 	
 	/**
 	 * All libraries to be included on the build path using windows file separators
@@ -64,6 +66,14 @@ public class CompileButtonListener implements ActionListener {
 		this.buildlog = buildlog;
 		this.properties = properties;
 		userMethods = new ArrayList<>();
+		// Get OS on startup,
+		OS = getOperatingSystem();
+		
+		if (OS.indexOf("mac") >= 0) {
+			JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
+			System.exit(-1);			
+		}
+		
 	}
 
 	@Override
@@ -87,22 +97,12 @@ public class CompileButtonListener implements ActionListener {
 
 	private void compileScript() {
 
-		File userFile = new File("UserScript.java");
-		userFile.deleteOnExit();
-		
-		String OS = getOperatingSystem();
-
 		try {
-
-			// TODO: Determine OS at load and store in a variable instead of checking each compile
 
 			if (OS.startsWith("Windows")) {
 				windowsCompile(programFiles, programClasses);
 			} else if (OS.startsWith("Linux")) {
 				unixCompile(programFiles, programClasses);
-			} else {
-				JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
-				System.exit(-1);
 			}
 
 		} catch (Exception e) {
@@ -125,9 +125,12 @@ public class CompileButtonListener implements ActionListener {
 		buildlog.append("Complete.\r\n");
 		buildlog.append("---------------------------------------\r\n");
 
-		File application = new File("UserScript.class");
-		application.deleteOnExit();
-
+		String[] userClasses = programClasses.split(" ");
+		for (String userClass : userClasses) {
+			File classFile = new File(userClass + ".class");
+			classFile.deleteOnExit();
+		}
+		
 		// Execute.
 		runProcess("java -classpath .:" + linuxLibraries +  classes);
 
@@ -148,9 +151,12 @@ public class CompileButtonListener implements ActionListener {
 
 		buildlog.append("Complete.\r\n");
 		buildlog.append("---------------------------------------\r\n");
-
-		File application = new File("UserScript.class");
-		application.deleteOnExit();
+		
+		String[] classes = programClasses.split(" ");
+		for (String userClass : classes) {
+			File classFile = new File(userClass + ".class");
+			classFile.deleteOnExit();
+		}
 
 		// Execute.
 		runProcess("java -classpath .;" + windowsLibraries +  className);
@@ -197,6 +203,7 @@ public class CompileButtonListener implements ActionListener {
 		try {
 
 			File userFile = new File("UserScript.java");
+			userFile.deleteOnExit();
 			Writer outputStream = new FileWriter(userFile);
 
 			// TODO: Move methods out of main method.
@@ -234,6 +241,9 @@ public class CompileButtonListener implements ActionListener {
 
 	private void addNetworxPackages(Writer outputStream) throws IOException {
 
+		// TODO: Create frame to load from selected packages like Jung/Java, other project
+		// needs to be finished first though.
+		
 		outputStream.write("import components.Vertex;\r\n");
 
 	}
@@ -326,7 +336,53 @@ public class CompileButtonListener implements ActionListener {
 	private void insertUserMethods(Writer outputStream) throws IOException {
 	
 		for (String userMethod : userMethods) {
+			
+			if (userMethod.contains("class")) {
+				generateUserClass(userMethod);
+				continue;
+			}
+			
 			outputStream.write(userMethod + "\r\n");
+		}
+		
+	}
+
+	private void generateUserClass(String userClass) {
+
+		String userClassName = "";
+		
+		String[] classTextByWords = userClass.split(" ");
+		
+		// Find class name by splitting the text on whitespaces, if the third word
+		// is 'static' then the class name is the 4th word (ie public static class ExampleClass {}) 
+		if (classTextByWords[2].equalsIgnoreCase("static")) {
+			userClassName = classTextByWords[3];
+		} else {
+			userClassName = classTextByWords[2]; // class name is third word in declaration
+		}
+		
+		try {
+
+			File userFile = new File(userClassName + ".java");
+			userFile.deleteOnExit();
+			Writer outputStream = new FileWriter(userFile);
+
+			// Import needed files from JARs, will be same as what is imported in main method,
+			// may need a better way to handle this as complexity grows.
+			addJUNGPackageImports(outputStream);
+			addNetworxPackages(outputStream);
+
+			// User class and open user class bracket
+			outputStream.write(userClass);
+			outputStream.close();
+			
+			programFiles += " " + userClassName + ".java";
+			programClasses += " " + userClassName;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 	}	
