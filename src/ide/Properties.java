@@ -17,8 +17,8 @@ public class Properties {
 		packagesToImport = new ArrayList<>();
 	}
 	
-	public void addPackage(String jungPackage) {
-		packagesToImport.add(jungPackage);
+	public void addPackage(String requiredPackage) {
+		packagesToImport.add(requiredPackage);
 	}
 	
 	public List<String> getPackagesToImport() {

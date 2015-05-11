@@ -39,6 +39,11 @@ public class CompileButtonListener implements ActionListener {
 	
 	private ArrayList<String> userMethods;
 
+	/* Global set of program files and classes to auto add to command line
+	   once use of custom classes added. */
+	private String programFiles = "UserScript.java";
+	private String programClasses = "UserScript";
+	
 	/**
 	 * All libraries to be included on the build path using windows file separators
 	 */
@@ -75,7 +80,7 @@ public class CompileButtonListener implements ActionListener {
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
-			buildScript(script);
+			buildScript();
 			compileScript();
 		}
 	}
@@ -85,9 +90,6 @@ public class CompileButtonListener implements ActionListener {
 		File userFile = new File("UserScript.java");
 		userFile.deleteOnExit();
 		
-		String fileName = userFile.getName();
-		String className = fileName.substring(0, fileName.lastIndexOf('.'));
-
 		String OS = getOperatingSystem();
 
 		try {
@@ -95,9 +97,9 @@ public class CompileButtonListener implements ActionListener {
 			// TODO: Determine OS at load and store in a variable instead of checking each compile
 
 			if (OS.startsWith("Windows")) {
-				windowsCompile(fileName, className);
+				windowsCompile(programFiles, programClasses);
 			} else if (OS.startsWith("Linux")) {
-				unixCompile(fileName, className);
+				unixCompile(programFiles, programClasses);
 			} else {
 				JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
 				System.exit(-1);
@@ -110,10 +112,10 @@ public class CompileButtonListener implements ActionListener {
 
 	}
 
-	private void unixCompile(String fileName, String className) throws Exception {
+	private void unixCompile(String files, String classes) throws Exception {
 		// Compile code
 		buildlog.append("Building script...\r\n");
-		runProcess("javac -classpath .:" + linuxLibraries + fileName);
+		runProcess("javac -classpath .:" + linuxLibraries + files);
 
 		if (buildFailed) {
 			buildlog.append("Script could not be compiled.");
@@ -127,7 +129,7 @@ public class CompileButtonListener implements ActionListener {
 		application.deleteOnExit();
 
 		// Execute.
-		runProcess("java -classpath .:" + linuxLibraries +  className);
+		runProcess("java -classpath .:" + linuxLibraries +  classes);
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");
@@ -191,8 +193,7 @@ public class CompileButtonListener implements ActionListener {
 	}
 
 	// Uses the file chooser to save the file
-	private void buildScript(String theScript) {
-
+	private void buildScript() {
 		try {
 
 			File userFile = new File("UserScript.java");
@@ -205,17 +206,19 @@ public class CompileButtonListener implements ActionListener {
 			addNetworxPackages(outputStream);
 
 			userMethods.clear();
-			findUserMethods(theScript);
+			findUserMethods(script);
 
 			// User class and open user class bracket
 			outputStream.write("public class UserScript { \r\n");
 			// Main method for program entry, open method bracket
 			outputStream.write("	public static void main(String[] args) { \r\n");
 			// Write user code for main method and close main method bracket
-			outputStream.write("		" + script + "\r\n}");
+			outputStream.write("		" + script + "\r\n	} \r\n");
 			
 			// Add supporting user methods
 			insertUserMethods(outputStream);
+			
+			// Possible TODO: Handle custom user classes, write to separate file, add to command line args
 			
 			// Close class bracket
 			outputStream.write("\r\n}");
@@ -226,6 +229,7 @@ public class CompileButtonListener implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void addNetworxPackages(Writer outputStream) throws IOException {
@@ -266,8 +270,6 @@ public class CompileButtonListener implements ActionListener {
 			findUserMethods(script);
 		}
 		
-		
-		
 	}
 	
 	private String extractUserMethod(String theScript, int position) {
@@ -300,12 +302,14 @@ public class CompileButtonListener implements ActionListener {
 			}
 		}
 		
-		userMethods.add(theScript.substring(startLocation, position+1));
+		position++;	// Shift to next index in String (if it exists)
+		
+		userMethods.add(theScript.substring(startLocation, position));
 		
 		String remainingCode = "";
 		// Store remaining code (if any)
 		try {
-			remainingCode = theScript.substring(position+1);
+			remainingCode = theScript.substring(position);
 		} catch (IndexOutOfBoundsException e) {
 			// Means we are ok, reached the end of the script
 			theScript = theScript.substring(0, startLocation);
