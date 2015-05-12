@@ -3,7 +3,6 @@ package buildtools;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -37,22 +36,25 @@ public class SaveFileListener  implements ActionListener {
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 	        FileNameExtensionFilter scriptFilter = new FileNameExtensionFilter("Networx Script files (*.scrt)", "scrt");
-	        // add filters
-			fileChooser.addChoosableFileFilter(scriptFilter);
+	        // add filter
 			fileChooser.setFileFilter(scriptFilter);
 			
 			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
 				
 				File userScript = fileChooser.getSelectedFile();
-				
-				Writer outputStream = new FileWriter(userScript);
-				outputStream.write(theScript);
-				outputStream.close();
+				if (userScript.getName().contains(".scrt")) {
+					Writer outputStream = new FileWriter(userScript);
+					outputStream.write(theScript);
+					outputStream.close();
+				} else { // Otherwise we need to add correct fileExtention
+					Writer outputStream = new FileWriter(userScript + ".scrt");
+					outputStream.write(theScript);
+					outputStream.close();
+				}
 
 			}
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			// TODO: Probably fix this to handle crashes without losing worksheet
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
