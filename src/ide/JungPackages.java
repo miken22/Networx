@@ -26,7 +26,6 @@ public interface JungPackages {
 		"edu.uci.ics.jung.io", 
 		"edu.uci.ics.jung.io.graphml", 
 		"edu.uci.ics.jung.io.graphml.parser", 
-		"edu.uci.ics.jung.samples", 
 		"edu.uci.ics.jung.visualization", 
 		"edu.uci.ics.jung.visualization.annotations", 
 		"edu.uci.ics.jung.visualization.control", 
@@ -45,4 +44,3 @@ public interface JungPackages {
 		"edu.uci.ics.jung.visualization3d.layout"
 	};
 }
-

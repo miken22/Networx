@@ -244,7 +244,10 @@ public class CompileButtonListener implements ActionListener {
 		// TODO: Create frame to load from selected packages like Jung/Java, other project
 		// needs to be finished first though.
 		
-		outputStream.write("import components.Vertex;\r\n");
+		outputStream.write("import networxlib.examples.*;\r\n");
+		outputStream.write("import networxlib.graphloader.*;\r\n");
+		outputStream.write("import networxlib.search.*;\r\n");
+		outputStream.write("import networxlib.visualizer.*;\r\n");
 
 	}
 
