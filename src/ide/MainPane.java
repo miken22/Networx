@@ -28,7 +28,6 @@ import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
-
 import buildtools.CompileButtonListener;
 import buildtools.OpenButtonListener;
 import buildtools.PropertiesButtonListener;
@@ -43,6 +42,7 @@ public class MainPane {
 	private JScrollPane outputScroll;
 	private JTextPane worksheet;
 	private JTextArea output;
+	private JTextArea lines;
 
 	private JPanel toolbar;
 	private JButton newFile;
@@ -103,8 +103,11 @@ public class MainPane {
 		createFrame();
 	}
 
+	// TODO: Make components dynamic and allow resizing
 	private void createFrame() {
 
+		lines = new JTextArea("1");	 
+		
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -153,6 +156,15 @@ public class MainPane {
 		mainScroll.setBackground(new Color(240, 240, 240));
 		mainScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
 		mainScroll.setBackground(new Color(217, 217, 217));
+		
+		lines.setBackground(Color.LIGHT_GRAY);
+		lines.setEditable(false);
+		lines.setFont(font);
+ 
+		worksheet.getDocument().addDocumentListener(new LineListener(worksheet, lines));
+ 
+		mainScroll.getViewport().add(worksheet);
+		mainScroll.setRowHeaderView(lines);
 		mainContainer.add(mainScroll);
 
 		// To display build logs
