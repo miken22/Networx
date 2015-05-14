@@ -4,7 +4,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Element;
 
 public class LineListener implements DocumentListener{
 
@@ -17,11 +16,11 @@ public class LineListener implements DocumentListener{
 	}
 	
 	public String getText() {
-		int caretPosition = worksheet.getDocument().getLength();
-		Element root = worksheet.getDocument().getDefaultRootElement();
-		String text = "1" + System.getProperty("line.separator");
-		for(int i = 2; i < root.getElementIndex( caretPosition ) + 2; i++){
-			text += i + System.getProperty("line.separator");
+		String text = "";
+		String document = worksheet.getText();
+		String[] documentLines = document.split("\n");
+		for (int i = 1; i <= documentLines.length+1; i++) {
+			text += i + "\n";
 		}
 		return text;
 	}
