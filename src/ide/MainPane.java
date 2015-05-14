@@ -28,10 +28,11 @@ import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
-import buildtools.CompileButtonListener;
-import buildtools.OpenButtonListener;
-import buildtools.PropertiesButtonListener;
-import buildtools.SaveFileListener;
+
+import toolbar.CompileButtonListener;
+import toolbar.OpenButtonListener;
+import toolbar.PropertiesButtonListener;
+import toolbar.SaveFileListener;
 
 public class MainPane {
 

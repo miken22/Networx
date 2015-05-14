@@ -1,4 +1,4 @@
-package buildtools;
+package toolbar;
 
 import ide.JavaPackageLoader;
 import ide.JungPackageLoader;

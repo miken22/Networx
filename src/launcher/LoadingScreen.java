@@ -1,4 +1,4 @@
-package ide;
+package launcher;
 
 import java.awt.SplashScreen;
 import java.io.IOException;

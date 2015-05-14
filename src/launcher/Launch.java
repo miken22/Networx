@@ -1,6 +1,5 @@
 package launcher;
 
-import ide.LoadingScreen;
 import ide.MainPane;
 
 public class Launch {
