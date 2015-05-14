@@ -263,9 +263,8 @@ public class CompileButtonListener implements ActionListener {
 
 	private void findUserMethods(String theScript) {
 
-		int position = script.indexOf("public");
 		this.script = theScript;		
-		
+		int position = script.indexOf("public");
 		
 		if (position != -1) {
 			this.script = extractUserMethod(script, position);		// Global copy of trimmed String
