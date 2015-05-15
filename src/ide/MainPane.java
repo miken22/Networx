@@ -38,6 +38,8 @@ public class MainPane {
 
 	// Main frame components
 	private JFrame frame;
+	private JFrame loadingScreen;
+	
 	private Container mainContainer;
 	private JScrollPane mainScroll;
 	private JScrollPane outputScroll;
@@ -62,6 +64,7 @@ public class MainPane {
 	private JMenuItem save;
 	private JMenuItem open;
 	private JMenuItem buildScript;
+	private JMenuItem libraryPackageLoader;
 	private JMenuItem jungPackageLoader;
 	private JMenuItem javaPackageLoader;
 
@@ -73,7 +76,23 @@ public class MainPane {
 	 * Main method to call to load the application frame
 	 */
 	public void loadWorkbench() {
-			    
+		
+		
+		loadingScreen = new JFrame();
+		loadingScreen.setUndecorated(true);
+		LoadingPanel lp = new LoadingPanel();
+		
+		Container loadC = loadingScreen.getContentPane();
+		loadC.add(lp);
+
+		loadingScreen.repaint();
+		loadingScreen.setLayout(null);
+		loadingScreen.setLocationRelativeTo(null);
+		loadingScreen.setResizable(false);
+		loadingScreen.setSize(new Dimension(360, 317));
+		loadingScreen.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		loadingScreen.setVisible(true);
+		
 		properties = new Properties();
 		
 		frame = new JFrame("Networx Graph Editor");
@@ -92,7 +111,8 @@ public class MainPane {
 
 		build = new JMenu("Build Tools");
 		buildScript = new JMenuItem("Build Script");
-		javaPackageLoader = new JMenuItem("Add Java Imports");
+		libraryPackageLoader = new JMenuItem("Add Networx Packages");
+		javaPackageLoader = new JMenuItem("Add Java Packages");
 		jungPackageLoader = new JMenuItem("Add JUNG2 Packages");
 
 		save.addActionListener(new MenuListener(1));
@@ -101,6 +121,7 @@ public class MainPane {
 		buildScript.addActionListener(new MenuListener(4));
 		javaPackageLoader.addActionListener(new PropertiesButtonListener(properties, 0));
 		jungPackageLoader.addActionListener(new PropertiesButtonListener(properties, 1));
+		libraryPackageLoader.addActionListener(new PropertiesButtonListener(properties, 2));
 		createFrame();
 	}
 
@@ -119,10 +140,9 @@ public class MainPane {
 		frame.setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize((int) width/2, (int)(height/1.2));
-//		frame.setExtendedState(frame.getExtendedState()|JFrame.MAXIMIZED_BOTH);
 		frame.setResizable(false);
 		frame.setJMenuBar(menu);
-
+		
 		menu.setBackground(new Color(217,217,217));
 		menu.add(file);
 		file.add(open);
@@ -131,6 +151,7 @@ public class MainPane {
 
 		menu.add(build);
 		build.add(buildScript);
+		build.add(libraryPackageLoader);
 		build.add(javaPackageLoader);
 		build.add(jungPackageLoader);
 
@@ -146,10 +167,11 @@ public class MainPane {
 			e.printStackTrace();
 		}
 
+		font = font.deriveFont(Font.PLAIN, 14);
+
 		// Create the script area
 		worksheet.setEditable(true);
 		worksheet.addKeyListener(new KeyStrokeListener());
-		font = font.deriveFont(Font.PLAIN, 14);
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
 		worksheet.setBackground(new Color(252, 252, 252));
@@ -182,6 +204,8 @@ public class MainPane {
 
 		buildToolbar();
 
+		loadingScreen.dispose();
+		
 		mainContainer.setBackground(new Color(217, 217, 217));
 		// Reveal the frame
 		frame.setLocationRelativeTo(null);
@@ -272,10 +296,7 @@ public class MainPane {
 
 		private int listenerType;
 
-		// TODO: Make a variable for the pane, pass instance of "this" in to the constructor
-		// and move this class into it's own file.
-
-		public MenuListener(int id) {
+		public MenuListener(int id) { 
 			this.listenerType = id;
 		}
 
@@ -286,6 +307,11 @@ public class MainPane {
 			} else if (listenerType == 2) {
 				openFile.doClick();
 			} else if (listenerType == 3) {
+				
+				if (textarea.documentHasChanged()) {
+					saveFile.doClick();
+				}
+				
 				System.exit(0);
 			} else if (listenerType == 4) {
 				compiler.doClick();
@@ -293,14 +319,14 @@ public class MainPane {
 		}
 
 	}
+	
 	/**
 	 * Trivial listener to create a new file
 	 * 
 	 * @author Michael
 	 *
 	 */
-	public class NewFileListener implements ActionListener {
-
+	private class NewFileListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent click) {
 			worksheet.setText("");

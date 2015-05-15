@@ -20,6 +20,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
     private SimpleAttributeSet quotations;
     private SimpleAttributeSet comments;
     
+    private boolean hasChanged;
+    
     public TextEditorDocument() {
     	
     	reservedWords = new SimpleAttributeSet();
@@ -43,12 +45,16 @@ public class TextEditorDocument extends DefaultStyledDocument {
     	
     	StyleConstants.setForeground(comments, Color.GREEN);
     	StyleConstants.setBold(quotations, false);
-    	StyleConstants.setItalic(quotations, true);  	
+    	StyleConstants.setItalic(quotations, true); 
+    	
+    	hasChanged = false;
     	
     }
     
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
+        
+        hasChanged = true;
 
         String text = getText(0, getLength());
         int before = findLastNonWordChar(text, offset);
@@ -111,6 +117,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 	public void remove(int offset, int length) throws BadLocationException {
         super.remove(offset, length);
+        
+        hasChanged = true;
 
         String text = getText(0, getLength());
         int before = findLastNonWordChar(text, offset);
@@ -146,5 +154,13 @@ public class TextEditorDocument extends DefaultStyledDocument {
             index++;
         }
         return index;
+    }
+    
+    public boolean documentHasChanged() {
+    	return hasChanged;
+    }
+    
+    public void isSaved() {
+    	hasChanged = false;
     }
 }

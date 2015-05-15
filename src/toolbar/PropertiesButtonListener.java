@@ -2,6 +2,8 @@ package toolbar;
 
 import ide.JavaPackageLoader;
 import ide.JungPackageLoader;
+import ide.LibraryPackageLoader;
+import ide.PackageLoader;
 import ide.Properties;
 
 import java.awt.event.ActionEvent;
@@ -21,13 +23,17 @@ public class PropertiesButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if (id == 0) {
-			// Add java imports
-			JavaPackageLoader jpl = new JavaPackageLoader(properties);
+			// Add java package list
+			PackageLoader jpl = new JavaPackageLoader(properties);
 			jpl.createFrame();
 		} else if (id == 1) {
-			// Load jung packages
-			JungPackageLoader bc = new JungPackageLoader(properties);
+			// Load jung package list
+			PackageLoader bc = new JungPackageLoader(properties);
 			bc.createFrame();
+		} else if (id == 2) {
+			// Load library package list
+			PackageLoader lpl = new LibraryPackageLoader(properties);
+			lpl.createFrame();
 		}
 		
 	}

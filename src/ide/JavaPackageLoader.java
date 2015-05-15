@@ -1,14 +1,9 @@
 package ide;
 
-import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,21 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
-public class JavaPackageLoader {
-
-	JFrame configurationFrame;
-	JButton ok;
-	JButton cancel;
-	
-	JLabel header;
-	JPanel packagePanel;
-	
-	List<Checkbox> packageGroup;
-	
-	Properties properties;
+public class JavaPackageLoader extends PackageLoader {
 	
 	public JavaPackageLoader(Properties properties) {
-		this.properties = properties;
+		super(properties);
 	}
 
 	/**
@@ -59,7 +43,7 @@ public class JavaPackageLoader {
 		packagePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		packagePanel.setLayout(new GridLayout(rows,1));
 		
-        addPanelPackageList();
+        addPanelPackageList(JavaPackages.javaPackages);
         
 		JScrollPane scrollPane = new JScrollPane(packagePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -82,56 +66,4 @@ public class JavaPackageLoader {
 		configurationFrame.setVisible(true);
 	}
 
-	/**
-	 * Create the checkboxes, add them to the panel and a list to iterate over late
-	 */
-	private void addPanelPackageList() {
-
-		for (String jungPackage : JavaPackages.javaPackages) {
-			Checkbox packageBox = new Checkbox(jungPackage, false);
-			packageGroup.add(packageBox);
-			packagePanel.add(packageBox);
-		}		
-	}
-
-	/**
-	 * For each checked box get the label and add it to the list of
-	 * properties to import
-	 * 
-	 * @author Michael Nowicki
-	 *
-	 */
-	private class SavePackageListener implements ActionListener {
-
-		private List<Checkbox> panelCBGroup;
-		private Properties projectProperties;
-		
-		public SavePackageListener(List<Checkbox> packageGroup, Properties projectProperties) {
-			panelCBGroup = packageGroup;
-			this.projectProperties = projectProperties;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent save) {
-			for (Checkbox option : panelCBGroup) {
-				if (option.getState()) {
-					projectProperties.addPackage(option.getLabel());
-				}
-			}
-			configurationFrame.dispose();
-		}
-	}
-	
-	/**
-	 * Close the frame, save nothing
-	 * 
-	 * @author Michael Nowicki
-	 *
-	 */
-	public class CancelListener implements ActionListener {	
-		@Override
-		public void actionPerformed(ActionEvent cancel) {
-			configurationFrame.dispose();
-		}
-	}
 }

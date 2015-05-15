@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,19 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
+public class LibraryPackageLoader extends PackageLoader {
 
-/**
- * Class that controls a frame to get the user to select the packages to import
- * for their script. This could be extended to make each package expandable, make
- * the classes the check-boxes, rather than importing the whole package.
- * 
- * @author Michael Nowicki
- *
- */
-public class JungPackageLoader extends PackageLoader {
-	
-	
-	public JungPackageLoader(Properties properties) {
+	public LibraryPackageLoader(Properties properties) {
 		super(properties);
 	}
 
@@ -32,14 +23,14 @@ public class JungPackageLoader extends PackageLoader {
 	 * Initialize the frame and all its components.
 	 */
 	public void createFrame() {
-		configurationFrame = new JFrame("JUNG2 Import Settings");
+		configurationFrame = new JFrame("Networx Library Import Settings");
 		ok = new JButton("OK");
 		cancel = new JButton("Cancel");
 		header = new JLabel("Select imports needed for script.");
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				
-		int rows = JungPackages.packages.length;
+		int rows = LibraryPackages.libraries.length;
 		
 		configurationFrame.setSize(400, 700);
 		configurationFrame.setResizable(false);
@@ -53,7 +44,7 @@ public class JungPackageLoader extends PackageLoader {
 		packagePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		packagePanel.setLayout(new GridLayout(rows,1));
 		
-        addPanelPackageList(JungPackages.packages);
+        addPanelPackageList(LibraryPackages.libraries);
         
 		JScrollPane scrollPane = new JScrollPane(packagePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -75,5 +66,5 @@ public class JungPackageLoader extends PackageLoader {
 		configurationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		configurationFrame.setVisible(true);
 	}
-
+	
 }

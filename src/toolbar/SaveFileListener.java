@@ -1,5 +1,7 @@
 package toolbar;
 
+import ide.TextEditorDocument;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,9 +17,11 @@ import javax.swing.text.BadLocationException;
 public class SaveFileListener  implements ActionListener {
 
 	private JTextPane worksheet;
+	private TextEditorDocument document;
 	
 	public SaveFileListener(JTextPane worksheet) {
 		this.worksheet = worksheet;
+		this.document = (TextEditorDocument) worksheet.getDocument();
 	}
 	
 	@Override
@@ -53,6 +57,8 @@ public class SaveFileListener  implements ActionListener {
 				}
 
 			}
+			
+			document.isSaved();
 
 			// TODO: Probably fix this to handle crashes without losing worksheet
 		} catch (IOException e) {
