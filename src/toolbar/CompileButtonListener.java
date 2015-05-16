@@ -206,11 +206,8 @@ public class CompileButtonListener implements ActionListener {
 			userFile.deleteOnExit();
 			Writer outputStream = new FileWriter(userFile);
 
-			// TODO: Move methods out of main method.
-
 			// Import needed files from JARs
-			addJUNGPackageImports(outputStream);
-			addNetworxPackages(outputStream);
+			addPackageImports(outputStream);
 
 			userMethods.clear();
 			findUserMethods(script);
@@ -225,8 +222,6 @@ public class CompileButtonListener implements ActionListener {
 			// Add supporting user methods
 			insertUserMethods(outputStream);
 			
-			// Possible TODO: Handle custom user classes, write to separate file, add to command line args
-			
 			// Close class bracket
 			outputStream.write("\r\n}");
 			outputStream.close();
@@ -239,20 +234,7 @@ public class CompileButtonListener implements ActionListener {
 		
 	}
 
-	private void addNetworxPackages(Writer outputStream) throws IOException {
-
-		// TODO: Create frame to load from selected packages like Jung/Java, other project
-		// needs to be finished first though.
-
-		outputStream.write("import networxlib.components.*;\r\n");
-		outputStream.write("import networxlib.examples.*;\r\n");
-		outputStream.write("import networxlib.graphloader.*;\r\n");
-		outputStream.write("import networxlib.search.*;\r\n");
-		outputStream.write("import networxlib.visualizer.*;\r\n");
-
-	}
-
-	private void addJUNGPackageImports(Writer outputStream) throws IOException {
+	private void addPackageImports(Writer outputStream) throws IOException {
 
 		for (String packageToImport : properties.getPackagesToImport()) {
 			outputStream.write("import " + packageToImport + ".*;\r\n");
@@ -372,8 +354,7 @@ public class CompileButtonListener implements ActionListener {
 
 			// Import needed files from JARs, will be same as what is imported in main method,
 			// may need a better way to handle this as complexity grows.
-			addJUNGPackageImports(outputStream);
-			addNetworxPackages(outputStream);
+			addPackageImports(outputStream);
 
 			// User class and open user class bracket
 			outputStream.write(userClass);

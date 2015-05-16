@@ -1,16 +1,14 @@
 package launcher;
 
-import ide.MainPane;
+import ide.WorkBench;
 
 public class Launch {
 
 	public static void main(String[] args){
 		
-		//Does not work...
-		//LoadingScreen splash = new LoadingScreen();
-		//splash.launch();
-		
-		MainPane pane = new MainPane();
+		WorkBench pane = new WorkBench();
 		pane.loadWorkbench();
+
 	}
+
 }

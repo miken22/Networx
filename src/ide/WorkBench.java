@@ -34,7 +34,7 @@ import toolbar.OpenButtonListener;
 import toolbar.PropertiesButtonListener;
 import toolbar.SaveFileListener;
 
-public class MainPane {
+public class WorkBench {
 
 	// Main frame components
 	private JFrame frame;
@@ -75,8 +75,7 @@ public class MainPane {
 	/**
 	 * Main method to call to load the application frame
 	 */
-	public void loadWorkbench() {
-		
+	public void loadWorkbench() {		
 		
 		loadingScreen = new JFrame();
 		loadingScreen.setUndecorated(true);
@@ -97,8 +96,10 @@ public class MainPane {
 		
 		frame = new JFrame("Networx Graph Editor");
 		
+		lines = new JTextArea("1");	 		
 		textarea = new TextEditorDocument();
 		worksheet = new JTextPane(textarea);
+		
 		output = new JTextArea();
 		mainScroll = new JScrollPane(worksheet);
 		outputScroll = new JScrollPane(output);
@@ -122,19 +123,19 @@ public class MainPane {
 		javaPackageLoader.addActionListener(new PropertiesButtonListener(properties, 0));
 		jungPackageLoader.addActionListener(new PropertiesButtonListener(properties, 1));
 		libraryPackageLoader.addActionListener(new PropertiesButtonListener(properties, 2));
+		
 		createFrame();
+	
 	}
 
 	// TODO: Make components dynamic and allow resizing
 	private void createFrame() {
-
-		lines = new JTextArea("1");	 
 		
-		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
-
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
+		
+		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
 		// Initialize frame and add the menu items
 		frame.setLayout(null);

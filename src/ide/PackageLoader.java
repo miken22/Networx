@@ -37,9 +37,14 @@ public abstract class PackageLoader {
 	 */
 	public void addPanelPackageList(String[] packageList) {
 		
-		for (String jungPackage : packageList) {
-			Checkbox packageBox = new Checkbox(jungPackage, false);
+		for (String thePackage : packageList) {
+			Checkbox packageBox = new Checkbox(thePackage, false);
 			packageGroup.add(packageBox);
+			
+			if (properties.getPackagesToImport().contains(thePackage)) {
+				packageBox.setState(true);
+			}
+			
 			packagePanel.add(packageBox);
 		}		
 	}

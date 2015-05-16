@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Properties {
 
-	List<String> packagesToImport;
+	private List<String> packagesToImport;
 	
 	public Properties() {
 		packagesToImport = new ArrayList<>();
