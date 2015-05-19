@@ -70,8 +70,6 @@ public class WorkBench {
 	private JMenuItem javaPackageLoader;
 
 	private Properties properties;
-	
-	private String fileName = "";
 
 	/**
 	 * Main method to call to load the application frame
@@ -79,13 +77,13 @@ public class WorkBench {
 	public void loadWorkbench() {		
 		
 		loadingScreen = new JFrame();
-		loadingScreen.setUndecorated(true);
+//		loadingScreen.setUndecorated(true);
 		LoadingPanel lp = new LoadingPanel();
 		
 		Container loadC = loadingScreen.getContentPane();
 		loadC.add(lp);
 
-		loadingScreen.repaint();
+//		loadingScreen.repaint();
 		loadingScreen.setLayout(null);
 		loadingScreen.setLocationRelativeTo(null);
 		loadingScreen.setResizable(false);
@@ -280,14 +278,6 @@ public class WorkBench {
 
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
 	/**
 	 * Main menu listener for the File options
 	 * 
@@ -320,6 +310,7 @@ public class WorkBench {
 					dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning",dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFile.doClick();
+						textarea.isSaved();
 					}
 				}
 				if (!textarea.documentHasChanged() || dialogResult == JOptionPane.NO_OPTION) {
@@ -364,6 +355,12 @@ public class WorkBench {
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
+			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_S){
+				saveFile.doClick();
+				textarea.isSaved();
+			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_O){
+				openFile.doClick();
+				textarea.isSaved();
 			}
 		}
 

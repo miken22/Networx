@@ -131,12 +131,6 @@ public class CompileButtonListener implements ActionListener {
 		for (String userClass : userClasses) {
 			File classFile = new File(userClass + ".class");
 			classFile.deleteOnExit();
-			// Hide class files
-			try {
-				Files.setAttribute(classFile.toPath(), "dos:hidden", true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		
 		// Execute.
@@ -371,14 +365,7 @@ public class CompileButtonListener implements ActionListener {
 		try {
 
 			File userFile = new File(userClassName + ".java");
-			userFile.deleteOnExit();
-			
-			try {
-				Files.setAttribute(userFile.toPath(), "dos:hidden", true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	
+			userFile.deleteOnExit();	
 			
 			Writer outputStream = new FileWriter(userFile);
 
