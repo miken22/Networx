@@ -77,7 +77,7 @@ public class WorkBench {
 	public void loadWorkbench() {		
 		
 		loadingScreen = new JFrame();
-//		loadingScreen.setUndecorated(true);
+		loadingScreen.setUndecorated(true);
 		LoadingPanel lp = new LoadingPanel();
 		
 		Container loadC = loadingScreen.getContentPane();
