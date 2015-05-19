@@ -305,8 +305,10 @@ public class WorkBench {
 		public void actionPerformed(ActionEvent arg0) {
 			if (listenerType == 1) {
 				saveFile.doClick();
+				textarea.isSaved();
 			} else if (listenerType == 2) {
 				openFile.doClick();
+				textarea.isSaved();
 			} else if (listenerType == 3) {
 				
 				if (textarea.documentHasChanged()) {

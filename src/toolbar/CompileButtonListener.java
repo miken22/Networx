@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -43,7 +44,7 @@ public class CompileButtonListener implements ActionListener {
 	   once use of custom classes added. */
 	private String programFiles = "UserScript.java";
 	private String programClasses = "UserScript";
-
+	
 	String OS = "";
 	
 	/**
@@ -65,7 +66,8 @@ public class CompileButtonListener implements ActionListener {
 		this.worksheet = worksheet;
 		this.buildlog = buildlog;
 		this.properties = properties;
-		userMethods = new ArrayList<>();
+		userMethods = new ArrayList<>();	
+		
 		// Get OS on startup,
 		OS = getOperatingSystem();
 		
@@ -129,6 +131,12 @@ public class CompileButtonListener implements ActionListener {
 		for (String userClass : userClasses) {
 			File classFile = new File(userClass + ".class");
 			classFile.deleteOnExit();
+			// Hide class files
+			try {
+				Files.setAttribute(classFile.toPath(), "dos:hidden", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		// Execute.
@@ -156,6 +164,11 @@ public class CompileButtonListener implements ActionListener {
 		for (String userClass : classes) {
 			File classFile = new File(userClass + ".class");
 			classFile.deleteOnExit();
+			try {
+				Files.setAttribute(classFile.toPath(), "dos:hidden", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		// Execute.
@@ -204,6 +217,7 @@ public class CompileButtonListener implements ActionListener {
 
 			File userFile = new File("UserScript.java");
 			userFile.deleteOnExit();
+			
 			Writer outputStream = new FileWriter(userFile);
 
 			// Import needed files from JARs
@@ -225,6 +239,14 @@ public class CompileButtonListener implements ActionListener {
 			// Close class bracket
 			outputStream.write("\r\n}");
 			outputStream.close();
+			
+			// Keep generated files hidden
+			try {
+				Files.setAttribute(userFile.toPath(), "dos:hidden", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -350,6 +372,14 @@ public class CompileButtonListener implements ActionListener {
 
 			File userFile = new File(userClassName + ".java");
 			userFile.deleteOnExit();
+			
+			try {
+				Files.setAttribute(userFile.toPath(), "dos:hidden", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	
+			
 			Writer outputStream = new FileWriter(userFile);
 
 			// Import needed files from JARs, will be same as what is imported in main method,
@@ -361,7 +391,7 @@ public class CompileButtonListener implements ActionListener {
 			outputStream.close();
 			
 			programFiles += " " + userClassName + ".java";
-			programClasses += " " + userClassName;
+			programClasses += " "  + userClassName;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

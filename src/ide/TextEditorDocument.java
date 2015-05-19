@@ -50,7 +50,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
     	hasChanged = false;
     	
     }
-    
+      
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
         super.insertString(offset, str, a);
         
