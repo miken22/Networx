@@ -7,8 +7,8 @@ import javax.swing.event.DocumentListener;
 
 public class LineListener implements DocumentListener{
 
-	JTextPane worksheet;
-	JTextArea lines;
+	private JTextPane worksheet;
+	private JTextArea lines;
 	
 	public LineListener(JTextPane worksheet, JTextArea lines) {
 		this.worksheet = worksheet;
@@ -21,7 +21,7 @@ public class LineListener implements DocumentListener{
 		String[] documentLines = document.split("\n");
 		for (int i = 1; i <= documentLines.length+1; i++) {
 			text += i + "\n";
-		}
+		}		
 		return text;
 	}
 	@Override

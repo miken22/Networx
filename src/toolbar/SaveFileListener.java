@@ -56,9 +56,8 @@ public class SaveFileListener  implements ActionListener {
 					outputStream.close();
 				}
 
+				document.isSaved();
 			}
-			
-			document.isSaved();
 
 			// TODO: Probably fix this to handle crashes without losing worksheet
 		} catch (IOException e) {

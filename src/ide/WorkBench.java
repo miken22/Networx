@@ -21,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -29,6 +30,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
 
+import jdk.nashorn.internal.scripts.JO;
 import toolbar.CompileButtonListener;
 import toolbar.OpenButtonListener;
 import toolbar.PropertiesButtonListener;
@@ -311,11 +313,19 @@ public class WorkBench {
 				textarea.isSaved();
 			} else if (listenerType == 3) {
 				
-				if (textarea.documentHasChanged()) {
-					saveFile.doClick();
-				}
 				
-				System.exit(0);
+				int dialogButton;
+				int dialogResult = JOptionPane.NO_OPTION;
+				if (textarea.documentHasChanged()) {
+					dialogButton = JOptionPane.YES_NO_OPTION;
+					dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning",dialogButton);
+					if(dialogResult == JOptionPane.YES_OPTION){
+						saveFile.doClick();
+					}
+				}
+				if (!textarea.documentHasChanged() || dialogResult == JOptionPane.NO_OPTION) {
+					System.exit(0);
+				}
 			} else if (listenerType == 4) {
 				compiler.doClick();
 			}

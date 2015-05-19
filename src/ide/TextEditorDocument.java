@@ -79,39 +79,44 @@ public class TextEditorDocument extends DefaultStyledDocument {
             wordR++;
         }       
         
-        colourComments(text);
+      colourComments();
 
     }
 	
 	//TODO: Fix colouring of quoted text, add comment colouring
 
-	private void colourComments(String text) {
+	private void colourComments() {
+		
+		String text = "";
+		try {
+			text = getText(0, this.getLength());
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
 		
 		StringReader strReader = new StringReader(text);
 		BufferedReader reader = new BufferedReader(strReader);
 		
+		// Iterate through each line, find those that contain "//" to color.
 		String line = null;
 		try {
 			int position = 0;
 			line = reader.readLine();
 			while (line != null) {
-				
 				if (line.startsWith("//")) {
 					int length = line.length();
 		            setCharacterAttributes(position, length, comments, false);     
+				} else if (line.contains("//")) {
+					int offset = line.indexOf("//");
+					setCharacterAttributes(offset, line.length(), comments, false);
+					
 				}
 				position += line.length()+1;
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
-//		if ((text.substring(wordL, wordR).matches("(\\/)"))) { 
-//            setCharacterAttributes(wordL, wordR - wordL, comments, false);     
-//		}
 		
 	}
 
@@ -132,9 +137,9 @@ public class TextEditorDocument extends DefaultStyledDocument {
         } else {
             setCharacterAttributes(before, after - before, defaultColour, false);
         }
-        
-        colourComments(text);
 
+        colourComments();
+        
     }
 	
     private int findLastNonWordChar(String text, int index) {
