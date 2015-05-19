@@ -56,7 +56,6 @@ public class WorkBench {
 
 	// Custom style for editor environment
 	private TextEditorDocument textarea;
-	private Font font;
 
 	private JMenuBar menu;
 	private JMenu file;
@@ -85,7 +84,7 @@ public class WorkBench {
 
 //		loadingScreen.repaint();
 		loadingScreen.setLayout(null);
-		loadingScreen.setLocationRelativeTo(null);
+		loadingScreen.setLocationRelativeTo(frame);
 		loadingScreen.setResizable(false);
 		loadingScreen.setSize(new Dimension(360, 317));
 		loadingScreen.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -94,26 +93,67 @@ public class WorkBench {
 		properties = new Properties();
 		
 		frame = new JFrame("Networx Graph Editor");
+		mainContainer = frame.getContentPane();
 		
-		lines = new JTextArea("1");	 		
-		textarea = new TextEditorDocument();
-		worksheet = new JTextPane(textarea);
-		
-		output = new JTextArea();
-		mainScroll = new JScrollPane(worksheet);
-		outputScroll = new JScrollPane(output);
-
 		menu = new JMenuBar();
+		
+		createFrame();
+	
+	}
+
+	private void createFrame() {
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = screenSize.getWidth();
+		double height = screenSize.getHeight();
+
+		// Initialize frame and add the menu items
+		frame.setLayout(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize((int) width/2, (int)(height/1.2));
+		frame.setResizable(false);
+		frame.setJMenuBar(menu);		
+		
+		createMenuBar();
+		
+		loadConsoles();
+
+		buildToolbar();
+
+		loadingScreen.dispose();
+		
+		mainContainer.setBackground(new Color(217, 217, 217));
+		// Reveal the frame
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		worksheet.requestFocus();
+
+	}
+
+	private void createMenuBar() {
+		
 		file = new JMenu("File");
 		open = new JMenuItem("Load Script");
 		save = new JMenuItem("Save Script");
 		exit = new JMenuItem("Exit");
+		
+		menu.setBackground(new Color(217,217,217));
+		menu.add(file);
+		file.add(open);
+		file.add(save);
+		file.add(exit);
 
 		build = new JMenu("Build Tools");
 		buildScript = new JMenuItem("Build Script");
 		libraryPackageLoader = new JMenuItem("Add Networx Packages");
 		javaPackageLoader = new JMenuItem("Add Java Packages");
 		jungPackageLoader = new JMenuItem("Add JUNG2 Packages");
+		
+		menu.add(build);
+		build.add(buildScript);
+		build.add(libraryPackageLoader);
+		build.add(javaPackageLoader);
+		build.add(jungPackageLoader);	
 
 		save.addActionListener(new MenuListener(1));
 		open.addActionListener(new MenuListener(2));
@@ -123,52 +163,31 @@ public class WorkBench {
 		jungPackageLoader.addActionListener(new PropertiesButtonListener(properties, 1));
 		libraryPackageLoader.addActionListener(new PropertiesButtonListener(properties, 2));
 		
-		createFrame();
-	
 	}
-
-	// TODO: Make components dynamic and allow resizing
-	private void createFrame() {
+	
+	private void loadConsoles() {
 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
+		lines = new JTextArea("1");	 		
+		textarea = new TextEditorDocument();
+		worksheet = new JTextPane(textarea);
+		
+		output = new JTextArea();
+		mainScroll = new JScrollPane(worksheet);
+		outputScroll = new JScrollPane(output);		
 		
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
-		// Initialize frame and add the menu items
-		frame.setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize((int) width/2, (int)(height/1.2));
-		frame.setResizable(false);
-		frame.setJMenuBar(menu);
-		
-		menu.setBackground(new Color(217,217,217));
-		menu.add(file);
-		file.add(open);
-		file.add(save);
-		file.add(exit);
-
-		menu.add(build);
-		build.add(buildScript);
-		build.add(libraryPackageLoader);
-		build.add(javaPackageLoader);
-		build.add(jungPackageLoader);
-
-		mainContainer = frame.getContentPane();
-		mainContainer.setBackground(new Color(240, 240, 240));
-
+		Font font = null;
 		// Main font theme
 		try {
 			font = Font.createFont(0, this.getClass().getResourceAsStream("/resources/Trebuchet MS.ttf"));
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (FontFormatException|IOException e) {
 			e.printStackTrace();
 		}
 
 		font = font.deriveFont(Font.PLAIN, 14);
 
+		
 		// Create the script area
 		worksheet.setEditable(true);
 		worksheet.addKeyListener(new KeyStrokeListener());
@@ -201,21 +220,11 @@ public class WorkBench {
 		outputScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
 		outputScroll.setBackground(new Color(217, 217, 217));
 		mainContainer.add(outputScroll);
-
-		buildToolbar();
-
-		loadingScreen.dispose();
 		
-		mainContainer.setBackground(new Color(217, 217, 217));
-		// Reveal the frame
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		worksheet.requestFocus();
-
 	}
 
 	private void buildToolbar() {
-
+	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 
@@ -234,9 +243,11 @@ public class WorkBench {
 		openFile.addActionListener(new OpenButtonListener(worksheet));
 		saveFile.addActionListener(new SaveFileListener(worksheet));
 		compiler.addActionListener(new CompileButtonListener(worksheet, output, properties));
-
+				
+		Image img;
+		
 		try {
-			Image img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
+			img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
 			newFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 
@@ -246,7 +257,7 @@ public class WorkBench {
 		toolbar.add(newFile);
 
 		try {
-			Image img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
+			img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
 			saveFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 
@@ -256,7 +267,7 @@ public class WorkBench {
 		toolbar.add(saveFile);
 
 		try {
-			Image img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
+			img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
 			openFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 
@@ -266,7 +277,7 @@ public class WorkBench {
 		toolbar.add(openFile);
 
 		try {
-			Image img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
+			img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
 			compiler.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 
@@ -274,6 +285,7 @@ public class WorkBench {
 		compiler.setBounds(66, 0, 20, 20);
 		compiler.setToolTipText("Compile Script");
 		toolbar.add(compiler);		
+		
 		mainContainer.add(toolbar);
 
 	}
@@ -293,7 +305,7 @@ public class WorkBench {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent e) {
 			if (listenerType == 1) {
 				saveFile.doClick();
 				textarea.isSaved();
@@ -355,10 +367,12 @@ public class WorkBench {
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
-			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_S){
+			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_S) {
+				key.consume();
 				saveFile.doClick();
 				textarea.isSaved();
-			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_O){
+			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_O) {
+				key.consume();
 				openFile.doClick();
 				textarea.isSaved();
 			}

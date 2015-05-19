@@ -41,15 +41,15 @@ public class OpenButtonListener implements ActionListener {
 				File userScript = fileChooser.getSelectedFile();	
 			
 				FileReader reader = new FileReader(userScript);
-				BufferedReader bw = new BufferedReader(reader);
+				BufferedReader bufferedReader = new BufferedReader(reader);
 				
 				Document doc = worksheet.getStyledDocument();
-				fileText = bw.readLine();
+				fileText = bufferedReader.readLine();
 				while (fileText != null) {
 					doc.insertString(doc.getLength(), fileText + "\r\n", null);
-					fileText = bw.readLine();
+					fileText = bufferedReader.readLine();
 				}
-		        bw.close();
+		        bufferedReader.close();
                 worksheet.requestFocus();				
 			}
 			
