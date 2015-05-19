@@ -30,7 +30,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
 
-import jdk.nashorn.internal.scripts.JO;
 import toolbar.CompileButtonListener;
 import toolbar.OpenButtonListener;
 import toolbar.PropertiesButtonListener;
