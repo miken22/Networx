@@ -34,7 +34,7 @@ public class OpenButtonListener implements ActionListener {
 			fileChooser.addChoosableFileFilter(scriptFilter);
 			fileChooser.setFileFilter(scriptFilter);
 			
-			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
+			if (fileChooser.showOpenDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
 				
 				worksheet.setText("");
 				
