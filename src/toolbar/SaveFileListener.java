@@ -43,8 +43,7 @@ public class SaveFileListener  implements ActionListener {
 	        // add filter
 			fileChooser.setFileFilter(scriptFilter);
 			
-			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
-				
+			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {				
 				File userScript = fileChooser.getSelectedFile();
 				if (userScript.getName().contains(".scrt")) {
 					Writer outputStream = new FileWriter(userScript);
@@ -55,7 +54,6 @@ public class SaveFileListener  implements ActionListener {
 					outputStream.write(theScript);
 					outputStream.close();
 				}
-
 				document.isSaved();
 			}
 

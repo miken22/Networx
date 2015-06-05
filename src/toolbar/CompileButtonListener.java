@@ -37,16 +37,16 @@ public class CompileButtonListener implements ActionListener {
 
 	private String script = "";
 	private boolean buildFailed = false;
-	
+
 	private ArrayList<String> userMethods;
 
 	/* Global set of program files and classes to auto add to command line
 	   once use of custom classes added. */
 	private String programFiles = "UserScript.java";
 	private String programClasses = "UserScript";
-	
+
 	String OS = "";
-	
+
 	/**
 	 * All libraries to be included on the build path using windows file separators
 	 */
@@ -67,15 +67,15 @@ public class CompileButtonListener implements ActionListener {
 		this.buildlog = buildlog;
 		this.properties = properties;
 		userMethods = new ArrayList<>();	
-		
+
 		// Get OS on startup,
 		OS = getOperatingSystem();
-		
+
 		if (OS.indexOf("mac") >= 0) {
 			JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
 			System.exit(-1);			
 		}
-		
+
 	}
 
 	@Override
@@ -86,38 +86,37 @@ public class CompileButtonListener implements ActionListener {
 			buildlog.setText("Nothing to compile!");
 			return;
 		} else {
+			// Clear build log
 			buildlog.setText("");
+			// Get text and copy to the script variable
 			try {
 				script = worksheet.getStyledDocument().getText(0, worksheet.getStyledDocument().getLength());
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
-			buildScript();
-			compileScript();
-		}
-	}
-
-	private void compileScript() {
-
-		try {
-
-			if (OS.startsWith("Windows")) {
-				windowsCompile(programFiles, programClasses);
-			} else if (OS.startsWith("Linux")) {
-				unixCompile(programFiles, programClasses);
+			// Extract code, seperate methods/classes, and compile
+			try {
+				buildScript();
+				compileScript(programFiles, programClasses);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-
-		} catch (Exception e) {
-			String error = e.getMessage();
-			buildlog.append(error);
 		}
-
 	}
 
-	private void unixCompile(String files, String classes) throws Exception {
+	public void compileScript(String files, String classes) throws Exception {
+
+		String libraries = "";
+
+		if (OS.startsWith("Windows")) {
+			libraries = windowsLibraries;
+		} else if (OS.startsWith("Linux")) {
+			libraries = linuxLibraries;
+		}
+
 		// Compile code
 		buildlog.append("Building script...\r\n");
-		runProcess("javac -classpath .:" + linuxLibraries + files);
+		runProcess("javac -classpath .:" + libraries + files);
 
 		if (buildFailed) {
 			buildlog.append("Script could not be compiled.");
@@ -132,41 +131,9 @@ public class CompileButtonListener implements ActionListener {
 			File classFile = new File(userClass + ".class");
 			classFile.deleteOnExit();
 		}
-		
-		// Execute.
-		runProcess("java -classpath .:" + linuxLibraries +  classes);
-
-		buildlog.append("---------------------------------------\r\n");
-		buildlog.append("Process complete");
-
-	}
-
-	private void windowsCompile(String fileName, String className) throws Exception {
-		// Compile code
-		buildlog.append("Building script...\r\n");
-		runProcess("javac -classpath .;" + windowsLibraries + fileName);
-
-		if (buildFailed) {
-			buildlog.append("Script could not be compiled.");
-			return;
-		}
-
-		buildlog.append("Complete.\r\n");
-		buildlog.append("---------------------------------------\r\n");
-		
-		String[] classes = programClasses.split(" ");
-		for (String userClass : classes) {
-			File classFile = new File(userClass + ".class");
-			classFile.deleteOnExit();
-			try {
-				Files.setAttribute(classFile.toPath(), "dos:hidden", true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
 		// Execute.
-		runProcess("java -classpath .;" + windowsLibraries +  className);
+		runProcess("java -classpath .:" + libraries +  classes);
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");
@@ -194,11 +161,14 @@ public class CompileButtonListener implements ActionListener {
 		InputStream errorStream = pro.getErrorStream();
 		BufferedReader errorLines = new BufferedReader(new InputStreamReader(errorStream));
 		String errorMessage = errorLines.readLine();
+
+		//		buildlog.setText("");
 		if (errorMessage != null) {
-			buildFailed = true;	
+			buildFailed = true;
 			buildlog.append(errorMessage + "\n");
 			pro.waitFor();
 			return;
+			//			
 		}
 		buildFailed = false;
 
@@ -211,7 +181,7 @@ public class CompileButtonListener implements ActionListener {
 
 			File userFile = new File("UserScript.java");
 			userFile.deleteOnExit();
-			
+
 			Writer outputStream = new FileWriter(userFile);
 
 			// Import needed files from JARs
@@ -226,28 +196,28 @@ public class CompileButtonListener implements ActionListener {
 			outputStream.write("	public static void main(String[] args) { \r\n");
 			// Write user code for main method and close main method bracket
 			outputStream.write("		" + script + "\r\n	} \r\n");
-			
+
 			// Add supporting user methods
 			insertUserMethods(outputStream);
-			
+
 			// Close class bracket
 			outputStream.write("\r\n}");
 			outputStream.close();
-			
+
 			// Keep generated files hidden
 			try {
 				Files.setAttribute(userFile.toPath(), "dos:hidden", true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void addPackageImports(Writer outputStream) throws IOException {
@@ -263,26 +233,26 @@ public class CompileButtonListener implements ActionListener {
 
 		this.script = theScript;		
 		int position = script.indexOf("public");
-		
+
 		if (position != -1) {
 			this.script = extractUserMethod(script, position);		// Global copy of trimmed String
 			findUserMethods(script);	// Continue to search for more methods
 		}
-		
+
 		position = script.indexOf("private");
 		if (position != -1) {
 			this.script = extractUserMethod(script, position);
 			findUserMethods(script);
 		}
-		
+
 		position = script.indexOf("protected");
 		if (position != -1) {
 			this.script = extractUserMethod(script, position);
 			findUserMethods(script);
 		}
-		
+
 	}
-	
+
 	private String extractUserMethod(String theScript, int position) {
 
 		// Store starting index of method.
@@ -290,33 +260,33 @@ public class CompileButtonListener implements ActionListener {
 		int braceCounter = 0;
 		// Find first occurrence of open brace
 		position = theScript.indexOf("{", position);
-		
+
 		// Update the counter, shift to next index in string
 		braceCounter++;
 		position++;
-				
+
 		while (braceCounter > 0) {
-			
+
 			for (int i = position; i < theScript.length(); i++) {
 				char c = theScript.charAt(i);
-			
+
 				if (c == '{') {
 					braceCounter++;
 				} else if (c == '}') {
 					braceCounter--;
 				}					
-				
+
 				if (braceCounter == 0) {
 					position = i;
 					break;
 				}
 			}
 		}
-		
+
 		position++;	// Shift to next index in String (if it exists)
-		
+
 		userMethods.add(theScript.substring(startLocation, position));
-		
+
 		String remainingCode = "";
 		// Store remaining code (if any)
 		try {
@@ -327,7 +297,7 @@ public class CompileButtonListener implements ActionListener {
 			theScript += "\r\n" + remainingCode;
 			return theScript;
 		}
-		
+
 		theScript = theScript.substring(0, startLocation);
 		theScript += "\r\n" + remainingCode;
 		// Otherwise more code to examine.
@@ -335,25 +305,25 @@ public class CompileButtonListener implements ActionListener {
 	}
 
 	private void insertUserMethods(Writer outputStream) throws IOException {
-	
+
 		for (String userMethod : userMethods) {
-			
+
 			if (userMethod.contains("class")) {
 				generateUserClass(userMethod);
 				continue;
 			}
-			
+
 			outputStream.write(userMethod + "\r\n");
 		}
-		
+
 	}
 
 	private void generateUserClass(String userClass) {
 
 		String userClassName = "";
-		
+
 		String[] classTextByWords = userClass.split(" ");
-		
+
 		// Find class name by splitting the text on whitespaces, if the third word
 		// is 'static' then the class name is the 4th word (ie public static class ExampleClass {}) 
 		if (classTextByWords[2].equalsIgnoreCase("static")) {
@@ -361,12 +331,12 @@ public class CompileButtonListener implements ActionListener {
 		} else {
 			userClassName = classTextByWords[2]; // class name is third word in declaration
 		}
-		
+
 		try {
 
 			File userFile = new File(userClassName + ".java");
 			userFile.deleteOnExit();	
-			
+
 			Writer outputStream = new FileWriter(userFile);
 
 			// Import needed files from JARs, will be same as what is imported in main method,
@@ -376,7 +346,7 @@ public class CompileButtonListener implements ActionListener {
 			// User class and open user class bracket
 			outputStream.write(userClass);
 			outputStream.close();
-			
+
 			programFiles += " " + userClassName + ".java";
 			programClasses += " "  + userClassName;
 
@@ -385,6 +355,6 @@ public class CompileButtonListener implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}	
 }

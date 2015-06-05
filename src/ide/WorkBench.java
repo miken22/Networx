@@ -114,6 +114,7 @@ public class WorkBench {
 		frame.setResizable(false);
 		frame.setJMenuBar(menu);		
 		
+		// Load all components for the workbench
 		createMenuBar();
 		
 		loadConsoles();
