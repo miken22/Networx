@@ -346,6 +346,8 @@ public class WorkBench {
 		@Override
 		public void actionPerformed(ActionEvent click) {
 			worksheet.setText("");
+			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
+			saveFile.addActionListener(new SaveFileListener(worksheet));
 		}
 	}
 

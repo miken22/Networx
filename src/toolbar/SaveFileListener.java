@@ -18,33 +18,50 @@ public class SaveFileListener  implements ActionListener {
 
 	private JTextPane worksheet;
 	private TextEditorDocument document;
-	
+	private String filePath = "";
+
 	public SaveFileListener(JTextPane worksheet) {
 		this.worksheet = worksheet;
 		this.document = (TextEditorDocument) worksheet.getDocument();
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		
+
 		String theScript = "";
 		try {
 			theScript = worksheet.getStyledDocument().getText(0, worksheet.getStyledDocument().getLength());
 		} catch (BadLocationException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		try {
 
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			if (filePath.equals("")){
+				JFileChooser fileChooser = new JFileChooser();
 
-	        FileNameExtensionFilter scriptFilter = new FileNameExtensionFilter("Networx Script files (*.scrt)", "scrt");
-	        // add filter
-			fileChooser.setFileFilter(scriptFilter);
-			
-			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {				
-				File userScript = fileChooser.getSelectedFile();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+				FileNameExtensionFilter scriptFilter = new FileNameExtensionFilter("Networx Script files (*.scrt)", "scrt");
+				// add filter
+				fileChooser.setFileFilter(scriptFilter);
+
+				if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {				
+					File userScript = fileChooser.getSelectedFile();
+					filePath = userScript.getAbsolutePath();
+					if (userScript.getName().contains(".scrt")) {
+						Writer outputStream = new FileWriter(userScript);
+						outputStream.write(theScript);
+						outputStream.close();
+					} else { // Otherwise we need to add correct fileExtention
+						Writer outputStream = new FileWriter(userScript + ".scrt");
+						outputStream.write(theScript);
+						outputStream.close();
+					}
+					document.isSaved();
+				}
+			} else {
+				File userScript = new File(filePath);
 				if (userScript.getName().contains(".scrt")) {
 					Writer outputStream = new FileWriter(userScript);
 					outputStream.write(theScript);
@@ -61,7 +78,6 @@ public class SaveFileListener  implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
 }
