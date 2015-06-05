@@ -1,5 +1,6 @@
 package toolbar;
 
+import ide.Handler;
 import ide.Properties;
 
 import java.awt.event.ActionEvent;
@@ -162,13 +163,10 @@ public class CompileButtonListener implements ActionListener {
 		BufferedReader errorLines = new BufferedReader(new InputStreamReader(errorStream));
 		String errorMessage = errorLines.readLine();
 
-		//		buildlog.setText("");
 		if (errorMessage != null) {
+			Handler.handleErrorMessage(errorMessage, pro, buildlog);
 			buildFailed = true;
-			buildlog.append(errorMessage + "\n");
-			pro.waitFor();
 			return;
-			//			
 		}
 		buildFailed = false;
 
@@ -305,17 +303,13 @@ public class CompileButtonListener implements ActionListener {
 	}
 
 	private void insertUserMethods(Writer outputStream) throws IOException {
-
 		for (String userMethod : userMethods) {
-
 			if (userMethod.contains("class")) {
 				generateUserClass(userMethod);
 				continue;
 			}
-
 			outputStream.write(userMethod + "\r\n");
 		}
-
 	}
 
 	private void generateUserClass(String userClass) {
@@ -323,6 +317,11 @@ public class CompileButtonListener implements ActionListener {
 		String userClassName = "";
 
 		String[] classTextByWords = userClass.split(" ");
+		
+		// This is a hack, probably should loop below until "class" is found,
+		// then take the String from the next index as the class name. However,
+		// there shouldn't be any abstract/final classes or interfaces/enums
+		// as that's not what the system is meant for.
 
 		// Find class name by splitting the text on whitespaces, if the third word
 		// is 'static' then the class name is the 4th word (ie public static class ExampleClass {}) 
