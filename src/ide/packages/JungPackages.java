@@ -1,4 +1,4 @@
-package ide;
+package ide.packages;
 
 public interface JungPackages {
 

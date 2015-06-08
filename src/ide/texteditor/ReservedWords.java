@@ -1,4 +1,4 @@
-package ide;
+package ide.texteditor;
 
 public interface ReservedWords {
 

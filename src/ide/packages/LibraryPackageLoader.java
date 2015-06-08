@@ -1,4 +1,6 @@
-package ide;
+package ide.packages;
+
+import ide.Properties;
 
 import java.awt.Color;
 import java.awt.Container;

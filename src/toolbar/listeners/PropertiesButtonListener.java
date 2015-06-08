@@ -1,10 +1,10 @@
 package toolbar.listeners;
 
-import ide.JavaPackageLoader;
-import ide.JungPackageLoader;
-import ide.LibraryPackageLoader;
-import ide.PackageLoader;
 import ide.Properties;
+import ide.packages.JavaPackageLoader;
+import ide.packages.JungPackageLoader;
+import ide.packages.LibraryPackageLoader;
+import ide.packages.PackageLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
