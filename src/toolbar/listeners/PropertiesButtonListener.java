@@ -1,4 +1,4 @@
-package toolbar;
+package toolbar.listeners;
 
 import ide.JavaPackageLoader;
 import ide.JungPackageLoader;

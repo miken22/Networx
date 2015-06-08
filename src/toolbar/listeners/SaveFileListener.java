@@ -1,6 +1,6 @@
-package toolbar;
+package toolbar.listeners;
 
-import ide.TextEditorDocument;
+import ide.texteditor.TextEditorDocument;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

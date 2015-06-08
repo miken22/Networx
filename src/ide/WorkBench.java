@@ -1,5 +1,9 @@
 package ide;
 
+import ide.texteditor.LineListener;
+import ide.texteditor.TextEditorDocument;
+import ide.texteditor.TextEditorMouseListener;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -30,10 +34,13 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
 
-import toolbar.CompileButtonListener;
-import toolbar.OpenButtonListener;
-import toolbar.PropertiesButtonListener;
-import toolbar.SaveFileListener;
+import toolbar.CompileButton;
+import toolbar.OpenButton;
+import toolbar.SaveButton;
+import toolbar.listeners.CompileButtonListener;
+import toolbar.listeners.OpenButtonListener;
+import toolbar.listeners.PropertiesButtonListener;
+import toolbar.listeners.SaveFileListener;
 
 public class WorkBench {
 
@@ -50,9 +57,9 @@ public class WorkBench {
 
 	private JPanel toolbar;
 	private JButton newFile;
-	private JButton compiler;
-	private JButton saveFile;
-	private JButton openFile;
+	private CompileButton compiler;
+	private SaveButton saveFile;
+	private OpenButton openFile;
 
 	// Custom style for editor environment
 	private TextEditorDocument textarea;
@@ -74,8 +81,7 @@ public class WorkBench {
 	 * Main method to call to load the application frame
 	 */
 	public void loadWorkbench() {		
-		launchSplashPane();
-		properties = new Properties();		
+		launchSplashPane();	
 		createFrame();
 	}
 
@@ -107,6 +113,8 @@ public class WorkBench {
 		
 		frame = new JFrame("Networx Graph Editor");
 		mainContainer = frame.getContentPane();
+	
+		properties = new Properties();	
 		
 		menu = new JMenuBar();
 		
@@ -208,7 +216,8 @@ public class WorkBench {
 		lines.setEditable(false);
 		lines.setFont(font);
 		worksheet.getDocument().addDocumentListener(new LineListener(worksheet, lines));
-
+		worksheet.addMouseListener(new TextEditorMouseListener());
+		
 		mainScroll.setRowHeaderView(lines);
 		mainContainer.add(mainScroll);
 
@@ -233,9 +242,9 @@ public class WorkBench {
 
 		toolbar = new JPanel();
 		newFile = new JButton();
-		openFile = new JButton();
-		saveFile = new JButton();
-		compiler = new JButton();
+		openFile = new OpenButton();
+		saveFile = new SaveButton();
+		compiler = new CompileButton();
 
 		toolbar.setBounds(0, 0, (int)width, 25);
 		toolbar.setLayout(null);
@@ -319,6 +328,7 @@ public class WorkBench {
 								
 				int dialogButton;
 				int dialogResult = JOptionPane.NO_OPTION;
+				
 				if (textarea.documentHasChanged()) {
 					dialogButton = JOptionPane.YES_NO_OPTION;
 					dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning",dialogButton);
@@ -327,9 +337,12 @@ public class WorkBench {
 						textarea.isSaved();
 					}
 				}
+				// If the document has not changed, and the user does not click yes then the app
+				// can exit
 				if (!textarea.documentHasChanged() || dialogResult == JOptionPane.NO_OPTION) {
 					System.exit(0);
 				}
+			
 			} else if (listenerType == 4) {
 				compiler.doClick();
 			}

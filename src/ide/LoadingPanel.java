@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class LoadingPanel extends JPanel {
+public final class LoadingPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private	BufferedImage image;
@@ -37,6 +37,7 @@ public class LoadingPanel extends JPanel {
 		
 		add(header);
 		add(jLabel);
+		repaint();
 		
 	}
 }

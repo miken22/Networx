@@ -1,4 +1,4 @@
-package ide;
+package ide.texteditor;
 
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -15,14 +15,14 @@ import javax.swing.event.DocumentListener;
 public class LineListener implements DocumentListener{
 
 	private JTextPane worksheet;
-	private JTextArea lines;
+	private JTextArea lineCounter;
 	
-	public LineListener(JTextPane worksheet, JTextArea lines) {
+	public LineListener(JTextPane worksheet, JTextArea lineCounter) {
 		this.worksheet = worksheet;
-		this.lines = lines;
+		this.lineCounter = lineCounter;
 	}
 	
-	public String getText() {
+	public String updateLineNumbers() {
 		String text = "";
 		String document = worksheet.getText();
 		String[] documentLines = document.split("\n");
@@ -33,14 +33,14 @@ public class LineListener implements DocumentListener{
 	}
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		lines.setText(getText());
+		lineCounter.setText(updateLineNumbers());
 	}
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		lines.setText(getText());
+		lineCounter.setText(updateLineNumbers());
 	}
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		lines.setText(getText());
+		lineCounter.setText(updateLineNumbers());
 	}	
 }

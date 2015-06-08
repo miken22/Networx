@@ -1,4 +1,6 @@
-package ide;
+package ide.texteditor;
+
+import ide.Properties;
 
 import java.io.File;
 import java.io.FileNotFoundException;

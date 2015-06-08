@@ -1,4 +1,7 @@
-package ide;
+package ide.texteditor;
+
+import ide.KeyWords;
+import ide.ReservedWords;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -32,21 +35,10 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		comments = new SimpleAttributeSet();
 
 		StyleConstants.setForeground(reservedWords, Color.RED);
-		StyleConstants.setBold(reservedWords, true);
-
 		StyleConstants.setForeground(keyWords, new Color(255,69,0));
-		StyleConstants.setBold(keyWords, true);
-
 		StyleConstants.setForeground(defaultColour, Color.BLACK);
-		StyleConstants.setBold(defaultColour, false);
-
 		StyleConstants.setForeground(quotations, Color.BLUE);
-		StyleConstants.setBold(quotations, false);
-		StyleConstants.setItalic(quotations, false);
-
 		StyleConstants.setForeground(comments, Color.GREEN);
-		StyleConstants.setBold(comments, false);
-//		StyleConstants.setItalic(comments, true); 
 
 		hasChanged = false;
 
@@ -56,27 +48,17 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		super.insertString(offset, str, a);
 
 		hasChanged = true;
-//		boolean inQuotes = false;
 
 		String text = getText(0, getLength());
 		int before = findLastNonWordChar(text, offset);
-		if (before < 0) before = 0;
+		if (before < 0) {
+			before = 0;
+		}
 		int after = findFirstNonWordChar(text, offset + str.length());
 		int wordL = before;
 		int wordR = before;
 
 		while (wordR <= after) {
-			// TODO: Fix quote colouring to handle full sentence 
-//			if (inQuotes) {
-//				if (text.substring(wordL, wordR).matches("[.*\"]")) {
-//					setCharacterAttributes(wordL, wordR - wordL, quotations, false);
-//					inQuotes = false;
-//				}
-//				setCharacterAttributes(wordL, wordR - wordL, quotations, false);
-//				wordL = wordR;
-//				wordR++;
-//				continue;
-//			}
 			
 			if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
 				if (text.substring(wordL, wordR).matches("(\\W)*(" + ReservedWords.reservedWords + ")")) {
@@ -92,26 +74,54 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					setCharacterAttributes(wordL, wordR - wordL, keyWords, false);                	    	            	
 				} else {
 					setCharacterAttributes(wordL, wordR - wordL, defaultColour, false);
-				}           
-//				if (text.substring(wordL, wordR).contains("\"")) {		
-//					setCharacterAttributes(wordL, wordR - wordL, quotations, false);
-//					inQuotes = true;
-//				}
+				}
 				wordL = wordR;
 			}
 			wordR++;
 		}       
+		colourQuotes();
 		colourComments();
 	}
+	
+	private void colourQuotes() {
+		String text = "";
+		try {
+			text = getText(0, this.getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 
-	//TODO: Fix comment colouring
+		StringReader strReader = new StringReader(text);
+		BufferedReader reader = new BufferedReader(strReader);
+
+		// Iterate through each line, find those that contain "//" to color.
+		String line = null;
+		try {
+			line = reader.readLine();
+			while (line != null) {
+				if (line.contains("\"")) {
+					int offset = line.indexOf("\"");
+					int endOfQuote = line.lastIndexOf("\"");
+					// Otherwise only colour from the // to the end of the line.
+					// Will not colour until the quote has been ended
+					// TODO: Support multi-line quotes
+					setCharacterAttributes(offset, endOfQuote - offset + 1, quotations, false);
+
+				}
+				line = reader.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void colourComments() {
 
 		String text = "";
 		try {
 			text = getText(0, this.getLength());
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 
 		StringReader strReader = new StringReader(text);
@@ -128,7 +138,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					setCharacterAttributes(position, length, comments, false);     
 				} else if (line.contains("//")) {
 					int offset = line.indexOf("//");
-					setCharacterAttributes(offset, line.length(), comments, false);
+					// Otherwise only colour from the // to the end of the line
+					setCharacterAttributes(offset, line.length() - offset, comments, false);
 
 				}
 				position += line.length()+1;

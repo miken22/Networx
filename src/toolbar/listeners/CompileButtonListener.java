@@ -1,8 +1,8 @@
-package toolbar;
+package toolbar.listeners;
 
-import ide.ClassHandler;
-import ide.MessageHandler;
 import ide.Properties;
+import ide.texteditor.ClassHandler;
+import ide.texteditor.MessageHandler;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
