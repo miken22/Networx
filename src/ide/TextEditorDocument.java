@@ -24,6 +24,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 	public TextEditorDocument() {
 
+		// Initialize all the different styles for text highlighting.
 		reservedWords = new SimpleAttributeSet();
 		keyWords = new SimpleAttributeSet();
 		defaultColour = new SimpleAttributeSet();
@@ -45,7 +46,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 		StyleConstants.setForeground(comments, Color.GREEN);
 		StyleConstants.setBold(comments, false);
-		StyleConstants.setItalic(comments, true); 
+//		StyleConstants.setItalic(comments, true); 
 
 		hasChanged = false;
 
@@ -55,6 +56,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		super.insertString(offset, str, a);
 
 		hasChanged = true;
+//		boolean inQuotes = false;
 
 		String text = getText(0, getLength());
 		int before = findLastNonWordChar(text, offset);
@@ -64,13 +66,24 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		int wordR = before;
 
 		while (wordR <= after) {
+			// TODO: Fix quote colouring to handle full sentence 
+//			if (inQuotes) {
+//				if (text.substring(wordL, wordR).matches("[.*\"]")) {
+//					setCharacterAttributes(wordL, wordR - wordL, quotations, false);
+//					inQuotes = false;
+//				}
+//				setCharacterAttributes(wordL, wordR - wordL, quotations, false);
+//				wordL = wordR;
+//				wordR++;
+//				continue;
+//			}
+			
 			if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
 				if (text.substring(wordL, wordR).matches("(\\W)*(" + ReservedWords.reservedWords + ")")) {
 					// Only colour the word itself, not brackets, other words, etc
 					while (!String.valueOf(text.charAt(wordL)).matches("[a-zA-Z]")) {
 						wordL++;
 					}
-
 					setCharacterAttributes(wordL, wordR - wordL, reservedWords, false);
 				} else if (text.substring(wordL, wordR).matches("(\\W)*(" + KeyWords.keyWords + ")")) {
 					while (!String.valueOf(text.charAt(wordL)).matches("[a-zA-Z]")) {
@@ -80,20 +93,18 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				} else {
 					setCharacterAttributes(wordL, wordR - wordL, defaultColour, false);
 				}           
-				if (text.substring(wordL, wordR).contains("\"")) {		
-					setCharacterAttributes(wordL, wordR - wordL, quotations, false);		
-				}
+//				if (text.substring(wordL, wordR).contains("\"")) {		
+//					setCharacterAttributes(wordL, wordR - wordL, quotations, false);
+//					inQuotes = true;
+//				}
 				wordL = wordR;
 			}
 			wordR++;
 		}       
-
 		colourComments();
-
 	}
 
 	//TODO: Fix comment colouring
-
 	private void colourComments() {
 
 		String text = "";

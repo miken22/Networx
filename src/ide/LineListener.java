@@ -5,6 +5,13 @@ import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * Simple line numbering listener. Has an issue when a line is edited
+ * after scrolling, needs to be looked into further
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class LineListener implements DocumentListener{
 
 	private JTextPane worksheet;

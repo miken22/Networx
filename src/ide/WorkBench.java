@@ -74,7 +74,16 @@ public class WorkBench {
 	 * Main method to call to load the application frame
 	 */
 	public void loadWorkbench() {		
-		
+		launchSplashPane();
+		properties = new Properties();		
+		createFrame();
+	}
+
+	/**
+	 * Loading screen. Not sure why this breaks using the
+	 * current call to load the workbench.
+	 */
+	private void launchSplashPane() {
 		loadingScreen = new JFrame();
 		loadingScreen.setUndecorated(true);
 		LoadingPanel lp = new LoadingPanel();
@@ -82,27 +91,25 @@ public class WorkBench {
 		Container loadC = loadingScreen.getContentPane();
 		loadC.add(lp);
 
-//		loadingScreen.repaint();
+		loadingScreen.repaint();
 		loadingScreen.setLayout(null);
 		loadingScreen.setLocationRelativeTo(frame);
 		loadingScreen.setResizable(false);
 		loadingScreen.setSize(new Dimension(360, 317));
 		loadingScreen.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		loadingScreen.setVisible(true);
-		
-		properties = new Properties();
+		loadingScreen.setVisible(true);		
+	}
+
+	/**
+	 * Initialize the main frame, set sizes and load all components
+	 */
+	private void createFrame() {
 		
 		frame = new JFrame("Networx Graph Editor");
 		mainContainer = frame.getContentPane();
 		
 		menu = new JMenuBar();
 		
-		createFrame();
-	
-	}
-
-	private void createFrame() {
-
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
@@ -115,10 +122,8 @@ public class WorkBench {
 		frame.setJMenuBar(menu);		
 		
 		// Load all components for the workbench
-		createMenuBar();
-		
+		createMenuBar();	
 		loadConsoles();
-
 		buildToolbar();
 
 		loadingScreen.dispose();
@@ -187,7 +192,6 @@ public class WorkBench {
 		}
 
 		font = font.deriveFont(Font.PLAIN, 14);
-
 		
 		// Create the script area
 		worksheet.setEditable(true);
@@ -203,10 +207,8 @@ public class WorkBench {
 		lines.setBackground(Color.LIGHT_GRAY);
 		lines.setEditable(false);
 		lines.setFont(font);
- 
 		worksheet.getDocument().addDocumentListener(new LineListener(worksheet, lines));
- 
-		mainScroll.getViewport().add(worksheet);
+
 		mainScroll.setRowHeaderView(lines);
 		mainContainer.add(mainScroll);
 
@@ -314,8 +316,7 @@ public class WorkBench {
 				openFile.doClick();
 				textarea.isSaved();
 			} else if (listenerType == 3) {
-				
-				
+								
 				int dialogButton;
 				int dialogResult = JOptionPane.NO_OPTION;
 				if (textarea.documentHasChanged()) {

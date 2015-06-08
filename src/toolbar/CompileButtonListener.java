@@ -1,6 +1,7 @@
 package toolbar;
 
-import ide.Handler;
+import ide.ClassHandler;
+import ide.MessageHandler;
 import ide.Properties;
 
 import java.awt.event.ActionEvent;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -43,22 +43,21 @@ public class CompileButtonListener implements ActionListener {
 
 	/* Global set of program files and classes to auto add to command line
 	   once use of custom classes added. */
-	private String programFiles = "UserScript.java";
+	private String programFiles = "UserFiles/UserScript.java";
 	private String programClasses = "UserScript";
-
-	String OS = "";
+	private String OS = "";
 
 	/**
 	 * All libraries to be included on the build path using windows file separators
 	 */
-	private final String windowsLibraries = "libraries/networxlib.jar;libraries/collections-generic-4.01.jar;libraries/colt-1.2.0.jar;libraries/concurrent-1.3.4.jar;libraries/j3d-core-1.3.1.jar"
+	private final String windowsLibraries = "UserFiles/;libraries/networxlib.jar;libraries/collections-generic-4.01.jar;libraries/colt-1.2.0.jar;libraries/concurrent-1.3.4.jar;libraries/j3d-core-1.3.1.jar"
 			+ ";libraries/jung-algorithms-2.0.1.jar;libraries/jung-api-2.0.1.jar;libraries/jung-graph-impl-2.0.1.jar;libraries/jung-io.2.0.1.jar;libraries/jung-jai-2.0.1.jar"
 			+ ";libraries/jung-visualization-2.0.1.jar;libraries/stax-api-1.0.1.jar;libraries/vecmath-1.3.1.jar;libraries/wstx-asl-3.2.6.jar ";
 
 	/**
 	 * All libraries to be included on the build path using Unix file separators
 	 */
-	private final String linuxLibraries = "libraries/networxlib.jar:libraries/collections-generic-4.01.jar:libraries/colt-1.2.0.jar:libraries/concurrent-1.3.4.jar:libraries/j3d-core-1.3.1.jar"
+	private final String linuxLibraries = "UserFiles/:libraries/networxlib.jar:libraries/collections-generic-4.01.jar:libraries/colt-1.2.0.jar:libraries/concurrent-1.3.4.jar:libraries/j3d-core-1.3.1.jar"
 			+ ":libraries/jung-algorithms-2.0.1.jar:libraries/jung-api-2.0.1.jar:libraries/jung-graph-impl-2.0.1.jar:libraries/jung-io.2.0.1.jar:libraries/jung-jai-2.0.1.jar"
 			+ ":libraries/jung-visualization-2.0.1.jar:libraries/stax-api-1.0.1.jar:libraries/vecmath-1.3.1.jar:libraries/wstx-asl-3.2.6.jar ";
 
@@ -76,7 +75,6 @@ public class CompileButtonListener implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
 			System.exit(-1);			
 		}
-
 	}
 
 	@Override
@@ -95,7 +93,7 @@ public class CompileButtonListener implements ActionListener {
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
-			// Extract code, seperate methods/classes, and compile
+			// Extract code, separate methods/classes, and compile
 			try {
 				buildScript();
 				compileScript(programFiles, programClasses);
@@ -117,7 +115,7 @@ public class CompileButtonListener implements ActionListener {
 
 		// Compile code
 		buildlog.append("Building script...\r\n");
-		runProcess("javac -classpath .:" + libraries + files);
+		runProcess("javac -cp .:" + libraries + files);
 
 		if (buildFailed) {
 			buildlog.append("Script could not be compiled.");
@@ -127,14 +125,17 @@ public class CompileButtonListener implements ActionListener {
 		buildlog.append("Complete.\r\n");
 		buildlog.append("---------------------------------------\r\n");
 
+		// Iterate over class files, set to remove on exit.
 		String[] userClasses = programClasses.split(" ");
+		File userFolder = new File("UserFiles");
 		for (String userClass : userClasses) {
-			File classFile = new File(userClass + ".class");
+			File classFile = new File(userFolder, userClass + ".class");
 			classFile.deleteOnExit();
 		}
+		userFolder.deleteOnExit();
 
 		// Execute.
-		runProcess("java -classpath .:" + libraries +  classes);
+		runProcess("java -cp .:" + libraries +  classes);
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");
@@ -145,39 +146,35 @@ public class CompileButtonListener implements ActionListener {
 		return System.getProperty("os.name");
 	}
 
-	// Write any file outputs
-	private void printLines(InputStream ins) throws Exception {
-		String line = null;
-		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
-		while ((line = in.readLine()) != null) {
-			buildlog.append(line + "\n");
-		}
-	}
-
 	// Generates the process and executes it
 	private void runProcess(String command) throws Exception {
-		Process pro = Runtime.getRuntime().exec(command);
-		printLines(pro.getInputStream());
 
-		InputStream errorStream = pro.getErrorStream();
+		Process runtimeProcess = Runtime.getRuntime().exec(command);
+		MessageHandler.handleProgramMessaage(runtimeProcess.getInputStream(), buildlog);
+
+		InputStream errorStream = runtimeProcess.getErrorStream();
 		BufferedReader errorLines = new BufferedReader(new InputStreamReader(errorStream));
 		String errorMessage = errorLines.readLine();
 
 		if (errorMessage != null) {
-			Handler.handleErrorMessage(errorMessage, pro, buildlog);
+			MessageHandler.handleErrorMessage(errorMessage, runtimeProcess, buildlog);
 			buildFailed = true;
 			return;
 		}
 		buildFailed = false;
-
-		pro.waitFor();
+		runtimeProcess.waitFor();
 	}
 
 	// Uses the file chooser to save the file
 	private void buildScript() {
+
+		File userFolder = new File("UserFiles");
+		userFolder.mkdir();
+		userFolder.deleteOnExit();
+		
 		try {
 
-			File userFile = new File("UserScript.java");
+			File userFile = new File(userFolder, "UserScript.java");
 			userFile.deleteOnExit();
 
 			Writer outputStream = new FileWriter(userFile);
@@ -201,31 +198,19 @@ public class CompileButtonListener implements ActionListener {
 			// Close class bracket
 			outputStream.write("\r\n}");
 			outputStream.close();
-
-			// Keep generated files hidden
-			try {
-				Files.setAttribute(userFile.toPath(), "dos:hidden", true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void addPackageImports(Writer outputStream) throws IOException {
-
 		for (String packageToImport : properties.getPackagesToImport()) {
 			outputStream.write("import " + packageToImport + ".*;\r\n");
 		}
-
 	}
-
 
 	private void findUserMethods(String theScript) {
 
@@ -303,57 +288,15 @@ public class CompileButtonListener implements ActionListener {
 	}
 
 	private void insertUserMethods(Writer outputStream) throws IOException {
+		
+		ClassHandler classWriter = new ClassHandler(properties, programFiles, programClasses);
+		
 		for (String userMethod : userMethods) {
 			if (userMethod.contains("class")) {
-				generateUserClass(userMethod);
+				classWriter.generateUserClass(userMethod);
 				continue;
 			}
 			outputStream.write(userMethod + "\r\n");
 		}
 	}
-
-	private void generateUserClass(String userClass) {
-
-		String userClassName = "";
-
-		String[] classTextByWords = userClass.split(" ");
-		
-		// This is a hack, probably should loop below until "class" is found,
-		// then take the String from the next index as the class name. However,
-		// there shouldn't be any abstract/final classes or interfaces/enums
-		// as that's not what the system is meant for.
-
-		// Find class name by splitting the text on whitespaces, if the third word
-		// is 'static' then the class name is the 4th word (ie public static class ExampleClass {}) 
-		if (classTextByWords[2].equalsIgnoreCase("static")) {
-			userClassName = classTextByWords[3];
-		} else {
-			userClassName = classTextByWords[2]; // class name is third word in declaration
-		}
-
-		try {
-
-			File userFile = new File(userClassName + ".java");
-			userFile.deleteOnExit();	
-
-			Writer outputStream = new FileWriter(userFile);
-
-			// Import needed files from JARs, will be same as what is imported in main method,
-			// may need a better way to handle this as complexity grows.
-			addPackageImports(outputStream);
-
-			// User class and open user class bracket
-			outputStream.write(userClass);
-			outputStream.close();
-
-			programFiles += " " + userClassName + ".java";
-			programClasses += " "  + userClassName;
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}	
 }
