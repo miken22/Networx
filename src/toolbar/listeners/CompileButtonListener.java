@@ -1,8 +1,9 @@
 package toolbar.listeners;
 
+import ide.MessageHandler;
 import ide.Properties;
 import ide.texteditor.ClassHandler;
-import ide.texteditor.MessageHandler;
+import ide.texteditor.UserDefinitionHandler;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -103,6 +105,13 @@ public class CompileButtonListener implements ActionListener {
 		}
 	}
 
+	/**
+	 *  Calls files necessary to write/compile user classes
+	 * 
+	 * @param files - List of files to compile
+	 * @param classes - List of classes for execution
+	 * @throws Exception - Any possible error to arise from compiling/execution
+	 */
 	public void compileScript(String files, String classes) throws Exception {
 
 		String libraries = "";
@@ -142,10 +151,6 @@ public class CompileButtonListener implements ActionListener {
 
 	}
 
-	private String getOperatingSystem() {
-		return System.getProperty("os.name");
-	}
-
 	// Generates the process and executes it
 	private void runProcess(String command) throws Exception {
 
@@ -181,9 +186,13 @@ public class CompileButtonListener implements ActionListener {
 
 			// Import needed files from JARs
 			addPackageImports(outputStream);
-
 			userMethods.clear();
-			findUserMethods(script);
+			UserDefinitionHandler findUserDefinitions = new UserDefinitionHandler();
+			// Get all user declared methods and classes
+			userMethods = findUserDefinitions.findUserDefinitions(script);
+			// Get the script with all user defined methods/classes
+			// removed
+			script = findUserDefinitions.getCleanedScript();
 
 			// User class and open user class bracket
 			outputStream.write("public class UserScript { \r\n");
@@ -212,80 +221,7 @@ public class CompileButtonListener implements ActionListener {
 		}
 	}
 
-	private void findUserMethods(String theScript) {
-
-		this.script = theScript;		
-		int position = script.indexOf("public");
-
-		if (position != -1) {
-			this.script = extractUserMethod(script, position);		// Global copy of trimmed String
-			findUserMethods(script);	// Continue to search for more methods
-		}
-
-		position = script.indexOf("private");
-		if (position != -1) {
-			this.script = extractUserMethod(script, position);
-			findUserMethods(script);
-		}
-
-		position = script.indexOf("protected");
-		if (position != -1) {
-			this.script = extractUserMethod(script, position);
-			findUserMethods(script);
-		}
-
-	}
-
-	private String extractUserMethod(String theScript, int position) {
-
-		// Store starting index of method.
-		int startLocation = position;
-		int braceCounter = 0;
-		// Find first occurrence of open brace
-		position = theScript.indexOf("{", position);
-
-		// Update the counter, shift to next index in string
-		braceCounter++;
-		position++;
-
-		while (braceCounter > 0) {
-
-			for (int i = position; i < theScript.length(); i++) {
-				char c = theScript.charAt(i);
-
-				if (c == '{') {
-					braceCounter++;
-				} else if (c == '}') {
-					braceCounter--;
-				}					
-
-				if (braceCounter == 0) {
-					position = i;
-					break;
-				}
-			}
-		}
-
-		position++;	// Shift to next index in String (if it exists)
-
-		userMethods.add(theScript.substring(startLocation, position));
-
-		String remainingCode = "";
-		// Store remaining code (if any)
-		try {
-			remainingCode = theScript.substring(position);
-		} catch (IndexOutOfBoundsException e) {
-			// Means we are ok, reached the end of the script
-			theScript = theScript.substring(0, startLocation);
-			theScript += "\r\n" + remainingCode;
-			return theScript;
-		}
-
-		theScript = theScript.substring(0, startLocation);
-		theScript += "\r\n" + remainingCode;
-		// Otherwise more code to examine.
-		return theScript;
-	}
+	
 
 	private void insertUserMethods(Writer outputStream) throws IOException {
 		
@@ -299,4 +235,9 @@ public class CompileButtonListener implements ActionListener {
 			outputStream.write(userMethod + "\r\n");
 		}
 	}
+	
+	private String getOperatingSystem() {
+		return System.getProperty("os.name");
+	}
+
 }

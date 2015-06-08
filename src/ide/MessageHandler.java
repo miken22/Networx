@@ -1,4 +1,4 @@
-package ide.texteditor;
+package ide;
 
 import java.io.BufferedReader;
 import java.io.IOException;

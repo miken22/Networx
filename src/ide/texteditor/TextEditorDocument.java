@@ -95,16 +95,19 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		String line = null;
 		try {
 			line = reader.readLine();
+			int lineLengthCounter = 0;
 			while (line != null) {
 				if (line.contains("\"")) {
-					int offset = line.indexOf("\"");
-					int endOfQuote = line.lastIndexOf("\"");
+					int offset = lineLengthCounter + line.indexOf("\"");
+					int endOfQuote = lineLengthCounter + line.lastIndexOf("\"");
 					// Otherwise only colour from the // to the end of the line.
 					// Will not colour until the quote has been ended
 					// TODO: Support multi-line quotes
 					setCharacterAttributes(offset, endOfQuote - offset + 1, quotations, false);
-
 				}
+				// Keep track of length of each line so offset lines up, add +1 for eac
+				// new line character not including in line length.
+				lineLengthCounter += line.length() + 1;
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
