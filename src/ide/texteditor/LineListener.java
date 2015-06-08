@@ -15,11 +15,11 @@ import javax.swing.event.DocumentListener;
 public class LineListener implements DocumentListener{
 
 	private JTextPane worksheet;
-	private JTextArea lineCounter;
+	private JTextPane lineCounter;
 	
-	public LineListener(JTextPane worksheet, JTextArea lineCounter) {
+	public LineListener(JTextPane worksheet, JTextPane lines) {
 		this.worksheet = worksheet;
-		this.lineCounter = lineCounter;
+		this.lineCounter = lines;
 	}
 	
 	public String updateLineNumbers() {

@@ -100,8 +100,6 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				if (line.contains("\"")) {
 					int offset = lineLengthCounter + line.indexOf("\"");
 					int endOfQuote = lineLengthCounter + line.lastIndexOf("\"");
-					// Otherwise only colour from the // to the end of the line.
-					// Will not colour until the quote has been ended
 					// TODO: Support multi-line quotes
 					setCharacterAttributes(offset, endOfQuote - offset + 1, quotations, false);
 				}

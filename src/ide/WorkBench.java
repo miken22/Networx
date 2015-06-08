@@ -53,7 +53,7 @@ public class WorkBench {
 	private JScrollPane outputScroll;
 	private JTextPane worksheet;
 	private JTextArea output;
-	private JTextArea lines;
+	private JTextPane lines;
 
 	private JPanel toolbar;
 	private JButton newFile;
@@ -181,7 +181,7 @@ public class WorkBench {
 	
 	private void loadConsoles() {
 		
-		lines = new JTextArea("1");	 		
+		lines = new JTextPane();	 		
 		textarea = new TextEditorDocument();
 		worksheet = new JTextPane(textarea);
 		
