@@ -2,7 +2,6 @@ package ide;
 
 import ide.texteditor.LineListener;
 import ide.texteditor.TextEditorDocument;
-import ide.texteditor.TextEditorMouseListener;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -14,7 +13,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -22,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -30,10 +29,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.text.BadLocationException;
-
 import toolbar.CompileButton;
 import toolbar.OpenButton;
 import toolbar.SaveButton;
@@ -46,14 +44,14 @@ public class WorkBench {
 
 	// Main frame components
 	private JFrame frame;
-	private JFrame loadingScreen;
+//	private JFrame loadingScreen;
 	
 	private Container mainContainer;
 	private JScrollPane mainScroll;
 	private JScrollPane outputScroll;
 	private JTextPane worksheet;
 	private JTextArea output;
-	private JTextPane lines;
+	private JTextArea lines;
 
 	private JPanel toolbar;
 	private JButton newFile;
@@ -77,47 +75,44 @@ public class WorkBench {
 
 	private Properties properties;
 
-	/**
-	 * Main method to call to load the application frame
-	 */
-	public void loadWorkbench() {		
-		launchSplashPane();	
-		createFrame();
-	}
-
-	/**
-	 * Loading screen. Not sure why this breaks using the
-	 * current call to load the workbench.
-	 */
-	private void launchSplashPane() {
-		loadingScreen = new JFrame();
-		loadingScreen.setUndecorated(true);
-		LoadingPanel lp = new LoadingPanel();
-		
-		Container loadC = loadingScreen.getContentPane();
-		loadC.add(lp);
-
-		loadingScreen.repaint();
-		loadingScreen.setLayout(null);
-		loadingScreen.setLocationRelativeTo(frame);
-		loadingScreen.setResizable(false);
-		loadingScreen.setSize(new Dimension(360, 317));
-		loadingScreen.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		loadingScreen.setVisible(true);		
-	}
-
-	/**
-	 * Initialize the main frame, set sizes and load all components
-	 */
-	private void createFrame() {
-		
+	public WorkBench() {
 		frame = new JFrame("Networx Graph Editor");
 		mainContainer = frame.getContentPane();
 	
 		properties = new Properties();	
 		
 		menu = new JMenuBar();
+		file = new JMenu("File");
+		open = new JMenuItem("Load Script");
+		save = new JMenuItem("Save Script");
+		exit = new JMenuItem("Exit");
 		
+		build = new JMenu("Build Tools");
+		buildScript = new JMenuItem("Build Script");
+		libraryPackageLoader = new JMenuItem("Add Networx Packages");
+		javaPackageLoader = new JMenuItem("Add Java Packages");
+		jungPackageLoader = new JMenuItem("Add JUNG2 Packages");
+		
+		lines = new JTextArea("1");	 		
+		textarea = new TextEditorDocument();
+		worksheet = new JTextPane(textarea);
+		
+		output = new JTextArea();
+		mainScroll = new JScrollPane(worksheet);
+		outputScroll = new JScrollPane(output);		
+		
+		toolbar = new JPanel();
+		newFile = new JButton();
+		openFile = new OpenButton();
+		saveFile = new SaveButton();
+		compiler = new CompileButton();
+	}
+	
+	/**
+	 * Initialize the main frame, set sizes and load all components
+	 */
+	public void loadWorkbench() {	
+				
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
@@ -133,8 +128,6 @@ public class WorkBench {
 		createMenuBar();	
 		loadConsoles();
 		buildToolbar();
-
-		loadingScreen.dispose();
 		
 		mainContainer.setBackground(new Color(217, 217, 217));
 		// Reveal the frame
@@ -146,23 +139,12 @@ public class WorkBench {
 
 	private void createMenuBar() {
 		
-		file = new JMenu("File");
-		open = new JMenuItem("Load Script");
-		save = new JMenuItem("Save Script");
-		exit = new JMenuItem("Exit");
-		
 		menu.setBackground(new Color(217,217,217));
 		menu.add(file);
 		file.add(open);
 		file.add(save);
 		file.add(exit);
 
-		build = new JMenu("Build Tools");
-		buildScript = new JMenuItem("Build Script");
-		libraryPackageLoader = new JMenuItem("Add Networx Packages");
-		javaPackageLoader = new JMenuItem("Add Java Packages");
-		jungPackageLoader = new JMenuItem("Add JUNG2 Packages");
-		
 		menu.add(build);
 		build.add(buildScript);
 		build.add(libraryPackageLoader);
@@ -177,19 +159,15 @@ public class WorkBench {
 		jungPackageLoader.addActionListener(new PropertiesButtonListener(properties, 1));
 		libraryPackageLoader.addActionListener(new PropertiesButtonListener(properties, 2));
 		
+		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
+		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
+		
 	}
 	
 	private void loadConsoles() {
-		
-		lines = new JTextPane();	 		
-		textarea = new TextEditorDocument();
-		worksheet = new JTextPane(textarea);
-		
-		output = new JTextArea();
-		mainScroll = new JScrollPane(worksheet);
-		outputScroll = new JScrollPane(output);		
-		
+
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
+		JLabel lineNumber = new JLabel("1");
 
 		Font font = null;
 		// Main font theme
@@ -203,7 +181,6 @@ public class WorkBench {
 		
 		// Create the script area
 		worksheet.setEditable(true);
-		worksheet.addKeyListener(new KeyStrokeListener());
 		worksheet.setFont(font);
 		worksheet.setBorder(b);
 		worksheet.setBackground(new Color(252, 252, 252));
@@ -215,8 +192,12 @@ public class WorkBench {
 		lines.setBackground(Color.LIGHT_GRAY);
 		lines.setEditable(false);
 		lines.setFont(font);
-		worksheet.getDocument().addDocumentListener(new LineListener(worksheet, lines));
-		worksheet.addMouseListener(new TextEditorMouseListener());
+		
+		LineListener lineListener = new LineListener(worksheet, lines, lineNumber);
+		
+		worksheet.getDocument().addDocumentListener(lineListener);
+		worksheet.addKeyListener(lineListener);
+		worksheet.addMouseListener(lineListener);
 		
 		mainScroll.setRowHeaderView(lines);
 		mainContainer.add(mainScroll);
@@ -233,18 +214,15 @@ public class WorkBench {
 		outputScroll.setBackground(new Color(217, 217, 217));
 		mainContainer.add(outputScroll);
 		
+		lineNumber.setBounds(10, frame.getHeight()-50, 50, 25);
+		mainContainer.add(lineNumber);
+		
 	}
 
 	private void buildToolbar() {
 	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
-
-		toolbar = new JPanel();
-		newFile = new JButton();
-		openFile = new OpenButton();
-		saveFile = new SaveButton();
-		compiler = new CompileButton();
 
 		toolbar.setBounds(0, 0, (int)width, 25);
 		toolbar.setLayout(null);
@@ -257,7 +235,7 @@ public class WorkBench {
 		compiler.addActionListener(new CompileButtonListener(worksheet, output, properties));
 				
 		Image img;
-		
+		// Empty catches are bad, mmmkkayyyy?
 		try {
 			img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
 			newFile.setIcon(new ImageIcon(img));
@@ -308,7 +286,7 @@ public class WorkBench {
 	 * @author Michael
 	 *
 	 */
-	public class MenuListener implements ActionListener {
+	private class MenuListener implements ActionListener {
 
 		private int listenerType;
 
@@ -363,43 +341,5 @@ public class WorkBench {
 			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
 			saveFile.addActionListener(new SaveFileListener(worksheet));
 		}
-	}
-
-	/**
-	 * Trivial key listener to insert four spaces when the tab key
-	 * is pressed
-	 * 
-	 * @author Michael
-	 *
-	 */
-	private class KeyStrokeListener implements KeyListener {
-
-		@Override
-		public void keyPressed(KeyEvent key) {
-			if (key.getKeyCode() == KeyEvent.VK_TAB) {
-				try {
-					textarea.insertString(worksheet.getCaretPosition(), "    ", null);
-					key.consume();
-					return;
-				} catch (BadLocationException e) {
-					e.printStackTrace();
-				}
-			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_S) {
-				key.consume();
-				saveFile.doClick();
-				textarea.isSaved();
-			} else if (key.isControlDown() && key.getKeyCode() == KeyEvent.VK_O) {
-				key.consume();
-				openFile.doClick();
-				textarea.isSaved();
-			}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {}
-
 	}
 }
