@@ -1,4 +1,4 @@
-package ide.texteditor;
+package toolbar.compiler;
 
 import java.util.ArrayList;
 
