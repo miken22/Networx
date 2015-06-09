@@ -123,8 +123,11 @@ public class CompileButtonListener implements ActionListener {
 
 		// Compile code
 		buildlog.append("Building script...\r\n");
-		runProcess("javac -cp .:" + libraries + files);
-
+		if (OS.startsWith("Windows")){
+			runProcess("javac -cp .;" + libraries + files);
+		} else {
+			runProcess("javac -cp .:" + libraries + files);
+		}
 		if (buildFailed) {
 			buildlog.append("Script could not be compiled.");
 			return;
@@ -143,7 +146,11 @@ public class CompileButtonListener implements ActionListener {
 		userFolder.deleteOnExit();
 
 		// Execute.
-		runProcess("java -cp .:" + libraries +  classes);
+		if (OS.startsWith("Windows")){
+			runProcess("java -cp .;" + libraries +  classes);
+		} else {		
+			runProcess("java -cp .:" + libraries +  classes);
+		}
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");
