@@ -39,10 +39,12 @@ public class LineListener implements DocumentListener, ActionListener, MouseList
 	public String updateLineNumbers() {
 		String text = "";
 		String document = worksheet.getText();
-		
-		String upToCurrentSpot = document.substring(0, worksheet.getCaretPosition());
-		String[] cursonLineNumber = upToCurrentSpot.split("\n");
-		lineNumber.setText(String.valueOf(cursonLineNumber.length));
+		int cursorPosition = worksheet.getCaretPosition();
+		if (cursorPosition <= document.length()) {
+			String upToCurrentSpot = document.substring(0, worksheet.getCaretPosition());
+			String[] cursonLineNumber = upToCurrentSpot.split("\n");
+			lineNumber.setText(String.valueOf(cursonLineNumber.length));	
+		}
 		
 		String[] documentLines = document.split("\n");
 		for (int i = 1; i <= documentLines.length+2; i++) {

@@ -19,7 +19,6 @@ public final class LoadingPanel extends JPanel {
 		try {
 	        image = ImageIO.read(this.getClass().getResource("/resources/splash.gif"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		loadScreen();

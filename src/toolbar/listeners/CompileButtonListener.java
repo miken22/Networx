@@ -64,7 +64,7 @@ public class CompileButtonListener implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent event) {
 
 		// Don't compile anything if the script is blank
 		if (worksheet.getText().length() == 0) {
@@ -144,8 +144,9 @@ public class CompileButtonListener implements ActionListener {
 
 		if (errorMessage != null) {
 			// If there is an error, print the message and signal build failure
-			MessageHandler.handleErrorMessage(errorMessage, runtimeProcess, buildlog);
+			MessageHandler.handleErrorMessage(errorMessage, worksheet, buildlog);
 			buildFailed = true;
+			runtimeProcess.waitFor();
 			return;
 		}
 		// Otherwise command succeed and wait for process to execute.

@@ -103,7 +103,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					// TODO: Support multi-line quotes
 					setCharacterAttributes(offset, endOfQuote - offset + 1, quotations, false);
 				}
-				// Keep track of length of each line so offset lines up, add +1 for eac
+				// Keep track of length of each line so offset lines up, add +1 for each
 				// new line character not including in line length.
 				lineLengthCounter += line.length() + 1;
 				line = reader.readLine();
@@ -117,7 +117,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 		String text = "";
 		try {
-			text = getText(0, this.getLength());
+			text = this.getText(0, this.getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
@@ -154,7 +154,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 		hasChanged = true;
 
-		String text = getText(0, getLength());
+		String text = this.getText(0, getLength());
 		int before = findLastNonWordChar(text, offset);
 		if (before < 0) before = 0;
 		int after = findFirstNonWordChar(text, offset);

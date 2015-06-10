@@ -46,6 +46,9 @@ public class ScriptBuilder {
 			// Get the script with all user defined methods/classes
 			// removed
 			script = findUserDefinitions.getCleanedScript();
+			
+			// TODO: Let user type in imports, find and move them to the top
+			//       of the class file.
 
 			// User class and open user class bracket
 			outputStream.write("public class UserScript { \r\n");
