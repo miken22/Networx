@@ -49,8 +49,8 @@ public class WorkBench {
 	private Container mainContainer;
 	private JScrollPane mainScroll;
 	private JScrollPane outputScroll;
-	private JTextPane worksheet;
-	private JTextArea output;
+	private JTextPane editor;
+	private JTextArea buildlog;
 	private JTextArea lines;
 
 	private JPanel toolbar;
@@ -95,11 +95,11 @@ public class WorkBench {
 		
 		lines = new JTextArea("1");	 		
 		textarea = new TextEditorDocument();
-		worksheet = new JTextPane(textarea);
+		editor = new JTextPane(textarea);
 		
-		output = new JTextArea();
-		mainScroll = new JScrollPane(worksheet);
-		outputScroll = new JScrollPane(output);		
+		buildlog = new JTextArea();
+		mainScroll = new JScrollPane(editor);
+		outputScroll = new JScrollPane(buildlog);		
 		
 		toolbar = new JPanel();
 		newFile = new JButton();
@@ -122,18 +122,18 @@ public class WorkBench {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize((int) width/2, (int)(height/1.2));
 		frame.setResizable(false);
-		frame.setJMenuBar(menu);		
+		frame.setLocationRelativeTo(null);
+		frame.setJMenuBar(menu);
+		mainContainer.setBackground(new Color(217, 217, 217));		
 		
 		// Load all components for the workbench
 		createMenuBar();	
 		loadConsoles();
 		buildToolbar();
 		
-		mainContainer.setBackground(new Color(217, 217, 217));
 		// Reveal the frame
-		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		worksheet.requestFocus();
+		editor.requestFocus();
 
 	}
 
@@ -180,10 +180,10 @@ public class WorkBench {
 		font = font.deriveFont(Font.PLAIN, 14);
 		
 		// Create the script area
-		worksheet.setEditable(true);
-		worksheet.setFont(font);
-		worksheet.setBorder(b);
-		worksheet.setBackground(new Color(252, 252, 252));
+		editor.setEditable(true);
+		editor.setFont(font);
+		editor.setBorder(b);
+		editor.setBackground(new Color(252, 252, 252));
 		mainScroll.setBounds(2, 25, frame.getWidth()-12,  (int)(frame.getHeight()/1.4));
 		mainScroll.setBackground(new Color(240, 240, 240));
 		mainScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
@@ -193,21 +193,21 @@ public class WorkBench {
 		lines.setEditable(false);
 		lines.setFont(font);
 		
-		LineListener lineListener = new LineListener(worksheet, lines, lineNumber);
+		LineListener lineListener = new LineListener(editor, lines, lineNumber);
 		
-		worksheet.getDocument().addDocumentListener(lineListener);
-		worksheet.addKeyListener(lineListener);
-		worksheet.addMouseListener(lineListener);
+		editor.getDocument().addDocumentListener(lineListener);
+		editor.addKeyListener(lineListener);
+		editor.addMouseListener(lineListener);
 		
 		mainScroll.setRowHeaderView(lines);
 		mainContainer.add(mainScroll);
 
 		// To display build logs
-		output.setLineWrap(true);
-		output.setEditable(false);
-		output.setBorder(b);
-		output.setBackground(new Color(252, 252, 252));
-		output.setFont(font);
+		buildlog.setLineWrap(true);
+		buildlog.setEditable(false);
+		buildlog.setBorder(b);
+		buildlog.setBackground(new Color(252, 252, 252));
+		buildlog.setFont(font);
 		outputScroll.setBounds(2, (mainScroll.getHeight()+25), (frame.getWidth() - 12), (int)(mainScroll.getHeight()/4));
 		outputScroll.setBackground(new Color(240, 240, 240));
 		outputScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
@@ -230,9 +230,9 @@ public class WorkBench {
 
 		// Setup compiler listener
 		newFile.addActionListener(new NewFileListener());
-		openFile.addActionListener(new OpenButtonListener(worksheet));
-		saveFile.addActionListener(new SaveFileListener(worksheet));
-		compiler.addActionListener(new CompileButtonListener(worksheet, output, properties));
+		openFile.addActionListener(new OpenButtonListener(editor));
+		saveFile.addActionListener(new SaveFileListener(editor));
+		compiler.addActionListener(new CompileButtonListener(editor, buildlog, properties));
 				
 		Image img;
 		// Empty catches are bad, mmmkkayyyy?
@@ -337,9 +337,9 @@ public class WorkBench {
 	private class NewFileListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent click) {
-			worksheet.setText("");
+			editor.setText("");
 			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
-			saveFile.addActionListener(new SaveFileListener(worksheet));
+			saveFile.addActionListener(new SaveFileListener(editor));
 		}
 	}
 }
