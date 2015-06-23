@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 
 public class ClassHandler {
 	
@@ -41,6 +44,14 @@ public class ClassHandler {
 
 		try {
 			File userFolder = new File("UserFiles");
+			
+			Path path = userFolder.toPath();
+			Boolean hidden = (Boolean) Files.getAttribute(path, "dos:hidden", LinkOption.NOFOLLOW_LINKS);
+			
+			if (hidden != null && !hidden) {
+			    Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
+			}
+			
 			File userFile = new File(userFolder, userClassName + ".java");
 			userFile.deleteOnExit();	
 			userFolder.deleteOnExit();

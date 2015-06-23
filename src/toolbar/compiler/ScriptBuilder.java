@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import javax.swing.JTextPane;
@@ -29,6 +32,22 @@ public class ScriptBuilder {
 		File userFolder = new File("UserFiles");
 		userFolder.mkdir();
 		userFolder.deleteOnExit();
+		
+		// Convert to path, check if the folder is hidden, hide it if it is not.
+		Path path = userFolder.toPath();
+		Boolean hidden;
+		try {
+			// Check if folder is hidden
+			hidden = (Boolean) Files.getAttribute(path, "dos:hidden", LinkOption.NOFOLLOW_LINKS);
+			if (hidden != null && !hidden) {
+				// Hide folder for Windows/Linux
+			    Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+	
 		
 		try {
 

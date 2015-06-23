@@ -43,9 +43,11 @@ public class CompileButtonListener implements ActionListener {
 	
 	/* Global set of program files and classes to auto add to command line
 	   once use of custom classes added. */
-	private String programFiles = "UserFiles/UserScript.java";
+	private String programFiles = "";
 	private String programClasses = "UserScript";
 	private String OS = "";
+	private String libraries = "";
+
 
 
 
@@ -56,6 +58,14 @@ public class CompileButtonListener implements ActionListener {
 
 		// Get OS on startup,
 		OS = getOperatingSystem();
+		
+		if (OS.startsWith("Windows")) {
+			programFiles += "UserFiles/UserScript.java";
+			libraries = WindowsLibraries.windowsList;
+		} else if (OS.startsWith("Linux")) {
+			programFiles += ".UserFiles/UserScript.java";
+			libraries = LinuxLibraries.linuxList;
+		}
 
 		if (OS.indexOf("mac") >= 0) {
 			JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
@@ -92,14 +102,6 @@ public class CompileButtonListener implements ActionListener {
 	 * @throws Exception - Any possible error to arise from compiling/execution
 	 */
 	public void compileScript(String files, String classes) throws Exception {
-
-		String libraries = "";
-
-		if (OS.startsWith("Windows")) {
-			libraries = WindowsLibraries.windowsList;
-		} else if (OS.startsWith("Linux")) {
-			libraries = LinuxLibraries.linuxList;
-		}
 
 		// Compile code
 		buildlog.append("Building script...\r\n");

@@ -296,14 +296,27 @@ public class WorkBench {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// Save file
 			if (listenerType == 1) {
+			
 				saveFile.doClick();
 				textarea.isSaved();
+			
 			} else if (listenerType == 2) {
+			// Open file, check to save first
+				if (textarea.documentHasChanged()) {
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning",dialogButton);
+					if(dialogResult == JOptionPane.YES_OPTION){
+						saveFile.doClick();
+						textarea.isSaved();
+					}
+				}
+				
 				openFile.doClick();
 				textarea.isSaved();
 			} else if (listenerType == 3) {
-								
+			// Exit application, check if saved first				
 				int dialogButton;
 				int dialogResult = JOptionPane.NO_OPTION;
 				
@@ -320,12 +333,11 @@ public class WorkBench {
 				if (!textarea.documentHasChanged() || dialogResult == JOptionPane.NO_OPTION) {
 					System.exit(0);
 				}
-			
+			// Compile script
 			} else if (listenerType == 4) {
 				compiler.doClick();
 			}
 		}
-
 	}
 	
 	/**
@@ -337,6 +349,16 @@ public class WorkBench {
 	private class NewFileListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent click) {
+			
+			if (textarea.documentHasChanged()) {
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning", dialogButton);
+				if(dialogResult == JOptionPane.YES_OPTION){
+					saveFile.doClick();
+					textarea.isSaved();
+				}
+			}
+			
 			editor.setText("");
 			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
 			saveFile.addActionListener(new SaveFileListener(editor));
