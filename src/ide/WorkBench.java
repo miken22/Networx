@@ -169,13 +169,14 @@ public class WorkBench {
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
 		JLabel lineNumber = new JLabel("1");
 
-		Font font = null;
-		// Main font theme
-		try {
-			font = Font.createFont(0, this.getClass().getResourceAsStream("/resources/Trebuchet MS.ttf"));
-		} catch (FontFormatException|IOException e) {
-			e.printStackTrace();
-		}
+		Font font = new Font("Normal", Font.PLAIN, 14);
+//		Main font theme
+//		try {
+//			font = Font.createFont(0, this.getClass().getResourceAsStream("/resources/Trebuchet MS.ttf"));
+//		} catch (FontFormatException|IOException e) {
+//			e.printStackTrace();
+//			System.exit(-1);
+//		}
 
 		font = font.deriveFont(Font.PLAIN, 14);
 		
@@ -240,7 +241,7 @@ public class WorkBench {
 			img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
 			newFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-
+			System.exit(-1);
 		}
 		newFile.setBounds(2, 0, 20, 20);
 		newFile.setToolTipText("New File");
@@ -250,7 +251,7 @@ public class WorkBench {
 			img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
 			saveFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-
+			System.exit(-1);
 		}
 		saveFile.setBounds(22, 0, 20, 20);
 		saveFile.setToolTipText("Save File As");
@@ -260,7 +261,7 @@ public class WorkBench {
 			img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
 			openFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-
+			System.exit(-1);
 		}
 		openFile.setBounds(44, 0, 20, 20);
 		openFile.setToolTipText("Open File");
@@ -270,7 +271,7 @@ public class WorkBench {
 			img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
 			compiler.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-
+			System.exit(-1);
 		}
 		compiler.setBounds(66, 0, 20, 20);
 		compiler.setToolTipText("Compile Script");
