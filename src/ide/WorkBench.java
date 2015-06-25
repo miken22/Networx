@@ -2,6 +2,7 @@ package ide;
 
 import ide.texteditor.LineListener;
 import ide.texteditor.TextEditorDocument;
+import ide.texteditor.TextLineNumber;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -31,6 +32,7 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+
 import toolbar.CompileButton;
 import toolbar.OpenButton;
 import toolbar.SaveButton;
@@ -194,12 +196,12 @@ public class WorkBench {
 		lines.setFont(font);
 		
 		LineListener lineListener = new LineListener(editor, lines, lineNumber);
-		
+		TextLineNumber tln = new TextLineNumber(editor);
 		editor.getDocument().addDocumentListener(lineListener);
 		editor.addKeyListener(lineListener);
-		editor.addMouseListener(lineListener);
+//		editor.addMouseListener(lineListener);
 		
-		mainScroll.setRowHeaderView(lines);
+		mainScroll.setRowHeaderView(tln);
 		mainContainer.add(mainScroll);
 
 		// To display build logs
