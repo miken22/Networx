@@ -32,7 +32,7 @@ public class JavaPackageLoader extends PackageLoader {
 		packagePanel = new JPanel();
 		packageGroup = new ArrayList<>();
 				
-		int rows = JavaPackages.javaPackages.length;
+		int rows = Packages.javaPackages.length;
 		
 		configurationFrame.setSize(400, 700);
 		configurationFrame.setResizable(false);
@@ -46,7 +46,7 @@ public class JavaPackageLoader extends PackageLoader {
 		packagePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		packagePanel.setLayout(new GridLayout(rows,1));
 		
-        addPanelPackageList(JavaPackages.javaPackages);
+        addPanelPackageList(Packages.javaPackages);
         
 		JScrollPane scrollPane = new JScrollPane(packagePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
