@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Networx" basedir="." default="jar">
+
+<!--
+
+	TODO: Rename files, double check build paths to standardize for Windows and Linux
+	
+	Simple ANT Build File to gather all libraries, resources, and java files that
+	builds the project for general use.
+
+-->
+
+<project name="Fuzzy-Runner" basedir="." default="jar">
 	<property name="source.dir" value="src" />
 	<property name="lib.dir" value="libraries" />
 	<property name="class.dir" value="bin" />
 	<property name="font.dir" value="resources" />
-	<property name="jar.dir" value="Networx" />
+	<property name="jar.dir" value="../fuzzy-runnable" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	<property name="main-class" value="launcher.Launch" />
 
