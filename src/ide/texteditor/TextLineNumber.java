@@ -2,6 +2,7 @@ package ide.texteditor;
 import java.awt.*;
 import java.beans.*;
 import java.util.HashMap;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -32,7 +33,8 @@ public class TextLineNumber extends JPanel
 	public final static float CENTER = 0.5f;
 	public final static float RIGHT = 1.0f;
 
-	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.GRAY);
+	private final static Border OUTER = BorderFactory.createTitledBorder(
+			BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true));
 
 	private final static int HEIGHT = Integer.MAX_VALUE - 1000000;
 
@@ -83,7 +85,7 @@ public class TextLineNumber extends JPanel
 
 		setBorderGap( 5 );
 		setCurrentLineForeground( Color.RED );
-		setDigitAlignment( RIGHT );
+		setDigitAlignment( CENTER );
 		setMinimumDisplayDigits( minimumDisplayDigits );
 
 		component.getDocument().addDocumentListener(this);
