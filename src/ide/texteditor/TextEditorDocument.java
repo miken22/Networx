@@ -15,7 +15,6 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 	private static final long serialVersionUID = 1L;
 	private SimpleAttributeSet reservedWords;
-	private SimpleAttributeSet keyWords;
 	private SimpleAttributeSet defaultColour;
 	private SimpleAttributeSet quotations;
 	private SimpleAttributeSet comments;
@@ -26,13 +25,11 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 		// Initialize all the different styles for text highlighting.
 		reservedWords = new SimpleAttributeSet();
-		keyWords = new SimpleAttributeSet();
 		defaultColour = new SimpleAttributeSet();
 		quotations = new SimpleAttributeSet();
 		comments = new SimpleAttributeSet();
 
 		StyleConstants.setForeground(reservedWords, Color.RED);
-		StyleConstants.setForeground(keyWords, new Color(255,69,0));
 		StyleConstants.setForeground(defaultColour, Color.BLACK);
 		StyleConstants.setForeground(quotations, Color.BLUE);
 		StyleConstants.setForeground(comments, Color.GREEN);
@@ -63,12 +60,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					while (!String.valueOf(text.charAt(wordL)).matches("[a-zA-Z]")) {
 						wordL++;
 					}
-					setCharacterAttributes(wordL, wordR - wordL, reservedWords, false);
-				} else if (text.substring(wordL, wordR).matches("(\\W)*(" + KeyWords.keyWords + ")")) {
-					while (!String.valueOf(text.charAt(wordL)).matches("[a-zA-Z]")) {
-						wordL++;
-					}
-					setCharacterAttributes(wordL, wordR - wordL, keyWords, false);                	    	            	
+					setCharacterAttributes(wordL, wordR - wordL, reservedWords, false);             	    	            	
 				} else {
 					setCharacterAttributes(wordL, wordR - wordL, defaultColour, false);
 				}
@@ -164,11 +156,6 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				before++;
 			}
 			setCharacterAttributes(before, after - before, reservedWords, false);
-		} else if (text.substring(before, after).matches("(\\W)*(" + KeyWords.keyWords + ")")) {
-			while (!String.valueOf(text.charAt(before)).matches("[a-zA-Z]")) {
-				before++;
-			}
-			setCharacterAttributes(before, after - before, keyWords, false);
 		} else {
 			setCharacterAttributes(before, after - before, defaultColour, false);
 		}
