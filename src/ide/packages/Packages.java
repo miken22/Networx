@@ -91,16 +91,16 @@ public class Packages {
 	};
 	
 	public static final String[] libraries = {
-		   "networxlib.components", 
-		   "networxlib.connectivity", 
-		   "networxlib.examples", 
-		   "networxlib.graphloader", 
-		   "networxlib.graphloader.utils",
-		   "networxlib.search", 
-		   "networxlib.search.tools", 
-		   "networxlib.stocks", 
-		   "networxlib.visualizer",
-		   "networxlib.webcrawler" 
+		   "core.components", 
+		   "core.stocks", 
+		   "core.visualizer",
+		   "core.webcrawler",
+		   "algorithms.connectivity", 
+		   "algorithms.graphloader", 
+		   "algorithms.graphloader.utils",
+		   "algorithms.search", 
+		   "algorithms.search.tools",
+		   "tests.examples"
 	};
 	
 }
