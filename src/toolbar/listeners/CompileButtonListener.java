@@ -14,9 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
-import toolbar.compiler.LinuxLibraries;
-import toolbar.compiler.ScriptBuilder;
-import toolbar.compiler.WindowsLibraries;
+import builder.Libraries;
+import builder.ScriptBuilder;
 
 /**
  * Class that implements the compiling functionality. Saves the script, calls javac
@@ -61,10 +60,10 @@ public class CompileButtonListener implements ActionListener {
 		
 		if (OS.startsWith("Windows")) {
 			programFiles += "UserFiles/UserScript.java";
-			libraries = WindowsLibraries.windowsList;
+			libraries = Libraries.windowsList;
 		} else if (OS.startsWith("Linux")) {
 			programFiles += ".UserFiles/UserScript.java";
-			libraries = LinuxLibraries.linuxList;
+			libraries = Libraries.linuxList;
 		}
 
 		if (OS.indexOf("mac") >= 0) {

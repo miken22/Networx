@@ -1,4 +1,4 @@
-package toolbar.compiler;
+package builder;
 
 import ide.Properties;
 
