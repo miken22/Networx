@@ -148,6 +148,7 @@ public class WorkBench {
 
 		menu.add(build);
 		build.add(buildScript);
+		build.add(new CommandLineArgument(properties));
 		build.add(libraryPackageLoader);
 		build.add(javaPackageLoader);
 		build.add(jungPackageLoader);	
@@ -188,7 +189,8 @@ public class WorkBench {
 		editor.setBackground(new Color(252, 252, 252));
 		mainScroll.setBounds(2, 25, frame.getWidth()-12,  (int)(frame.getHeight()/1.4));
 		mainScroll.setBackground(new Color(240, 240, 240));
-		mainScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
+		mainScroll.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
 		mainScroll.setBackground(new Color(217, 217, 217));
 		
 		lines.setBackground(Color.LIGHT_GRAY);
@@ -210,9 +212,11 @@ public class WorkBench {
 		buildlog.setBorder(b);
 		buildlog.setBackground(new Color(252, 252, 252));
 		buildlog.setFont(font);
-		outputScroll.setBounds(2, (mainScroll.getHeight()+25), (frame.getWidth() - 12), (int)(mainScroll.getHeight()/4));
+		outputScroll.setBounds(2, (mainScroll.getHeight()+25), 
+				(frame.getWidth() - 12), (int)(mainScroll.getHeight()/4));
 		outputScroll.setBackground(new Color(240, 240, 240));
-		outputScroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
+		outputScroll.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
 		outputScroll.setBackground(new Color(217, 217, 217));
 		mainContainer.add(outputScroll);
 		

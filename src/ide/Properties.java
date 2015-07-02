@@ -12,11 +12,21 @@ import java.util.List;
 public class Properties {
 
 	private List<String> packagesToImport;
+	private String commandArguments;
 	
 	public Properties() {
 		packagesToImport = new ArrayList<>();
+		commandArguments = "";
 	}
 	
+	public void addCommandLineArgument(String argument) {
+		commandArguments += " " + argument;
+	}
+	
+	public String getCommandArguments() {
+		return commandArguments.trim();
+	}
+
 	public void addPackage(String requiredPackage) {
 		packagesToImport.add(requiredPackage);
 	}

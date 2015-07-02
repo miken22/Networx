@@ -40,6 +40,8 @@ public class CompileButtonListener implements ActionListener {
 	 */
 	private ScriptBuilder sb;
 	
+	private Properties properties;
+	
 	/* Global set of program files and classes to auto add to command line
 	   once use of custom classes added. */
 	private String programFiles = "";
@@ -47,12 +49,10 @@ public class CompileButtonListener implements ActionListener {
 	private String OS = "";
 	private String libraries = "";
 
-
-
-
 	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog, Properties properties) {
 		this.worksheet = worksheet;
 		this.buildlog = buildlog;	
+		this.properties = properties;
 		sb = new ScriptBuilder(properties);
 
 		// Get OS on startup,
@@ -102,6 +102,8 @@ public class CompileButtonListener implements ActionListener {
 	 */
 	public void compileScript(String files, String classes) throws Exception {
 
+		String arguments = properties.getCommandArguments();
+		
 		// Compile code
 		buildlog.append("Building script...\r\n");
 		runProcess("javac -cp " + libraries + files);
@@ -124,7 +126,7 @@ public class CompileButtonListener implements ActionListener {
 		userFolder.deleteOnExit();
 
 		// Execute.
-		runProcess("java -cp " + libraries +  classes);
+		runProcess("java " + arguments + " -cp " + libraries +  classes);
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");

@@ -19,7 +19,8 @@ public class MessageHandler {
 				buildlog.append(errorMessage + "\n");
 				return;
 			} catch (IOException e) {
-				e.printStackTrace();
+				buildlog.append("Something went wrong compiling script, ensure ");
+				buildlog.append("the command line arguments are correct. ");
 			}
 		}
 
