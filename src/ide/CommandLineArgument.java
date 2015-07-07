@@ -80,7 +80,8 @@ public class CommandLineArgument extends JMenuItem {
 		}
 		
 		private void loadWindow() {
-			setSize(300, 500);
+			
+			setSize(500, 500);
 			setLayout(null);
 			setLocationRelativeTo(null);
 			
@@ -88,14 +89,14 @@ public class CommandLineArgument extends JMenuItem {
 			title.setBounds(0, 0, 250, 50);
 			this.getContentPane().add(title);
 			
-			arguments.setBounds(1,50,290, 350);
+			arguments.setBounds(1,50,490, 350);
 			arguments.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true)));
 			this.getContentPane().add(arguments);
 			
-			save.setBounds(20, 420, 150, 25);
+			save.setBounds(75, 420, 150, 25);
 			save.addActionListener(new SaveListener(this,properties));
-			cancel.setBounds(180, 420, 100, 25);
+			cancel.setBounds(275, 420, 100, 25);
 			cancel.addActionListener(new CancelListener(this));
 			
 			this.getContentPane().add(save);
