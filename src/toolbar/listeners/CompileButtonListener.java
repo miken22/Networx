@@ -62,7 +62,7 @@ public class CompileButtonListener implements ActionListener {
 			programFiles += "UserFiles/UserScript.java";
 			libraries = Libraries.windowsList;
 		} else if (OS.startsWith("Linux")) {
-			programFiles += ".UserFiles/UserScript.java";
+			programFiles += "UserFiles/UserScript.java";
 			libraries = Libraries.linuxList;
 		}
 
