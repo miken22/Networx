@@ -2,6 +2,13 @@ package builder;
 
 import java.util.ArrayList;
 
+/**
+ * Looks for user defined methods and classes to extract out of the 
+ * main code routine.
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class UserDefinitionHandler {
 	
 	private String script;
@@ -11,7 +18,7 @@ public class UserDefinitionHandler {
 	 * Finds all user defined classes and methods and extracts them from the
 	 * script
 	 * 
-	 * @param theScript
+	 * @param theScript - The text from the editor environment
 	 * @return
 	 */
 	public ArrayList<String> findUserDefinitions(String theScript) {
@@ -90,11 +97,17 @@ public class UserDefinitionHandler {
 		// Otherwise more code to examine.
 		return theScript;
 	}
-	
+
+	/**
+	 * Clear record of user methods
+	 */
 	public void clearOldMethods() {
 		userMethods.clear();
 	}
 	
+	/**
+	 * @return - the script with the user methods/classes moved
+	 */
 	public String getCleanedScript() {
 		return script;
 	}

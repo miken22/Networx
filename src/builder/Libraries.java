@@ -1,6 +1,11 @@
 package builder;
 
-public class Libraries {
+/**
+ * List of libraries to add for compiling, formatted for linux or windows
+ * @author Mike Nowicki
+ *
+ */
+public final class Libraries {
 
 	/**
 	 * All libraries to be included on the build path using Unix file separators

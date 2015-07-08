@@ -6,6 +6,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.DefaultEditorKit;
 
+/**
+ * Simple class to implement right-click functionality
+ * in the text editor.
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class RightClickMenu {
 	
 	private JPopupMenu popupMenu;

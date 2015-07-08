@@ -11,6 +11,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyleConstants;
 
+/**
+ * The document that the user edits to create their scripts
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class TextEditorDocument extends DefaultStyledDocument {
 
 	private static final long serialVersionUID = 1L;
@@ -38,6 +44,9 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 	}
 
+	/**
+	 * Inserts the string and performs necessary decorations
+	 */
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
 		super.insertString(offset, str, a);
 
@@ -141,6 +150,9 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 	}
 
+	/**
+	 * Removes the string and performs necessary decorations
+	 */
 	public void remove(int offset, int length) throws BadLocationException {
 		super.remove(offset, length);
 
@@ -183,10 +195,17 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		return index;
 	}
 
+	/**
+	 * 
+	 * @return - True if the document was modified, False otherwise
+	 */
 	public boolean documentHasChanged() {
 		return hasChanged;
 	}
 
+	/**
+	 * Mark the document as saved
+	 */
 	public void isSaved() {
 		hasChanged = false;
 	}

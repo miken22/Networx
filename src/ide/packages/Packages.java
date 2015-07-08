@@ -1,7 +1,16 @@
 package ide.packages;
 
-public class Packages {
+/**
+ * List of all packages to display in the package loaders
+ * 
+ * @author Mike Nowicki
+ *
+ */
+public final class Packages {
 
+	/**
+	 * All java packages that can be imported
+	 */
 	public static final String[] javaPackages = { "java.beans", "java.beans.beancontext", "java.io", "java.lang", "java.lang.annotation",
 		"java.lang.instrument", "java.lang.invoke",	"java.lang.management",
 		"java.lang.ref",
@@ -48,6 +57,9 @@ public class Packages {
 		"java.util.zip"
 	};
 	
+	/**
+	 * List of all JUNG2 packages to import
+	 */
 	public static final String[] packages = {
 		"edu.uci.ics.jung.algorithms.blockmodel", 
 		"edu.uci.ics.jung.algorithms.cluster",
@@ -90,6 +102,9 @@ public class Packages {
 		"edu.uci.ics.jung.visualization3d.layout"
 	};
 	
+	/**
+	 * List of custom packages to import
+	 */
 	public static final String[] libraries = {
 		   "core.components", 
 		   "core.stocks", 

@@ -22,7 +22,7 @@ import builder.ScriptBuilder;
  * to compile the code and then uses java to execute the program. Text output is 
  * displayed in the build log text area.
  * 
- * @author Michael
+ * @author Mike Nowicki
  *
  */
 public class CompileButtonListener implements ActionListener {
@@ -72,6 +72,9 @@ public class CompileButtonListener implements ActionListener {
 		}
 	}
 
+	/**
+	 * Attempts to compile the user script
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 

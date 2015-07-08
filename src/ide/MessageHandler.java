@@ -10,8 +10,24 @@ import java.io.InputStreamReader;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
+/**
+ * Handles messages to the build log, adjusts line numbers to match
+ * what is in the editor
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class MessageHandler {
 
+	/**
+	 * Looks through the error message, detects if it has to do with a given line number
+	 * and formats the message to represent the line it actually is in the program
+	 * 
+	 * @param errorMessage - The error
+	 * @param worksheet - The user worksheet
+	 * @param buildlog - The console to print to
+	 * @throws InterruptedException
+	 */
 	public static void handleErrorMessage(String errorMessage, JTextPane worksheet, JTextArea buildlog) throws InterruptedException {
 		if (errorMessage.matches(".*[0-9].*")) {
 			try {
@@ -27,6 +43,13 @@ public class MessageHandler {
 		buildlog.append(errorMessage + "\n");
 	}
 
+	/**
+	 * Prints the messages from the user program
+	 * 
+	 * @param ins - The stream of output from the user program
+	 * @param buildlog - The console to write to
+	 * @throws IOException
+	 */
 	public static void handleProgramMessaage(InputStream ins, JTextArea buildlog) throws IOException {
 		String line = null;
 		BufferedReader in = new BufferedReader(new InputStreamReader(ins));

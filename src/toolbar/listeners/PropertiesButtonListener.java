@@ -9,6 +9,12 @@ import ide.packages.PackageLoader;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Class that creates the correct java package loader frame
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class PropertiesButtonListener implements ActionListener {
 
 	Properties properties;

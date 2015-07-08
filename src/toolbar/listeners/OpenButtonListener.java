@@ -11,6 +11,13 @@ import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.Document;
 
+/**
+ * Class that loads user files and places the code into the text
+ * editor
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class OpenButtonListener implements ActionListener {
 
 	private JTextPane worksheet;

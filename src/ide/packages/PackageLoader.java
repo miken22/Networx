@@ -12,6 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Main package loader class to display packages
+ * as checkboxes for import.
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public abstract class PackageLoader {
 
 	JFrame configurationFrame;

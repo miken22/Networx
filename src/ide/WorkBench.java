@@ -41,6 +41,13 @@ import toolbar.listeners.OpenButtonListener;
 import toolbar.listeners.PropertiesButtonListener;
 import toolbar.listeners.SaveFileListener;
 
+/**
+ * Main frame of the application, holds all buttons,
+ * text editors, and output.
+ * 
+ * @author Mike
+ *
+ */
 public class WorkBench {
 
 	// Main frame components

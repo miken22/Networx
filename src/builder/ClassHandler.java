@@ -11,10 +11,26 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 
+/**
+ * This class handles the user code to identify any user defined classes.
+ * Any classes are extracted and written to a seperate user file
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class ClassHandler {
 	
+	/**
+	 * Properties object
+	 */
 	private Properties properties;
+	/**
+	 * List of java files for compiling
+	 */
 	private String programFiles;
+	/**
+	 * List of java class names for execution
+	 */
 	private String programClasses;
 	
 	public ClassHandler(Properties props, String programFiles, String programClasses) {
@@ -23,6 +39,12 @@ public class ClassHandler {
 		this.programClasses = programClasses;
 	}
 
+	/**
+	 * Takes a string, representing all the code in the user defined class,
+	 * and writes it to a seperate file
+	 * 
+	 * @param userClass - A string composed on the user class code
+	 */
 	public void generateUserClass(String userClass) {
 
 		String userClassName = "";
@@ -77,6 +99,12 @@ public class ClassHandler {
 
 	}	
 	
+	/**
+	 * Add the necessary packages to import as defined by the properties
+	 * 
+	 * @param outputStream - The file writer
+	 * @throws IOException
+	 */
 	private void addPackageImports(Writer outputStream) throws IOException {
 
 		for (String packageToImport : properties.getPackagesToImport()) {

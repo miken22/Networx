@@ -14,6 +14,12 @@ import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 
+/**
+ * Class that takes the user script and generates the necessary
+ * class files and adds imports to the java file
+ * @author mike
+ *
+ */
 public class ScriptBuilder {
 
 	private Properties properties;
@@ -25,6 +31,12 @@ public class ScriptBuilder {
 	}
 
 	// Uses the file chooser to save the file
+	/**
+	 * Takes the user script and generates the appropriate Java files for compiling
+	 * @param worksheet - The editor environment
+	 * @param programFiles - The list of files for compiling
+	 * @param programClasses - The list of files for execution
+	 */
 	public void buildScript(JTextPane worksheet, String programFiles, String programClasses) {
 
 		String script = worksheet.getText();
@@ -90,12 +102,26 @@ public class ScriptBuilder {
 		}
 	}
 
+	/**
+	 * Adds the packages from the properties to the top of the java file
+	 * 
+	 * @param outputStream
+	 * @throws IOException
+	 */
 	private void addPackageImports(Writer outputStream) throws IOException {
 		for (String packageToImport : properties.getPackagesToImport()) {
 			outputStream.write("import " + packageToImport + ".*;\r\n");
 		}
 	}
 
+	/**
+	 * Moves user methods to the correct locations in the java code
+	 * 
+	 * @param outputStream
+	 * @param programFiles
+	 * @param programClasses
+	 * @throws IOException
+	 */
 	private void insertUserMethods(Writer outputStream, String programFiles, String programClasses) throws IOException {
 		
 		ClassHandler classWriter = new ClassHandler(properties, programFiles, programClasses);

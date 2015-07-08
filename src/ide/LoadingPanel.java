@@ -8,6 +8,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Don't use
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public final class LoadingPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;

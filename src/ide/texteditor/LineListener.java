@@ -16,8 +16,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * Simple line numbering listener. Has an issue when a line is edited
- * after scrolling, needs to be looked into further
+ * Do not use
  * 
  * @author Mike Nowicki
  *

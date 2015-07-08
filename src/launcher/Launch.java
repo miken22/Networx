@@ -4,6 +4,12 @@ import java.awt.EventQueue;
 
 import ide.WorkBench;
 
+/**
+ * Main entry point of the program
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class Launch {
 
 	public static void main(String[] args){	

@@ -14,6 +14,12 @@ import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
+/**
+ * Class that saves the user script to a file
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class SaveFileListener  implements ActionListener {
 
 	private JTextPane worksheet;

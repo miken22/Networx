@@ -1,6 +1,9 @@
 package ide.texteditor;
 
-public interface KeyWords {
+/**
+ * Do not use
+ */
+public final class KeyWords {
 
 	public static final String keyWords = "String|Object|Integer|Double|Float|Byte|ArrayList|List|HashMap|HashSet|" +
 										  "DirectedGraph|Forest|Graph |Hypergraph|KPartiteGraph|MultiGraph|Tree|" + 
