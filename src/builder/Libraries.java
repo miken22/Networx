@@ -10,19 +10,23 @@ import java.io.File;
 public final class Libraries {
 
 	/**
-	 * All libraries to be included on the build path using Unix file separators
+	 * Gets all libraries that need to be added to the classpath
+	 * when the user application is compiled
+	 * 
+	 * @param OS String indicating the operating system. From System.getProperty("os");
+	 * @return The list of libraries to add to the compilers classpath.
 	 */
-	public final static String linuxList = ".:UserFiles/";//:lib/networxlib.jar:lib/collections-generic-4.01.jar:lib/colt-1.2.0.jar:lib/concurrent-1.3.4.jar:lib/j3d-core-1.3.1.jar"
-			//+ ":lib/jung-algorithms-2.0.1.jar:lib/jung-api-2.0.1.jar:lib/jung-graph-impl-2.0.1.jar:lib/jung-io.2.0.1.jar:lib/jung-jai-2.0.1.jar"
-			//+ ":lib/jung-visualization-2.0.1.jar:lib/stax-api-1.0.1.jar:lib/vecmath-1.3.1.jar:lib/wstx-asl-3.2.6.jar ";
-
-	
-	/**
-	 * All libraries to be included on the build path using windows file separators
-	 */
-	public final static String windowsList = ".;UserFiles/";//;lib/networxlib.jar;lib/collections-generic-4.01.jar;lib/colt-1.2.0.jar;lib/concurrent-1.3.4.jar;lib/j3d-core-1.3.1.jar"
-			//+ ";lib/jung-algorithms-2.0.1.jar;lib/jung-api-2.0.1.jar;lib/jung-graph-impl-2.0.1.jar;lib/jung-io.2.0.1.jar;lib/jung-jai-2.0.1.jar"
-			//+ ";lib/jung-visualization-2.0.1.jar;lib/stax-api-1.0.1.jar;lib/vecmath-1.3.1.jar;lib/wstx-asl-3.2.6.jar ";
+	public static String getLibraries(String OS) {
+		
+		String libraries = "";
+		
+		if (OS.startsWith("Windows")) {
+			libraries = loadWindowsLibaries(libraries);
+		} else if (OS.startsWith("Linux")) {
+			libraries = loadLinuxLibaries(libraries);
+		}		
+		return libraries;
+	}
 	
 	private static String loadWindowsLibaries(String libraries) {
 		
@@ -40,7 +44,8 @@ public final class Libraries {
 		for (File subFile : libFolder.listFiles()) {
 			
 			if (subFile.isDirectory()) {
-				
+				// Only look one level into sub-folders, does not support >2 levels
+				// of library files
 				for (File nestedLib : subFile.listFiles()) {
 					if (nestedLib.isDirectory()) {
 						continue;
@@ -110,20 +115,6 @@ public final class Libraries {
 			return true;
 		}
 		return false;
-	}
-	
-	public static String getLibraries(String OS) {
-		
-		String libraries = "";
-		
-		if (OS.startsWith("Windows")) {
-			libraries = loadWindowsLibaries(libraries);
-		} else if (OS.startsWith("Linux")) {
-			libraries = loadLinuxLibaries(libraries);
-		}
-		System.out.println(libraries);
-		
-		return libraries;
 	}
 	
 }

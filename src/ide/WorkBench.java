@@ -241,10 +241,10 @@ public class WorkBench {
 		toolbar.setLayout(null);
 		toolbar.setBackground(new Color(217, 217, 217));
 
-		// Setup compiler listener
+		// Setup listeners
 		newFile.addActionListener(new NewFileListener());
-		openFile.addActionListener(new OpenButtonListener(editor));
-		saveFile.addActionListener(new SaveFileListener(editor));
+		openFile.addActionListener(new OpenButtonListener(editor, properties));
+		saveFile.addActionListener(new SaveFileListener(editor, properties));
 		compiler.addActionListener(new CompileButtonListener(editor, buildlog, properties));
 				
 		Image img;
@@ -374,7 +374,7 @@ public class WorkBench {
 			
 			editor.setText("");
 			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
-			saveFile.addActionListener(new SaveFileListener(editor));
+			saveFile.addActionListener(new SaveFileListener(editor, properties));
 			properties.clearSettings();
 		}
 	}

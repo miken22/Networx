@@ -1,5 +1,6 @@
 package toolbar.listeners;
 
+import ide.Properties;
 import ide.texteditor.TextEditorDocument;
 
 import java.awt.event.ActionEvent;
@@ -24,10 +25,11 @@ public class SaveFileListener  implements ActionListener {
 
 	private JTextPane worksheet;
 	private TextEditorDocument document;
-	private String filePath = "";
+	private Properties properties;
 
-	public SaveFileListener(JTextPane worksheet) {
+	public SaveFileListener(JTextPane worksheet, Properties properties) {
 		this.worksheet = worksheet;
+		this.properties = properties;
 		this.document = (TextEditorDocument) worksheet.getDocument();
 	}
 
@@ -43,48 +45,54 @@ public class SaveFileListener  implements ActionListener {
 
 		try {
 
-			if (filePath.equals("")){
-				JFileChooser fileChooser = new JFileChooser();
+			JFileChooser fileChooser = new JFileChooser();
 
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-				FileNameExtensionFilter scriptFilter = new FileNameExtensionFilter("Networx Script files (*.scrt)", "scrt");
-				// add filter
-				fileChooser.setFileFilter(scriptFilter);
+			FileNameExtensionFilter scriptFilter = new FileNameExtensionFilter("Networx Script files (*.scrt)", "scrt");
+			// add filter
+			fileChooser.setFileFilter(scriptFilter);
 
-				if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {				
-					File userScript = fileChooser.getSelectedFile();
-					filePath = userScript.getAbsolutePath();
-					if (userScript.getName().contains(".scrt")) {
-						Writer outputStream = new FileWriter(userScript);
-						outputStream.write(theScript);
-						outputStream.close();
-					} else { // Otherwise we need to add correct fileExtention
-						Writer outputStream = new FileWriter(userScript + ".scrt");
-						outputStream.write(theScript);
-						outputStream.close();
-					}
-					document.isSaved();
-				}
-			} else {
-				File userScript = new File(filePath);
+			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {				
+
+				File userScript = fileChooser.getSelectedFile();
+				Writer outputStream = null;
+
 				if (userScript.getName().contains(".scrt")) {
-					Writer outputStream = new FileWriter(userScript);
-					outputStream.write(theScript);
-					outputStream.close();
+					outputStream = new FileWriter(userScript);
 				} else { // Otherwise we need to add correct fileExtention
-					Writer outputStream = new FileWriter(userScript + ".scrt");
-					outputStream.write(theScript);
-					outputStream.close();
+					outputStream = new FileWriter(userScript + ".scrt");
 				}
+
+				outputStream.write(theScript);
+				
+				// If there are set properties add them to the file
+				if (properties.getPackagesToImport().size() != 0) {
+
+					outputStream.write("\r\n");
+					outputStream.write("#Imports");
+					outputStream.write("\r\n");
+					
+					for (String toImport : properties.getPackagesToImport()) {
+						outputStream.write(toImport + "\r\n");
+					}
+				}
+				
+				if (properties.getCommandArguments().length() != 0) {
+					outputStream.write("#Arguments");
+					outputStream.write("\r\n");
+					outputStream.write(properties.getCommandArguments());
+				}
+				
+				outputStream.close();
+
 				document.isSaved();
 			}
-
-			// TODO: Probably fix this to handle crashes without losing worksheet
+			
+			// TODO: Save user properties (imports etc)
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

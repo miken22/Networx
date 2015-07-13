@@ -1,5 +1,7 @@
 package toolbar.listeners;
 
+import ide.Properties;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -21,9 +23,11 @@ import javax.swing.text.Document;
 public class OpenButtonListener implements ActionListener {
 
 	private JTextPane worksheet;
-
-	public OpenButtonListener(JTextPane worksheet) {
+	private Properties properties;
+	
+	public OpenButtonListener(JTextPane worksheet, Properties properties) {
 		this.worksheet = worksheet;
+		this.properties = properties;
 	}
 
 	@Override
@@ -43,6 +47,8 @@ public class OpenButtonListener implements ActionListener {
 
 			if (fileChooser.showOpenDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
 
+				// Clear old settings (if any)
+				properties.clearSettings();
 				worksheet.setText("");
 
 				File userScript = fileChooser.getSelectedFile();	
@@ -52,15 +58,32 @@ public class OpenButtonListener implements ActionListener {
 				
 				fileText = bufferedReader.readLine();
 				
-				while (fileText != null) {
+				while (fileText != null && !fileText.equals("#Imports")) {
 					doc.insertString(doc.getLength(), fileText + "\r\n", null);
 					fileText = bufferedReader.readLine();
 				}
-			
+				
+				// Check for saved preferences, 
+				if (fileText != null && fileText.equals("#Imports")) {
+					fileText = bufferedReader.readLine();
+					while (fileText != null && !fileText.equals("#Arguments")) {
+						properties.addPackage(fileText);
+						fileText = bufferedReader.readLine();
+					}
+				}
+				
+				// Add command line arguments if needed
+				if (fileText != null && fileText.equals("#Arguments")) {
+					fileText = bufferedReader.readLine();
+					properties.addCommandLineArgument(fileText);
+				}
+				
 				bufferedReader.close();
 				worksheet.requestFocus();				
 			
 			}
+			
+			// TODO: Load user settings from saved scripts
 
 		} catch (Exception exp) {
 			exp.printStackTrace();
