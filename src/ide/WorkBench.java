@@ -250,7 +250,7 @@ public class WorkBench {
 		Image img;
 		// Empty catches are bad, mmmkkayyyy?
 		try {
-			img = ImageIO.read(getClass().getResource("/resources/rsz_newfile.png"));
+			img = ImageIO.read(getClass().getResource("/res/rsz_newfile.png"));
 			newFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 			System.exit(-1);
@@ -260,7 +260,7 @@ public class WorkBench {
 		toolbar.add(newFile);
 
 		try {
-			img = ImageIO.read(getClass().getResource("/resources/rsz_save.png"));
+			img = ImageIO.read(getClass().getResource("/res/rsz_save.png"));
 			saveFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 			System.exit(-1);
@@ -270,7 +270,7 @@ public class WorkBench {
 		toolbar.add(saveFile);
 
 		try {
-			img = ImageIO.read(getClass().getResource("/resources/rsz_open.png"));
+			img = ImageIO.read(getClass().getResource("/res/rsz_open.png"));
 			openFile.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 			System.exit(-1);
@@ -280,7 +280,7 @@ public class WorkBench {
 		toolbar.add(openFile);
 
 		try {
-			img = ImageIO.read(getClass().getResource("/resources/rsz_play.png"));
+			img = ImageIO.read(getClass().getResource("/res/rsz_play.png"));
 			compiler.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
 			System.exit(-1);
@@ -375,6 +375,7 @@ public class WorkBench {
 			editor.setText("");
 			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
 			saveFile.addActionListener(new SaveFileListener(editor));
+			properties.clearSettings();
 		}
 	}
 }

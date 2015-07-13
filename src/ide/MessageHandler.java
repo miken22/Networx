@@ -69,8 +69,15 @@ public class MessageHandler {
 
 		// UserFile is 10 characters long, so start from there to the period
 		// in the name ******.java
-		String errorFile = parts[0].substring(10,parts[0].indexOf('.')) + ".java";
+		
 
+		String errorFile = "";
+		try {
+			errorFile = parts[0].substring(10,parts[0].indexOf('.')) + ".java";			
+		} catch (StringIndexOutOfBoundsException e) {
+			return errorMessage;
+		}
+		
 		File userScript = new File(directory, errorFile);
 		userScript.deleteOnExit();
 

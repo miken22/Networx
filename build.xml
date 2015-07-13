@@ -11,9 +11,9 @@
 
 <project name="Fuzzy-Runner" basedir="." default="jar">
 	<property name="source.dir" value="src" />
-	<property name="lib.dir" value="libraries" />
+	<property name="lib.dir" value="lib" />
 	<property name="class.dir" value="bin" />
-	<property name="font.dir" value="resources" />
+	<property name="font.dir" value="res" />
 	<property name="jar.dir" value="../fuzzy-runnable" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	<property name="main-class" value="launcher.Launch" />
@@ -33,23 +33,27 @@
 	</target>
 
 	<target name="compile" description="build class files" depends="clean">
-		<mkdir dir="${class.dir}" />
+		<mkdir dir="${class.dir}/${lib.dir}" />
 		<javac srcdir="${source.dir}" destdir="${class.dir}" includeantruntime="false" />
 	</target>
 
 	<target name="jar" depends="compile">
 		<mkdir dir="${jar.dir}" />
-		<mkdir dir="${class.dir}/${lib.dir}" />
+		<mkdir dir="${class.dir}" />
+		
+		<!-- Move libraries so application can use them -->
+		<copy todir="${jar.dir}/${lib.dir}" flatten="false">
+			<path refid="libraries.path" />
+		</copy>
+		
 		<copy todir="${class.dir}/${lib.dir}" flatten="true">
 			<path refid="libraries.path" />
 		</copy>
+		
+		<!-- Move resources for application -->
 		<copy todir="${class.dir}/${font.dir}" flatten="true">
 			<path refid="res.path" />
 		</copy>
-
-		<manifestclasspath property="manifest.classpath" jarfile="${jar.file}">
-			<classpath refid="libraries.path" />
-		</manifestclasspath>
 
 		<jar destfile="${jar.file}" basedir="${class.dir}">
 			<manifest>

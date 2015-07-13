@@ -57,14 +57,8 @@ public class CompileButtonListener implements ActionListener {
 
 		// Get OS on startup,
 		OS = getOperatingSystem();
-		
-		if (OS.startsWith("Windows")) {
-			programFiles += "UserFiles/UserScript.java";
-			libraries = Libraries.windowsList;
-		} else if (OS.startsWith("Linux")) {
-			programFiles += "UserFiles/UserScript.java";
-			libraries = Libraries.linuxList;
-		}
+		libraries = Libraries.getLibraries(OS);
+		programFiles += "UserFiles/UserScript.java";
 
 		if (OS.indexOf("mac") >= 0) {
 			JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
@@ -109,7 +103,7 @@ public class CompileButtonListener implements ActionListener {
 		
 		// Compile code
 		buildlog.append("Building script...\r\n");
-		runProcess("javac -cp " + libraries + files);
+		runProcess("javac -cp " + libraries + " " + files);
 		
 		if (buildFailed) {
 			buildlog.append("Script could not be compiled.");
@@ -129,7 +123,7 @@ public class CompileButtonListener implements ActionListener {
 		userFolder.deleteOnExit();
 
 		// Execute.
-		runProcess("java " + arguments + " -cp " + libraries +  classes);
+		runProcess("java " + arguments + " -cp " + libraries + " " + classes);
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");

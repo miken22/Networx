@@ -35,4 +35,8 @@ public class Properties {
 		return packagesToImport;
 	}
 	
+	public void clearSettings() {
+		commandArguments = "";
+		packagesToImport.clear();
+	}
 }

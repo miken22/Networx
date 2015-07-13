@@ -112,7 +112,6 @@ public final class Packages {
 		   "core.webcrawler",
 		   "algorithms.connectivity", 
 		   "algorithms.graphloader", 
-		   "algorithms.graphloader.utils",
 		   "algorithms.search", 
 		   "algorithms.search.tools",
 		   "tests.examples"
