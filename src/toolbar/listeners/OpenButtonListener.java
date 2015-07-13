@@ -1,6 +1,7 @@
 package toolbar.listeners;
 
 import ide.Properties;
+import ide.texteditor.TextEditorDocument;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +12,6 @@ import java.io.FileReader;
 import javax.swing.JFileChooser;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.Document;
 
 /**
  * Class that loads user files and places the code into the text
@@ -54,7 +54,7 @@ public class OpenButtonListener implements ActionListener {
 				File userScript = fileChooser.getSelectedFile();	
 				FileReader reader = new FileReader(userScript);
 				BufferedReader bufferedReader = new BufferedReader(reader);
-				Document doc = worksheet.getStyledDocument();
+				TextEditorDocument doc = (TextEditorDocument)worksheet.getStyledDocument();
 				
 				fileText = bufferedReader.readLine();
 				
@@ -79,12 +79,11 @@ public class OpenButtonListener implements ActionListener {
 				}
 				
 				bufferedReader.close();
+				doc.isSaved();
 				worksheet.requestFocus();				
 			
 			}
 			
-			// TODO: Load user settings from saved scripts
-
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			actionPerformed(e);
