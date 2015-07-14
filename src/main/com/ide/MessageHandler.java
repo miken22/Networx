@@ -36,10 +36,7 @@ public class MessageHandler {
 				errorMessage = adjustErrorIndex(errorMessage, worksheet);
 				buildlog.append(errorMessage + "\n");
 				return;
-			} catch (IOException e) {
-				buildlog.append("Something went wrong compiling script, ensure ");
-				buildlog.append("the command line arguments are correct. ");
-			}
+			} catch (IOException e) {}
 		}
 
 		buildlog.append(errorMessage + "\n");
@@ -66,16 +63,18 @@ public class MessageHandler {
 		String script = worksheet.getText();
 		String[] scriptLines = script.split("\n");
 
-		File directory = new File("UserFiles");
-		directory.deleteOnExit();
-
-		// UserFile is 10 characters long, so start from there to the period
-		// in the name ******.java
+		File directory = null;
+		if (System.getProperty("os.name").contains("windows")) {
+			directory = new File("UserFiles");
+		} else {
+			directory = new File(".UserFiles");
+		}
 		
-
+		directory.deleteOnExit();
+		// Get file to scan
 		String errorFile = "";
 		try {
-			errorFile = parts[0].substring(10,parts[0].indexOf('.')) + ".java";			
+			errorFile = parts[0].substring(parts[0].indexOf('/')+1,parts[0].length());			
 		} catch (StringIndexOutOfBoundsException e) {
 			return errorMessage;
 		}
@@ -94,11 +93,19 @@ public class MessageHandler {
 			lineCounter++;
 			line = bufferedReader.readLine();
 		}
+		
+		int trimEnd = errorFile.indexOf('.');
+		errorFile = errorFile.substring(0, trimEnd);
 
 		for (int i = 0; i < scriptLines.length; i++) {
 			if (scriptLines[i].trim().equals(line.trim())) {
 				bufferedReader.close();
-				return parts[0] + ":" + (i+1) + parts[2] + parts[3];
+				
+				if (errorFile.equals("UserScript")) {
+					return "Error on Line:" + (i+1) + parts[2] + parts[3];
+				} else {
+					return "Error in Class " + errorFile + ":" + (i+1) + parts[2] + parts[3];
+				}
 			}
 		}
 

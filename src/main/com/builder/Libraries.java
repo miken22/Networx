@@ -69,7 +69,7 @@ public final class Libraries {
 	
 	private static String loadLinuxLibaries(String libraries) {
 		
-		libraries += ".:UserFiles/";
+		libraries += ".:.UserFiles/";
 		
 		File libFolder = new File("lib");
 		if (!libFolder.isDirectory()) {
