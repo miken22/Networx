@@ -40,13 +40,11 @@ public class ScriptBuilder {
 	public void buildScript(JTextPane worksheet, String programFiles, String programClasses) {
 
 		String script = worksheet.getText();
+		String OS = System.getProperty("os.name");
 		
-		File userFolder = null;
+		File userFolder = new File(".UserFiles");
 
-		if (System.getProperty("os.name").contains("windows")) {
-			
-			userFolder = new File("UserFiles");
-			
+		if (OS.contains("windows")) {
 			// Convert to path, check if the folder is hidden, hide it if it is not.
 			Path path = userFolder.toPath();
 			Boolean hidden;
@@ -58,11 +56,6 @@ public class ScriptBuilder {
 				    Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
 				}
 			} catch (IOException e1) {}
-			
-		
-		
-		} else {
-			userFolder = new File(".UserFiles");
 		}
 		
 		userFolder.mkdir();
@@ -79,12 +72,12 @@ public class ScriptBuilder {
 			// Import needed files from JARs
 			addPackageImports(outputStream);
 			userMethods.clear();
-			UserDefinitionHandler findUserDefinitions = new UserDefinitionHandler();
+			UserDefinitionHandler userDefHandler = new UserDefinitionHandler();
 			// Get all user declared methods and classes
-			userMethods = findUserDefinitions.findUserDefinitions(script);
+			userMethods = userDefHandler.findUserDefinitions(script);
 			// Get the script with all user defined methods/classes
 			// removed
-			script = findUserDefinitions.getCleanedScript();
+			script = userDefHandler.getCleanedScript();
 			
 			// TODO: Let user type in imports, find and move them to the top
 			//       of the class file.
@@ -133,7 +126,7 @@ public class ScriptBuilder {
 	private void insertUserMethods(Writer outputStream, String programFiles, 
 									String programClasses) throws IOException {
 		
-		ClassHandler classWriter = new ClassHandler(properties, programFiles, programClasses);
+		ClassHandler classWriter = new ClassHandler(properties);
 		
 		for (String userMethod : userMethods) {
 			if (userMethod.contains("class")) {

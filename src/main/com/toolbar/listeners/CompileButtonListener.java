@@ -37,37 +37,13 @@ public class CompileButtonListener implements ActionListener {
 	 * Class that extracts the text from the worksheet and build
 	 * class(es) as needed that can be compiled and executed.
 	 */
-	private ScriptBuilder sb;
 	
 	private Properties properties;
-	
-	/* Global set of program files and classes to auto add to command line
-	   once use of custom classes added. */
-	private String programFiles = "";
-	private String programClasses = "UserScript";
-	private String OS = "";
-	private String libraries = "";
 
 	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog, Properties properties) {
 		this.worksheet = worksheet;
 		this.buildlog = buildlog;	
 		this.properties = properties;
-		sb = new ScriptBuilder(properties);
-
-		// Get OS on startup,
-		OS = getOperatingSystem();
-		libraries = Libraries.getLibraries(OS);
-
-		if (OS.contains("windows")) {
-			programFiles += "UserFiles/UserScript.java";			
-		} else {
-			programFiles += ".UserFiles/UserScript.java";
-		}
-		
-		if (OS.indexOf("mac") >= 0) {
-			JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
-			System.exit(-1);			
-		}
 	}
 
 	/**
@@ -75,7 +51,12 @@ public class CompileButtonListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
-
+		
+		// Set first file for class path / compiling.
+		String programFiles = ".UserFiles/UserScript.java";
+		String programClasses = "UserScript";
+		ScriptBuilder sb = new ScriptBuilder(properties);
+		
 		// Don't compile anything if the script is blank
 		if (worksheet.getText().length() == 0) {
 			buildlog.setText("Nothing to compile!");
@@ -104,6 +85,8 @@ public class CompileButtonListener implements ActionListener {
 	public void compileScript(String files, String classes) throws Exception {
 
 		String arguments = properties.getCommandArguments();
+		String OS = getOperatingSystem();
+		String libraries = Libraries.getLibraries(OS);
 		
 		// Compile code
 		buildlog.append("Building script...\r\n");
@@ -117,8 +100,8 @@ public class CompileButtonListener implements ActionListener {
 		buildlog.append("---------------------------------------\r\n");
 
 		// Iterate over class files, set to remove on exit.
-		String[] userClasses = programClasses.split(" ");
-		File userFolder = new File("UserFiles");
+		String[] userClasses = classes.split(" ");
+		File userFolder = new File(".UserFiles");
 		for (String userClass : userClasses) {
 			File classFile = new File(userFolder, userClass + ".class");
 			classFile.deleteOnExit();

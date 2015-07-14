@@ -8,6 +8,8 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.com.ide.Properties;
 
@@ -24,19 +26,12 @@ public class ClassHandler {
 	 * Properties object
 	 */
 	private Properties properties;
-	/**
-	 * List of java files for compiling
-	 */
-	private String programFiles;
-	/**
-	 * List of java class names for execution
-	 */
-	private String programClasses;
 	
-	public ClassHandler(Properties props, String programFiles, String programClasses) {
+	private List<String> fileList;
+	
+	public ClassHandler(Properties props) {
 		this.properties = props;
-		this.programFiles = programFiles;
-		this.programClasses = programClasses;
+		fileList = new ArrayList<>();
 	}
 
 	/**
@@ -66,12 +61,9 @@ public class ClassHandler {
 
 		try {
 			
-			File userFolder = null;
+			File userFolder = new File(".UserFiles");
 			
-			if (System.getProperty("os.name").contains("windows")) {
-				
-				userFolder = new File("UserFiles");
-				
+			if (System.getProperty("os.name").contains("windows")) {			
 				// Convert to path, check if the folder is hidden, hide it if it is not.
 				Path path = userFolder.toPath();
 				Boolean hidden;
@@ -83,11 +75,7 @@ public class ClassHandler {
 					    Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
 					}
 				} catch (IOException e1) {}
-				
-			
-			
-			} else {
-				userFolder = new File(".UserFiles");
+		
 			}
 			
 			File userFile = new File(userFolder, userClassName + ".java");
@@ -103,16 +91,15 @@ public class ClassHandler {
 			// User class and open user class bracket
 			outputStream.write(userClass);
 			outputStream.close();
+			
+			fileList.add(userClassName);
 
-			programFiles = programFiles + " UserFiles/" + userClassName + ".java";
-			programClasses = programClasses + " "  + userClassName;
-
+		// catches should not be triggered
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}	
 	
 	/**
@@ -122,11 +109,24 @@ public class ClassHandler {
 	 * @throws IOException
 	 */
 	private void addPackageImports(Writer outputStream) throws IOException {
-
 		for (String packageToImport : properties.getPackagesToImport()) {
 			outputStream.write("import " + packageToImport + ".*;\r\n");
 		}
-
 	}
 	
+	public String updateSourceFileList(String programFiles) {
+		
+		for (String fileName : fileList) {
+			programFiles += fileName + ".java ";
+		}
+		
+		return programFiles;
+	}
+	
+	public String updateClassFileList(String classFiles) {
+		for (String fileName : fileList) {
+			classFiles += fileName + " ";
+		}
+		return classFiles;
+	}
 }
