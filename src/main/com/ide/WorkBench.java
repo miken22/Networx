@@ -51,8 +51,7 @@ public class WorkBench {
 
 	// Main frame components
 	private JFrame frame;
-//	private JFrame loadingScreen;
-	
+
 	private Container mainContainer;
 	private JScrollPane mainScroll;
 	private JScrollPane outputScroll;
@@ -318,7 +317,8 @@ public class WorkBench {
 			// Open file, check to save first
 				if (textarea.documentHasChanged()) {
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning",dialogButton);
+					int dialogResult = JOptionPane.showConfirmDialog (null,
+							"Would You Like to Save your Work?","Warning",dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFile.doClick();
 						textarea.isSaved();
@@ -334,7 +334,8 @@ public class WorkBench {
 				
 				if (textarea.documentHasChanged()) {
 					dialogButton = JOptionPane.YES_NO_OPTION;
-					dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning",dialogButton);
+					dialogResult = JOptionPane.showConfirmDialog (null,
+							"Would You Like to Save your Work?","Warning",dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFile.doClick();
 						textarea.isSaved();
@@ -364,7 +365,8 @@ public class WorkBench {
 			
 			if (textarea.documentHasChanged()) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
-				int dialogResult = JOptionPane.showConfirmDialog (null, "Would You Like to Save your Work?","Warning", dialogButton);
+				int dialogResult = JOptionPane.showConfirmDialog (null, 
+						"Would You Like to Save your Work?","Warning", dialogButton);
 				if(dialogResult == JOptionPane.YES_OPTION){
 					saveFile.doClick();
 					textarea.isSaved();

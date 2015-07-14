@@ -11,8 +11,15 @@ public final class Packages {
 	/**
 	 * All java packages that can be imported
 	 */
-	public static final String[] javaPackages = { "java.beans", "java.beans.beancontext", "java.io", "java.lang", "java.lang.annotation",
-		"java.lang.instrument", "java.lang.invoke",	"java.lang.management",
+	public static final String[] javaPackages = { 
+		"java.beans", 
+		"java.beans.beancontext",
+		"java.io",
+		"java.lang",
+		"java.lang.annotation",
+		"java.lang.instrument",
+		"java.lang.invoke",
+		"java.lang.management",
 		"java.lang.ref",
 		"java.lang.reflect",
 		"java.math",
@@ -106,15 +113,14 @@ public final class Packages {
 	 * List of custom packages to import
 	 */
 	public static final String[] libraries = {
-		   "core.components", 
-		   "core.stocks", 
-		   "core.visualizer",
-		   "core.webcrawler",
 		   "algorithms.connectivity", 
 		   "algorithms.graphloader", 
 		   "algorithms.search", 
 		   "algorithms.search.tools",
-		   "tests.examples"
+		   "core.components", 
+		   "core.stocks", 
+		   "core.visualizer",
+		   "core.webcrawler"
 	};
 	
 }

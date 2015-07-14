@@ -122,7 +122,8 @@ public class ScriptBuilder {
 	 * @param programClasses
 	 * @throws IOException
 	 */
-	private void insertUserMethods(Writer outputStream, String programFiles, String programClasses) throws IOException {
+	private void insertUserMethods(Writer outputStream, String programFiles, 
+									String programClasses) throws IOException {
 		
 		ClassHandler classWriter = new ClassHandler(properties, programFiles, programClasses);
 		

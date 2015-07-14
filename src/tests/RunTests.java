@@ -13,7 +13,6 @@ public class RunTests {
 
 	public static void main(String[] args) {
 
-		// Breadth first search example
 //		AStarExample example = new AStarExample();
 //		BFSExample example = new BFSExample();
 //		DFSExample example = new DFSExample();
@@ -26,7 +25,7 @@ public class RunTests {
 		
 //		SpanningTreeExample example = new SpanningTreeExample();
 		
-		example.runExample();
+//		example.runExample();
 
 	}
 

@@ -28,7 +28,9 @@ public class MessageHandler {
 	 * @param buildlog - The console to print to
 	 * @throws InterruptedException
 	 */
-	public static void handleErrorMessage(String errorMessage, JTextPane worksheet, JTextArea buildlog) throws InterruptedException {
+	public static void handleErrorMessage(String errorMessage, JTextPane worksheet, 
+											JTextArea buildlog) throws InterruptedException {
+		
 		if (errorMessage.matches(".*[0-9].*")) {
 			try {
 				errorMessage = adjustErrorIndex(errorMessage, worksheet);
