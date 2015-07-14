@@ -75,9 +75,7 @@ public class WorkBench {
 	private JMenuItem save;
 	private JMenuItem open;
 	private JMenuItem buildScript;
-	private JMenuItem libraryPackageLoader;
-	private JMenuItem jungPackageLoader;
-	private JMenuItem javaPackageLoader;
+	private JMenuItem packageLoader;
 
 	private Properties properties;
 
@@ -95,9 +93,7 @@ public class WorkBench {
 		
 		build = new JMenu("Build Tools");
 		buildScript = new JMenuItem("Build Script");
-		libraryPackageLoader = new JMenuItem("Add Networx Packages");
-		javaPackageLoader = new JMenuItem("Add Java Packages");
-		jungPackageLoader = new JMenuItem("Add JUNG2 Packages");
+		packageLoader = new JMenuItem("Set Package Imports");
 		
 		lines = new JTextArea("1");	 		
 		textarea = new TextEditorDocument();
@@ -154,17 +150,14 @@ public class WorkBench {
 		menu.add(build);
 		build.add(buildScript);
 		build.add(new CommandLineArgument(properties));
-		build.add(libraryPackageLoader);
-		build.add(javaPackageLoader);
-		build.add(jungPackageLoader);	
+		build.add(packageLoader);	
 
 		save.addActionListener(new MenuListener(1));
 		open.addActionListener(new MenuListener(2));
 		exit.addActionListener(new MenuListener(3));
 		buildScript.addActionListener(new MenuListener(4));
-		javaPackageLoader.addActionListener(new PropertiesButtonListener(properties, 0));
-		jungPackageLoader.addActionListener(new PropertiesButtonListener(properties, 1));
-		libraryPackageLoader.addActionListener(new PropertiesButtonListener(properties, 2));
+	
+		packageLoader.addActionListener(new PropertiesButtonListener(properties));
 		
 		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
@@ -376,7 +369,8 @@ public class WorkBench {
 			editor.setText("");
 			saveFile.removeActionListener(saveFile.getActionListeners()[0]);
 			saveFile.addActionListener(new SaveFileListener(editor, properties));
-			properties.clearSettings();
+			properties.clearArguments();
+			properties.clearImports();
 		}
 	}
 }

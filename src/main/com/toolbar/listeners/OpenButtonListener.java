@@ -48,7 +48,8 @@ public class OpenButtonListener implements ActionListener {
 			if (fileChooser.showOpenDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
 
 				// Clear old settings (if any)
-				properties.clearSettings();
+				properties.clearImports();
+				properties.clearArguments();
 				worksheet.setText("");
 
 				File userScript = fileChooser.getSelectedFile();	

@@ -67,7 +67,7 @@ public final class Packages {
 	/**
 	 * List of all JUNG2 packages to import
 	 */
-	public static final String[] packages = {
+	public static final String[] jungPackages = {
 		"edu.uci.ics.jung.algorithms.blockmodel", 
 		"edu.uci.ics.jung.algorithms.cluster",
 		"edu.uci.ics.jung.algorithms.filters", 

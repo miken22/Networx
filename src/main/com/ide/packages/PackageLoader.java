@@ -1,5 +1,6 @@
 package main.com.ide.packages;
 
+import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,8 +8,9 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 import main.com.ide.Properties;
 
@@ -19,45 +21,100 @@ import main.com.ide.Properties;
  * @author Mike Nowicki
  *
  */
-public abstract class PackageLoader {
+public class PackageLoader extends JFrame {
 
-	JFrame configurationFrame;
-	JButton ok;
-	JButton cancel;
+	private static final long serialVersionUID = 1L;
+
+	private JTabbedPane optionPane;
+	private JButton ok;
+	private JButton cancel;
 	
-	JLabel header;
-	JPanel packagePanel;
+	private JPanel topPanel;
 	
-	List<Checkbox> packageGroup;
+	private LibraryPackagePane libPackagePane;
+	private JavaPackagePane javaPackagePane;
+	private JungPackagePane jungPackagePane;
 	
-	Properties properties;
+	private Properties properties;
 	
 	public PackageLoader(Properties properties) {
-		this.properties = properties;
-	}
-
-	/**
-	 * Initialize the frame and all its components.
-	 */
-	public abstract void createFrame();
-
-	/**
-	 * Create the checkboxes, add them to the panel and a list to iterate over late
-	 */
-	public void addPanelPackageList(String[] packageList) {
 		
-		for (String thePackage : packageList) {
-			Checkbox packageBox = new Checkbox(thePackage, false);
-			packageGroup.add(packageBox);
-			
-			if (properties.getPackagesToImport().contains(thePackage)) {
-				packageBox.setState(true);
-			}
-			
-			packagePanel.add(packageBox);
-		}		
+		super("Packages to Import");
+		
+		this.properties = properties;
+	
+		optionPane = new JTabbedPane();
+		
+		ok = new JButton("OK");
+		cancel = new JButton("Cancel");
+		
+		topPanel = new JPanel();
+		
+		libPackagePane = new LibraryPackagePane(properties);
+		javaPackagePane = new JavaPackagePane(properties);
+		jungPackagePane = new JungPackagePane(properties);
+		
+		initialize();
+		
 	}
 
+	private void initialize() {
+		
+		setSize(550,700);
+		setLayout(null);
+		setResizable(false);
+		
+		add(topPanel);
+
+		// Add panel and tabbed pane, load each pane
+		topPanel.setBounds(5,5,540, 600);
+		topPanel.setLayout(new BorderLayout());
+
+		libPackagePane.updatePackageSelection();
+		javaPackagePane.updatePackageSelection();
+		jungPackagePane.updatePackageSelection();	
+		
+		JScrollPane fuzzyPane = new JScrollPane(libPackagePane);
+
+        JScrollPane javaPane = new JScrollPane(javaPackagePane);
+        javaPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        JScrollPane jungPane = new JScrollPane(jungPackagePane);
+        jungPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);          
+		
+		optionPane.add("Fuzzy Packages", fuzzyPane);
+		optionPane.add("Java Packages", javaPane);
+		optionPane.add("JUNG2 Packages", jungPane);
+		
+		topPanel.add(optionPane, BorderLayout.CENTER);
+
+		// Load buttons and their listeners
+
+		ok.setBounds(150, 625, 90, 35);
+		cancel.setBounds(275, 625, 90, 35);
+		
+		ok.addActionListener(new SavePackageListener(properties));
+		cancel.addActionListener(new CancelListener());
+		
+		add(ok);
+		add(cancel);	
+		
+	}
+
+	/**
+	 * Show the frame.
+	 */
+	public void createFrame() {
+		
+		libPackagePane.updatePackageSelection();
+		javaPackagePane.updatePackageSelection();
+		jungPackagePane.updatePackageSelection();
+		
+		setLocationRelativeTo(null);
+		setVisible(true);
+		
+	}
+	
 	/**
 	 * For each checked box get the label and add it to the list of
 	 * properties to import
@@ -67,22 +124,43 @@ public abstract class PackageLoader {
 	 */
 	public class SavePackageListener implements ActionListener {
 
-		private List<Checkbox> panelCBGroup;
 		private Properties projectProperties;
 		
-		public SavePackageListener(List<Checkbox> packageGroup, Properties projectProperties) {
-			panelCBGroup = packageGroup;
+		public SavePackageListener(Properties projectProperties) {
 			this.projectProperties = projectProperties;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent save) {
-			for (Checkbox option : panelCBGroup) {
+
+			projectProperties.clearImports();
+			
+			List<Checkbox> panelGroup = libPackagePane.getPackageGroup();
+			
+			// Look through all components sets of checkboxes and store
+			// any that are selected
+			
+			for (Checkbox option : panelGroup) {
 				if (option.getState()) {
 					projectProperties.addPackage(option.getLabel());
 				}
 			}
-			configurationFrame.dispose();
+			
+			panelGroup = javaPackagePane.getPackageGroup();
+			for (Checkbox option : panelGroup) {
+				if (option.getState()) {
+					projectProperties.addPackage(option.getLabel());
+				}
+			}
+			
+			
+			panelGroup = jungPackagePane.getPackageGroup();
+			for (Checkbox option : panelGroup) {
+				if (option.getState()) {
+					projectProperties.addPackage(option.getLabel());
+				}
+			}
+			dispose();
 		}
 	}
 	
@@ -95,7 +173,7 @@ public abstract class PackageLoader {
 	public class CancelListener implements ActionListener {	
 		@Override
 		public void actionPerformed(ActionEvent cancel) {
-			configurationFrame.dispose();
+			dispose();
 		}
 	}
 	

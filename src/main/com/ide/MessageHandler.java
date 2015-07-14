@@ -87,6 +87,7 @@ public class MessageHandler {
 
 		Integer initialLineNumber = Integer.valueOf(parts[1]);
 
+		// Look through the file for the exact line of the error 
 		String line = bufferedReader.readLine();
 		int lineCounter = 1;
 		while (lineCounter < initialLineNumber) {
@@ -97,6 +98,8 @@ public class MessageHandler {
 		int trimEnd = errorFile.indexOf('.');
 		errorFile = errorFile.substring(0, trimEnd);
 
+		// Scan through the script looking for the matching line and
+		// report adjusted line number back to the user.
 		for (int i = 0; i < scriptLines.length; i++) {
 			if (scriptLines[i].trim().equals(line.trim())) {
 				bufferedReader.close();
