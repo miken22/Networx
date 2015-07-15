@@ -30,7 +30,7 @@ public final class Libraries {
 	
 	private static String loadWindowsLibaries(String libraries) {
 		
-		libraries += ".;UserFiles/";
+		libraries += ".;.UserFiles/";
 		
 		File libFolder = new File("lib");
 		if (!libFolder.isDirectory()) {
