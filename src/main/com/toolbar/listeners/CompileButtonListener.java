@@ -3,11 +3,9 @@ package main.com.toolbar.listeners;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
@@ -52,9 +50,10 @@ public class CompileButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		
-		// Set first file for class path / compiling.
-		String programFiles = ".UserFiles/UserScript.java";
-		String programClasses = "UserScript";
+		// Set first file for class path / compiling. Currently not needed
+//		String programFiles = ".UserFiles/UserScript.java";
+//		String programClasses = "UserScript";
+		
 		ScriptBuilder sb = new ScriptBuilder(properties);
 		
 		// Don't compile anything if the script is blank
@@ -63,12 +62,11 @@ public class CompileButtonListener implements ActionListener {
 			return;
 		} else {
 			// Clear build log
-			buildlog.setText("");
-			
+			buildlog.setText("");	
 			// Extract code, separate methods/classes, and compile
 			try {
-				sb.buildScript(worksheet, programFiles, programClasses);
-				compileScript(programFiles, programClasses);
+				sb.buildScript(worksheet);
+				compileScript();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -78,11 +76,9 @@ public class CompileButtonListener implements ActionListener {
 	/**
 	 *  Calls files necessary to write/compile user classes
 	 * 
-	 * @param files - List of files to compile
-	 * @param classes - List of classes for execution
 	 * @throws Exception - Any possible error to arise from compiling/execution
 	 */
-	public void compileScript(String files, String classes) throws Exception {
+	public void compileScript() throws Exception {
 
 		String arguments = properties.getCommandArguments();
 		String OS = getOperatingSystem();
@@ -90,7 +86,7 @@ public class CompileButtonListener implements ActionListener {
 		
 		// Compile code
 		buildlog.append("Building script...\r\n");
-		runProcess("javac -cp " + libraries + " " + files);
+		runProcess("javac -cp " + libraries + " .UserFiles/UserScript.java");
 		
 		if (buildFailed) {
 			return;
@@ -99,17 +95,8 @@ public class CompileButtonListener implements ActionListener {
 		buildlog.append("Complete.\r\n");
 		buildlog.append("---------------------------------------\r\n");
 
-		// Iterate over class files, set to remove on exit.
-		String[] userClasses = classes.split(" ");
-		File userFolder = new File(".UserFiles");
-		for (String userClass : userClasses) {
-			File classFile = new File(userFolder, userClass + ".class");
-			classFile.deleteOnExit();
-		}
-		userFolder.deleteOnExit();
-
 		// Execute.
-		runProcess("java " + arguments + " -cp " + libraries + " " + classes);
+		runProcess("java " + arguments + " -cp " + libraries + " UserScript");
 
 		buildlog.append("---------------------------------------\r\n");
 		buildlog.append("Process complete");

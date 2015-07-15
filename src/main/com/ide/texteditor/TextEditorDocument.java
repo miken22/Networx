@@ -43,11 +43,16 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		hasChanged = false;
 
 	}
+	
+	// TODO: Auto formatting, indenting when user is already etc
 
 	/**
 	 * Inserts the string and performs necessary decorations
 	 */
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+		if (str.equals("\t")){
+			str = "    ";
+		}	
 		super.insertString(offset, str, a);
 
 		hasChanged = true;
@@ -114,6 +119,9 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		}
 	}
 
+	/**
+	 * Does not currently function 100%
+	 */
 	private void colourComments() {
 
 		String text = "";

@@ -33,8 +33,13 @@
 	</target>
 
 	<target name="compile" description="build class files" depends="clean">
-		<mkdir dir="${class.dir}/${lib.dir}" />
-		<javac srcdir="${source.dir}" destdir="${class.dir}" includeantruntime="false" />
+		<mkdir dir="${class.dir}/${lib.dir}" />		
+		<javac srcdir="${source.dir}" 
+			   destdir="${class.dir}" 
+		       excludes="tests/"
+			   includeantruntime="no"
+		/>
+		
 	</target>
 
 	<target name="jar" depends="compile">

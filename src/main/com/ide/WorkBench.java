@@ -16,7 +16,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -29,7 +28,6 @@ import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import main.com.ide.texteditor.LineListener;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
 import main.com.toolbar.CompileButton;
@@ -159,6 +157,7 @@ public class WorkBench {
 	
 		packageLoader.addActionListener(new PropertiesButtonListener(properties));
 		
+		buildScript.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
 		
@@ -167,7 +166,7 @@ public class WorkBench {
 	private void loadConsoles() {
 
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
-		JLabel lineNumber = new JLabel("1");
+//		JLabel lineNumber = new JLabel("1");
 
 		Font font = new Font("Normal", Font.PLAIN, 14);
 //		Main font theme
@@ -195,10 +194,10 @@ public class WorkBench {
 		lines.setEditable(false);
 		lines.setFont(font);
 		
-		LineListener lineListener = new LineListener(editor, lines, lineNumber);
+//		LineListener lineListener = new LineListener(editor, lines, lineNumber);
 		TextLineNumber tln = new TextLineNumber(editor);
-		editor.getDocument().addDocumentListener(lineListener);
-		editor.addKeyListener(lineListener);
+//		editor.getDocument().addDocumentListener(lineListener);
+//		editor.addKeyListener(lineListener);
 //		editor.addMouseListener(lineListener);
 		
 		mainScroll.setRowHeaderView(tln);
@@ -218,8 +217,8 @@ public class WorkBench {
 		outputScroll.setBackground(new Color(217, 217, 217));
 		mainContainer.add(outputScroll);
 		
-		lineNumber.setBounds(10, frame.getHeight()-50, 50, 25);
-		mainContainer.add(lineNumber);
+//		lineNumber.setBounds(10, frame.getHeight()-50, 50, 25);
+//		mainContainer.add(lineNumber);
 		
 	}
 

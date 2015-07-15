@@ -33,11 +33,10 @@ public class ScriptBuilder {
 	// Uses the file chooser to save the file
 	/**
 	 * Takes the user script and generates the appropriate Java files for compiling
+	 * 
 	 * @param worksheet - The editor environment
-	 * @param programFiles - The list of files for compiling
-	 * @param programClasses - The list of files for execution
 	 */
-	public void buildScript(JTextPane worksheet, String programFiles, String programClasses) {
+	public void buildScript(JTextPane worksheet) {
 
 		String script = worksheet.getText();
 		String OS = System.getProperty("os.name");
@@ -57,10 +56,10 @@ public class ScriptBuilder {
 				}
 			} catch (IOException e1) {}
 		}
-		
-		userFolder.mkdir();
-		userFolder.deleteOnExit();
-		
+
+		if (!userFolder.exists()) {
+			userFolder.mkdir();
+		}
 		
 		try {
 
@@ -90,7 +89,7 @@ public class ScriptBuilder {
 			outputStream.write("		" + script + "\r\n	} \r\n");
 
 			// Add supporting user methods
-			insertUserMethods(outputStream, programFiles, programClasses);
+			insertUserMethods(outputStream);
 
 			// Close class bracket
 			outputStream.write("\r\n}");
@@ -123,8 +122,7 @@ public class ScriptBuilder {
 	 * @param programClasses
 	 * @throws IOException
 	 */
-	private void insertUserMethods(Writer outputStream, String programFiles, 
-									String programClasses) throws IOException {
+	private void insertUserMethods(Writer outputStream) throws IOException {
 		
 		ClassHandler classWriter = new ClassHandler(properties);
 		
