@@ -16,7 +16,7 @@
 	<property name="font.dir" value="res" />
 	<property name="jar.dir" value="../fuzzy-runnable" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
-	<property name="main-class" value="launcher.Launch" />
+	<property name="main-class" value="main.com.launcher.Launch" />
 
 	<path id="libraries.path">
 		<fileset dir="${lib.dir}">
