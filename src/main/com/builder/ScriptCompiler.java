@@ -32,7 +32,7 @@ public class ScriptCompiler {
 	}
 	
 	/**
-	 *  Calls files necessary to write/compile user classes
+	 * Calls files necessary to write/compile user classes
 	 * 
 	 * @throws Exception - Any possible error to arise from compiling/execution
 	 */
