@@ -27,7 +27,7 @@ public class Launch {
 					System.exit(-1);			
 				}
 				
-			    WorkBench pane = new WorkBench();
+				WorkBench pane = new WorkBench();
 			    pane.loadWorkbench();
 			}
 		}; 

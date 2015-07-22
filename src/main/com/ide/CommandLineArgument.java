@@ -1,6 +1,7 @@
 package main.com.ide;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -44,10 +45,14 @@ public class CommandLineArgument extends JMenuItem {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			new ArgumentWindow();
-			
+			Runnable task = new Runnable(){
+				@Override
+				public void run() {
+					new ArgumentWindow();
+				}
+			}; 
+			EventQueue.invokeLater(task);
 		}
-		
 	}
 	
 	/**
