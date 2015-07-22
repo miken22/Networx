@@ -5,14 +5,14 @@ import algorithms.search.UninformedSearch;
 import core.stocks.StockEdge;
 import core.stocks.StockVertex;
 import core.webcrawler.StockGraphBuilder;
-import core.webcrawler.YahooCrawler;
+import core.webcrawler.Crawler;
 import edu.uci.ics.jung.graph.Graph;
 
 public class TestCrawler {
 
 	public void runExample() {
 		
-		YahooCrawler crawler = new YahooCrawler();
+		Crawler crawler = new Crawler();
 		crawler.crawl();
 	
 		StockGraphBuilder sgb = new StockGraphBuilder();
