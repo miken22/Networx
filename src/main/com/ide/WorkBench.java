@@ -80,7 +80,7 @@ public class WorkBench extends JFrame {
 		this.setLayout(new GridBagLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize((int) width/2, (int)(height/1.2));
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLocationRelativeTo(null);
 		this.setBackground(new Color(217, 217, 217));		
 
@@ -88,15 +88,6 @@ public class WorkBench extends JFrame {
 		buildToolbar();
 		createMenuBar(menu);
 		loadConsoles();
-		
-		this.getContentPane().addComponentListener(new ComponentAdapter() {
-		    @Override
-		    public void componentResized(ComponentEvent e)
-		    {
-		        getContentPane().validate();
-		    	getContentPane().repaint();
-		    }
-		});
 
 		// Reveal the frame
 		this.setVisible(true);
@@ -144,22 +135,14 @@ public class WorkBench extends JFrame {
 	private void loadConsoles() {
 
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
+
 		Font font = new Font("Normal", Font.PLAIN, 14);
+		font = font.deriveFont(Font.PLAIN, 14);
 
 		JScrollPane mainScroll = new JScrollPane(editor);
 		JScrollPane outputScroll = new JScrollPane(buildlog);
 
 		GridBagConstraints constraint = new GridBagConstraints();
-		
-//		Main font theme
-//		try {
-//			font = Font.createFont(0, this.getClass().getResourceAsStream("/resources/Trebuchet MS.ttf"));
-//		} catch (FontFormatException|IOException e) {
-//			e.printStackTrace();
-//			System.exit(-1);
-//		}
-
-		font = font.deriveFont(Font.PLAIN, 14);
 
 		// Create the script area
 		editor.setEditable(true);
@@ -175,18 +158,11 @@ public class WorkBench extends JFrame {
 		TextLineNumber tln = new TextLineNumber(editor);
 		mainScroll.setRowHeaderView(tln);
 		
-		mainScroll.addComponentListener(new ComponentAdapter() {
-		    @Override
-		    public void componentResized(ComponentEvent e)
-		    {
-		        mainScroll.repaint();
-		    }
-		});
-		
 		constraint.gridx = 0;
 		constraint.gridy = 1;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		constraint.weighty = 0.4;
+		constraint.fill = GridBagConstraints.BOTH;
+		constraint.weightx = 1;
+		constraint.weighty = .99;
 		
 		this.getContentPane().add(mainScroll, constraint);
 
@@ -201,19 +177,12 @@ public class WorkBench extends JFrame {
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
 		outputScroll.setBackground(new Color(217, 217, 217));
-		outputScroll.addComponentListener(new ComponentAdapter() {
-		    @Override
-		    public void componentResized(ComponentEvent e)
-		    {
-		        outputScroll.repaint();
-		    }
-		});
-
+		
 		constraint.gridx = 0;
 		constraint.gridy = 2;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		constraint.weighty = 0.3;
-		
+		constraint.fill = GridBagConstraints.BOTH;
+		constraint.weightx = 1;
+		constraint.weighty = .2;
 		this.getContentPane().add(outputScroll, constraint);
 
 	}
@@ -281,18 +250,13 @@ public class WorkBench extends JFrame {
 		compilerButton.setToolTipText("Compile Script");
 		toolbar.add(compilerButton);	
 		
-		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.fill = GridBagConstraints.BOTH;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		constraint.weighty = 0.3;
-
-		toolbar.addComponentListener(new ComponentAdapter() {
-		    @Override
-		    public void componentResized(ComponentEvent e)
-		    {
-		       	toolbar.repaint();
-		    }
-		});
+		constraint.weightx = 1;
+		constraint.weighty = .1;
+		
+		toolbar.setLocation(0, 0);
 		
 		this.getContentPane().add(toolbar, constraint);
 

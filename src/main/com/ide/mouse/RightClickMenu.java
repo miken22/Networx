@@ -1,9 +1,11 @@
 package main.com.ide.mouse;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
 /**
@@ -30,6 +32,10 @@ public class RightClickMenu {
 		cut.setText("Cut");
 		copy.setText("Copy");
 		paste.setText("Paste");
+
+		cut.setAccelerator(KeyStroke.getKeyStroke('X', KeyEvent.CTRL_DOWN_MASK));
+		copy.setAccelerator(KeyStroke.getKeyStroke('C', KeyEvent.CTRL_DOWN_MASK));
+		paste.setAccelerator(KeyStroke.getKeyStroke('V', KeyEvent.CTRL_DOWN_MASK));
 		
 		popupMenu.add(cut);
 		popupMenu.add(copy);
