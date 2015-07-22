@@ -9,8 +9,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
@@ -73,8 +71,6 @@ public class WorkBench extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
-
-		JMenuBar menu = new JMenuBar();
 		
 		// Initialize frame and add the menu items
 		this.setLayout(new GridBagLayout());
@@ -86,19 +82,21 @@ public class WorkBench extends JFrame {
 
 		// Load all components for the workbench
 		buildToolbar();
-		createMenuBar(menu);
+		createMenuBar();
 		loadConsoles();
 
 		// Reveal the frame
 		this.setVisible(true);
-		this.setJMenuBar(menu);
+		this.validate();
 		this.pack();
 		editor.requestFocus();
 
 	}
 	
-	private void createMenuBar(JMenuBar menu) {
+	private void createMenuBar() {
 
+		JMenuBar menu = new JMenuBar();
+		
 		JMenu file = new JMenu("File");
 		JMenuItem open = new JMenuItem("Load Script");
 		JMenuItem save = new JMenuItem("Save Script");
@@ -130,6 +128,7 @@ public class WorkBench extends JFrame {
 		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
 
+		this.setJMenuBar(menu);
 	}
 
 	private void loadConsoles() {
@@ -149,10 +148,14 @@ public class WorkBench extends JFrame {
 		editor.setFont(font);
 		editor.setBorder(b);
 		editor.setBackground(new Color(252, 252, 252));
-		mainScroll.setPreferredSize(new Dimension(this.getWidth()-12, (int)(this.getHeight()/1.4)));
-		mainScroll.setBackground(new Color(240, 240, 240));
+		
+		mainScroll.setPreferredSize(new Dimension(
+				this.getWidth()-12, (int)(this.getHeight()/1.4)));
+	
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Current Script:"));
+							 BorderFactory.createLineBorder(
+									Color.LIGHT_GRAY,1,true), "Current Script:"));
+		
 		mainScroll.setBackground(new Color(217, 217, 217));
 
 		TextLineNumber tln = new TextLineNumber(editor);
@@ -172,10 +175,13 @@ public class WorkBench extends JFrame {
 		buildlog.setBorder(b);
 		buildlog.setBackground(new Color(252, 252, 252));
 		buildlog.setFont(font);
-		outputScroll.setPreferredSize(new Dimension(getWidth()-12, (int)(getHeight()/5)));
-		outputScroll.setBackground(new Color(240, 240, 240));
+		
+		outputScroll.setPreferredSize(new Dimension(
+				getWidth()-12, (int)(getHeight()/5)));
+		
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true), "Build Log:"));
+							   BorderFactory.createLineBorder(
+									   Color.LIGHT_GRAY,1,true), "Build Log:"));
 		outputScroll.setBackground(new Color(217, 217, 217));
 		
 		constraint.gridx = 0;
