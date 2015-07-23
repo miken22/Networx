@@ -9,6 +9,7 @@ import tests.searches.GBFSExample;
 import tests.searches.UniformCostExample;
 import tests.spanningtrees.SpanningTreeExample;
 
+@SuppressWarnings("unused")
 public class RunTests {
 
 	public static void main(String[] args) {
