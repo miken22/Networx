@@ -29,6 +29,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import main.com.ide.mouse.RightClickListener;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
 import main.com.toolbar.CompileButton;
@@ -148,6 +149,7 @@ public class WorkBench extends JFrame {
 		editor.setFont(font);
 		editor.setBorder(b);
 		editor.setBackground(new Color(252, 252, 252));
+		editor.addMouseListener(new RightClickListener());
 		
 		mainScroll.setPreferredSize(new Dimension(
 				this.getWidth()-12, (int)(this.getHeight()/1.4)));
