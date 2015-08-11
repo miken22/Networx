@@ -1,8 +1,9 @@
-builder
-ide
-ide.mouse
-ide.packages
-ide.texteditor
-launcher
-toolbar
-toolbar.listeners
+algorithms.connectivity
+algorithms.graphloader
+algorithms.search
+algorithms.search.tools
+algorithms.spanningtree
+core.components
+core.stocks
+core.visualizer
+core.webcrawler

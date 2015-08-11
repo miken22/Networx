@@ -1,6 +1,7 @@
 package main.com.ide;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -11,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -59,6 +62,9 @@ public class WorkBench extends JFrame {
 
 	public WorkBench() {
 
+		// Change this after sharing
+		super("Fuzzy-Runnable");
+		
 		properties = new Properties();	
 
 		textarea = new TextEditorDocument();
@@ -106,7 +112,10 @@ public class WorkBench extends JFrame {
 		JMenu build = new JMenu("Build Tools");
 		JMenuItem buildScript = new JMenuItem("Build Script");
 		JMenuItem packageLoader = new JMenuItem("Set Package Imports");
-
+		
+		JMenu help = new JMenu("Help");
+		JMenuItem javaDocHelp = new JMenuItem("View Javadoc");
+		
 		menu.setBackground(new Color(217,217,217));
 		menu.add(file);
 		file.add(open);
@@ -129,6 +138,39 @@ public class WorkBench extends JFrame {
 		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
 
+		menu.add(help);
+		help.add(javaDocHelp);
+		
+		javaDocHelp.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Get path to jar location
+				String path  = "";
+				try {
+					path = WorkBench.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+				} catch (URISyntaxException e1) {
+				
+				}
+				
+				// Trim off the "Fuzzy-Runner.jar" portion
+				// TODO: Fix when app is renamed!!!
+				path = path.substring(0, path.length()-16);
+				
+				buildlog.append(path);
+				
+				// Launch the users default browser.
+				if(Desktop.isDesktopSupported())
+				{
+					try {
+						Desktop.getDesktop().browse(new URI("file://" + path + "doc/index.html"));
+					} catch (IOException | URISyntaxException e1) {
+						buildlog.append("Something went wrong looking for the path to your Javadocs.");
+					}
+				}
+			}
+		});
+		
 		this.setJMenuBar(menu);
 	}
 
