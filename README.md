@@ -1,2 +1,3 @@
 # fuzzy-octogon
-Do things that don't make sense.
+
+Work in progress, stay tuned
