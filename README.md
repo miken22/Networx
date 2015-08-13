@@ -1,3 +1,2 @@
 # fuzzy-octogon
-
-Work in progress, stay tuned
+Do things that don't make sense.
