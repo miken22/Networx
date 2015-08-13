@@ -14,6 +14,7 @@
 	<property name="lib.dir" value="lib" />
 	<property name="class.dir" value="bin" />
 	<property name="font.dir" value="res" />
+	<property name="doc.dir" value="doc" />
 	<property name="jar.dir" value="../fuzzy-runnable" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	<property name="main-class" value="main.com.launcher.Launch" />
@@ -26,7 +27,10 @@
 	<path id="res.path">
 		<fileset dir="${font.dir}" />
 	</path>
-
+	<path id="doc.path">
+		<fileset dir="${doc.dir}" />
+	</path>
+	
 	<target name="clean" description="delete old files">
 		<delete dir="${class.dir}" />
 		<delete dir="${jar.dir}" />
@@ -49,10 +53,11 @@
 		<!-- Move libraries so application can use them -->
 		<copy todir="${jar.dir}/${lib.dir}" flatten="false">
 			<path refid="libraries.path" />
-		</copy>
+		</copy>	
 		
-		<copy todir="${class.dir}/${lib.dir}" flatten="true">
-			<path refid="libraries.path" />
+		<!-- Move Javadoc to folder so it can be used by application -->
+		<copy todir="${jar.dir}/${doc.dir}" flatten="true">
+			<path refid="doc.path" />
 		</copy>
 		
 		<!-- Move resources for application -->
