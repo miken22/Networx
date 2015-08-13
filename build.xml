@@ -53,11 +53,7 @@
 		<!-- Move libraries so application can use them -->
 		<copy todir="${jar.dir}/${lib.dir}" flatten="false">
 			<path refid="libraries.path" />
-		</copy>
-		
-		<copy todir="${class.dir}/${lib.dir}" flatten="true">
-			<path refid="libraries.path" />
-		</copy>
+		</copy>	
 		
 		<!-- Move Javadoc to folder so it can be used by application -->
 		<copy todir="${jar.dir}/${doc.dir}" flatten="true">
