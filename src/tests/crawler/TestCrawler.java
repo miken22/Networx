@@ -22,7 +22,7 @@ public class TestCrawler {
 //		System.out.println(graph.getVertexCount());
 //		System.out.println(graph.getEdgeCount());
 		
-		UninformedSearch<StockVertex, StockEdge> bfs = new BreadthFirstSearch<>(graph);
+		UninformedSearch<StockVertex, StockEdge> bfs = new BreadthFirstSearch<>();
 		bfs.visualizeSearch(graph, graph.getVertices().iterator().next());
 		
 	}

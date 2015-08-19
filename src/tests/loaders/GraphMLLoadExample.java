@@ -2,7 +2,6 @@ package tests.loaders;
 
 import algorithms.graphloader.GraphMLReader;
 import algorithms.search.BreadthFirstSearch;
-import algorithms.search.UninformedSearch;
 import core.components.Edge;
 import core.components.Vertex;
 import edu.uci.ics.jung.graph.Graph;
@@ -16,8 +15,8 @@ public class GraphMLLoadExample {
 		GraphMLReader graphBuilder = new GraphMLReader();
 		graphBuilder.loadGraphFile(graph);
 		
-		BreadthFirstSearch<Vertex, Edge> bfs = new BreadthFirstSearch<>(graph);
-//		bfs.visualizeSearch(graph.getVertices().iterator().next());
+		BreadthFirstSearch<Vertex, Edge> bfs = new BreadthFirstSearch<>();
+		bfs.visualizeSearch(graph, graph.getVertices().iterator().next());
 		
 		
 	}

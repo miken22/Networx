@@ -26,7 +26,7 @@ public class BFSExample {
 		graphBuilder.loadGraphFile(graph);
 
 		// Instantiate search algorithms class
-		UninformedSearch<Vertex, Edge> bfs = new BreadthFirstSearch<>(graph);
+		UninformedSearch<Vertex, Edge> bfs = new BreadthFirstSearch<>();
 				
 		// Use first node pointed to by iterator as root for example
 		Vertex root = graph.getVertices().iterator().next();
