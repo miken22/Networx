@@ -16,8 +16,8 @@ public class GraphMLLoadExample {
 		GraphMLReader graphBuilder = new GraphMLReader();
 		graphBuilder.loadGraphFile(graph);
 		
-		UninformedSearch<Vertex, Edge> bfs = new BreadthFirstSearch<Vertex, Edge>(graph);
-		bfs.visualizeSearch(graph.getVertices().iterator().next());
+		BreadthFirstSearch<Vertex, Edge> bfs = new BreadthFirstSearch<>(graph);
+//		bfs.visualizeSearch(graph.getVertices().iterator().next());
 		
 		
 	}

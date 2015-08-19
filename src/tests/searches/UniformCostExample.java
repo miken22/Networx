@@ -5,7 +5,7 @@ import java.util.List;
 import algorithms.search.UniformCostSearch;
 import core.components.Edge;
 import core.components.Vertex;
-import core.visualizer.SimpleVisualizer;
+import core.visualizer.Visualizer;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
 
@@ -41,15 +41,15 @@ public class UniformCostExample {
 		graph.addEdge(new Edge(5), v3, v7);
 		graph.addEdge(new Edge(2), v5, v8);
 		
-		UniformCostSearch<Vertex, Edge> ucs = new UniformCostSearch<>(graph, v4);
+		UniformCostSearch<Vertex, Edge> ucs = new UniformCostSearch<>();
 		
-		List<Vertex> ordering = ucs.search(v1);
+		List<Vertex> ordering = ucs.search(graph, v4, v1);
 		
 		for (Vertex n : ordering) {
 			System.out.println(n.toString());
 		}
-		SimpleVisualizer<Vertex, Edge> visualizer = new SimpleVisualizer<>();
-		visualizer.viewGraph(graph, true);
+
+		Visualizer.viewGraph(graph, true);
 		
 	}
 	

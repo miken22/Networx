@@ -30,10 +30,10 @@ public class BFSExample {
 				
 		// Use first node pointed to by iterator as root for example
 		Vertex root = graph.getVertices().iterator().next();
-		List<Vertex> result = bfs.search(root);
+		List<Vertex> result = bfs.search(graph, root);
 		
 		// Show the result of the search
-		bfs.visualizeSearch(root);
+		bfs.visualizeSearch(graph, root);
 		
 		// Print the nodes
 		System.out.println("The vertices were visitted in the following order:");
