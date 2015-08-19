@@ -63,7 +63,7 @@ public class ClassHandler {
 			
 			File userFolder = new File(".UserFiles");
 			
-			if (System.getProperty("os.name").contains("windows")) {			
+			if (System.getProperty("os.name").contains("Windows")) {			
 				// Convert to path, check if the folder is hidden, hide it if it is not.
 				Path path = userFolder.toPath();
 				Boolean hidden;
