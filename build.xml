@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-
-	TODO: Double check build paths to standardize for Windows and Linux
-	
-	Simple ANT Build File to gather all libraries, resources, and java files that
+	Simple ANT Build File to gather all libraries, resources, and java files and
 	builds the project for general use.
-
 -->
 
-<project name="Fuzzy-Runner" basedir="." default="jar">
+<project name="Grapher" basedir="." default="jar">
 	<property name="source.dir" value="src" />
 	<property name="lib.dir" value="lib" />
 	<property name="class.dir" value="bin" />
 	<property name="font.dir" value="res" />
 	<property name="doc.dir" value="doc" />
-	<property name="jar.dir" value="../fuzzy-runnable" />
+	<property name="jar.dir" value="../Grapher" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
 	<property name="main-class" value="main.com.launcher.Launch" />
 

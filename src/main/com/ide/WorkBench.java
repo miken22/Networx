@@ -63,7 +63,7 @@ public class WorkBench extends JFrame {
 	public WorkBench() {
 
 		// Change this after sharing
-		super("Fuzzy-Runnable");
+		super("Grapher");
 		
 		properties = new Properties();	
 
@@ -114,7 +114,8 @@ public class WorkBench extends JFrame {
 		JMenuItem packageLoader = new JMenuItem("Set Package Imports");
 		
 		JMenu help = new JMenu("Help");
-		JMenuItem javaDocHelp = new JMenuItem("View Javadoc");
+		JMenuItem javaDocHelp = new JMenuItem("View Library Javadoc");
+		JMenuItem appHelp = new JMenuItem("General Help");
 		
 		menu.setBackground(new Color(217,217,217));
 		menu.add(file);
@@ -139,6 +140,7 @@ public class WorkBench extends JFrame {
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
 
 		menu.add(help);
+		help.add(appHelp);
 		help.add(javaDocHelp);
 		
 		javaDocHelp.addActionListener(new ActionListener() {
@@ -152,22 +154,26 @@ public class WorkBench extends JFrame {
 				} catch (URISyntaxException e1) {
 				
 				}
-				
-				// Trim off the "Fuzzy-Runner.jar" portion
-				// TODO: Fix when app is renamed!!!
-				path = path.substring(0, path.length()-16);
-				
-				buildlog.append(path);
+							
+				// this has to change if being run in eclipse, shouldn't need it though
+				path = path.substring(0, path.length()-11);
 				
 				// Launch the users default browser.
-				if(Desktop.isDesktopSupported())
-				{
+				if(Desktop.isDesktopSupported()) {
 					try {
 						Desktop.getDesktop().browse(new URI("file://" + path + "doc/index.html"));
 					} catch (IOException | URISyntaxException e1) {
 						buildlog.append("Something went wrong looking for the path to your Javadocs.");
 					}
 				}
+			}
+		});
+		
+		appHelp.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO: Implement help function
 			}
 		});
 		
