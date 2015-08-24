@@ -21,10 +21,7 @@ import main.com.ide.Properties;
  *
  */
 public class ClassHandler {
-	
-	/**
-	 * Properties object
-	 */
+
 	private Properties properties;
 	
 	private List<String> fileList;

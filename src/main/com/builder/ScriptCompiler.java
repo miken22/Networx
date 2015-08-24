@@ -1,5 +1,6 @@
 package main.com.builder;
 
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -82,6 +83,9 @@ public class ScriptCompiler {
 			}
 			
 			buildFailed = true;
+			// Create and run error sound
+			final Runnable runnable = (Runnable) Toolkit.getDefaultToolkit().getDesktopProperty("win.sound.exclamation");
+			if (runnable != null) runnable.run();
 			runtimeProcess.waitFor();
 			return;
 		}

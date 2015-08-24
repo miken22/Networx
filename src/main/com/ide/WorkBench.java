@@ -73,6 +73,10 @@ public class WorkBench extends JFrame {
 
 	}
 
+	
+	/**
+	 * Main method to load all components on the frame
+	 */
 	public void loadWorkbench() {	
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -100,6 +104,7 @@ public class WorkBench extends JFrame {
 
 	}
 	
+	// Create all menu bar lists and items
 	private void createMenuBar() {
 
 		JMenuBar menu = new JMenuBar();
@@ -180,6 +185,7 @@ public class WorkBench extends JFrame {
 		this.setJMenuBar(menu);
 	}
 
+	// Create editor environment and console
 	private void loadConsoles() {
 
 		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
@@ -243,6 +249,7 @@ public class WorkBench extends JFrame {
 
 	}
 
+	// Create and place all buttons on the toolbar
 	private void buildToolbar() {
 		
 		GridBagConstraints constraint = new GridBagConstraints();
