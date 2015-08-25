@@ -42,11 +42,10 @@ public class ThemePicker extends JFrame{
 	private final String textString = "// This is a comment \n\r" +
 									  "public static void main(String[] args) { \r\n" +
 									  "    System.out.println(\"Hello World\");\r\n" +
-									  "}";
+									  "}\r\n";
 
 	public ThemePicker() {
-		themeSettings = new ThemeSettings();
-		
+		themeSettings = new ThemeSettings();		
 		createFrame();
 	}
 		
