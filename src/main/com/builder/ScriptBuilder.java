@@ -43,7 +43,11 @@ public class ScriptBuilder {
 		
 		File userFolder = new File(".UserFiles");
 
-		if (OS.contains("windows")) {
+		if (!userFolder.exists()) {
+			userFolder.mkdir();
+		}
+		
+		if (OS.contains("Windows")) {
 			// Convert to path, check if the folder is hidden, hide it if it is not.
 			Path path = userFolder.toPath();
 			Boolean hidden;
@@ -55,10 +59,6 @@ public class ScriptBuilder {
 				    Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
 				}
 			} catch (IOException e1) {}
-		}
-
-		if (!userFolder.exists()) {
-			userFolder.mkdir();
 		}
 		
 		try {

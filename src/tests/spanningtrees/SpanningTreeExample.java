@@ -1,10 +1,10 @@
 package tests.spanningtrees;
 
 import algorithms.graphloader.GraphMLReader;
-import algorithms.search.KruskallMinimalSpanningTree;
+import algorithms.spanningtree.KruskallMinimalSpanningTree;
 import core.components.Edge;
 import core.components.Vertex;
-import core.visualizer.SimpleVisualizer;
+import core.visualizer.Visualizer;
 import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
@@ -30,8 +30,7 @@ public class SpanningTreeExample {
 		Forest<Vertex, Edge> tree = mst.findMinimalSpanningTree(graph);
 		
 		// Visualize tree
-		SimpleVisualizer<Vertex, Edge> viewer = new SimpleVisualizer<>();
-		viewer.viewTree(tree);
+		Visualizer.viewTree(tree);
 		
 	}
 	

@@ -63,7 +63,7 @@ public class ScriptCompiler {
 
 	// Generates the process and executes it
 	private void runProcess(String command) throws Exception {
-
+		
 		Process runtimeProcess = Runtime.getRuntime().exec(command);
 		// Print any console outputs in the buildlog
 		MessageHandler.handleProgramMessaage(runtimeProcess.getInputStream(), buildlog);
