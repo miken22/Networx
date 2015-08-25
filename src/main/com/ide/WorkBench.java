@@ -3,6 +3,7 @@ package main.com.ide;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -54,7 +55,7 @@ public class WorkBench extends JFrame {
 	private CompileButton compilerButton;
 	private SaveButton saveFileButton;
 	private OpenButton openFileButton;
-	
+
 	// Custom style for editor environment
 	private TextEditorDocument textarea;
 
@@ -64,7 +65,7 @@ public class WorkBench extends JFrame {
 
 		// Change this after sharing
 		super("Grapher");
-		
+
 		properties = new Properties();	
 
 		textarea = new TextEditorDocument();
@@ -73,7 +74,7 @@ public class WorkBench extends JFrame {
 
 	}
 
-	
+
 	/**
 	 * Main method to load all components on the frame
 	 */
@@ -82,7 +83,7 @@ public class WorkBench extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
-		
+
 		// Initialize frame and add the menu items
 		this.setLayout(new GridBagLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,12 +104,12 @@ public class WorkBench extends JFrame {
 		editor.requestFocus();
 
 	}
-	
+
 	// Create all menu bar lists and items
 	private void createMenuBar() {
 
 		JMenuBar menu = new JMenuBar();
-		
+
 		JMenu file = new JMenu("File");
 		JMenuItem open = new JMenuItem("Load Script");
 		JMenuItem save = new JMenuItem("Save Script");
@@ -117,14 +118,14 @@ public class WorkBench extends JFrame {
 		JMenu build = new JMenu("Build Tools");
 		JMenuItem buildScript = new JMenuItem("Build Script");
 		JMenuItem packageLoader = new JMenuItem("Set Package Imports");
-		
+
 		JMenu options = new JMenu("Options");
 		JMenuItem editorThemes = new JMenuItem("Themes");
-		
+
 		JMenu help = new JMenu("Help");
 		JMenuItem javaDocHelp = new JMenuItem("View Library Javadoc");
 		JMenuItem appHelp = new JMenuItem("General Help");
-		
+
 		menu.setBackground(new Color(217,217,217));
 		menu.add(file);
 		file.add(open);
@@ -133,8 +134,8 @@ public class WorkBench extends JFrame {
 
 		menu.add(build);
 		build.add(buildScript);
-		build.add(new CommandLineArgument(properties));
 		build.add(packageLoader);	
+		build.add(new CommandLineArgument(properties));
 
 		save.addActionListener(new MenuListener(1));
 		open.addActionListener(new MenuListener(2));
@@ -149,24 +150,27 @@ public class WorkBench extends JFrame {
 
 		menu.add(options);
 		options.add(editorThemes);
-		
+
+		// When clicked create the new frame to pick the theme
 		editorThemes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		            public void run() {
-		                new ThemePicker();
-		            }
-		        });
+				Runnable task = new Runnable(){
+					@Override
+					public void run() {
+						new ThemePicker();
+					}
+				};
+				EventQueue.invokeLater(task);
 			}
 		});
-		
+
 		menu.add(help);
 		help.add(appHelp);
 		help.add(javaDocHelp);
-		
+
 		javaDocHelp.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Get path to jar location
@@ -174,31 +178,31 @@ public class WorkBench extends JFrame {
 				try {
 					path = WorkBench.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 				} catch (URISyntaxException e1) {
-				
+
 				}
-							
+
 				// this has to change if being run in eclipse, shouldn't need it though
 				path = path.substring(0, path.length()-11);
-				
+
 				// Launch the users default browser.
 				if(Desktop.isDesktopSupported()) {
 					try {
 						Desktop.getDesktop().browse(new URI("file://" + path + "doc/index.html"));
 					} catch (IOException | URISyntaxException e1) {
-						buildlog.append("Something went wrong looking for the path to your Javadocs.");
+						buildlog.append("Could not find the path to your Javadocs.");
 					}
 				}
 			}
 		});
-		
+
 		appHelp.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO: Implement help function
 			}
 		});
-		
+
 		this.setJMenuBar(menu);
 	}
 
@@ -221,25 +225,25 @@ public class WorkBench extends JFrame {
 		editor.setBorder(b);
 		editor.setBackground(new Color(252, 252, 252));
 		editor.addMouseListener(new RightClickListener());
-		
+
 		mainScroll.setPreferredSize(new Dimension(
 				this.getWidth()-12, (int)(this.getHeight()/1.4)));
-	
+
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
-							 BorderFactory.createLineBorder(
-									Color.LIGHT_GRAY,1,true), "Current Script:"));
-		
+				BorderFactory.createLineBorder(
+						Color.LIGHT_GRAY,1,true), "Current Script:"));
+
 		mainScroll.setBackground(new Color(217, 217, 217));
 
 		TextLineNumber tln = new TextLineNumber(editor);
 		mainScroll.setRowHeaderView(tln);
-		
+
 		constraint.gridx = 0;
 		constraint.gridy = 1;
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.weightx = 1;
 		constraint.weighty = .99;
-		
+
 		this.getContentPane().add(mainScroll, constraint);
 
 		// To display build logs
@@ -248,15 +252,15 @@ public class WorkBench extends JFrame {
 		buildlog.setBorder(b);
 		buildlog.setBackground(new Color(252, 252, 252));
 		buildlog.setFont(font);
-		
+
 		outputScroll.setPreferredSize(new Dimension(
 				getWidth()-12, (int)(getHeight()/5)));
-		
+
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
-							   BorderFactory.createLineBorder(
-									   Color.LIGHT_GRAY,1,true), "Build Log:"));
+				BorderFactory.createLineBorder(
+						Color.LIGHT_GRAY,1,true), "Build Log:"));
 		outputScroll.setBackground(new Color(217, 217, 217));
-		
+
 		constraint.gridx = 0;
 		constraint.gridy = 2;
 		constraint.fill = GridBagConstraints.BOTH;
@@ -268,7 +272,7 @@ public class WorkBench extends JFrame {
 
 	// Create and place all buttons on the toolbar
 	private void buildToolbar() {
-		
+
 		GridBagConstraints constraint = new GridBagConstraints();
 
 		JPanel toolbar = new JPanel();
@@ -289,7 +293,7 @@ public class WorkBench extends JFrame {
 		compilerButton.addActionListener(new CompileButtonListener(editor, buildlog, properties));
 
 		Image img;
-		// Empty catches are bad, mmmkkayyyy?
+		
 		try {
 			img = ImageIO.read(getClass().getResource("/res/rsz_newfile.png"));
 			newFileButton.setIcon(new ImageIcon(img));
@@ -329,15 +333,15 @@ public class WorkBench extends JFrame {
 		compilerButton.setBounds(66, 0, 20, 20);
 		compilerButton.setToolTipText("Compile Script");
 		toolbar.add(compilerButton);	
-		
+
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
 		constraint.weightx = 1;
 		constraint.weighty = .1;
-		
+
 		toolbar.setLocation(0, 0);
-		
+
 		this.getContentPane().add(toolbar, constraint);
 
 	}

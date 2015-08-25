@@ -5,9 +5,18 @@ import java.awt.Color;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+/**
+ * Class that sets the attributes for the text editor for the
+ * theme picking environment.
+ * 
+ * @author Michael Nowicki
+ *
+ */
 public class ThemeSettings {
 	
 	private Color editorColour = new Color(252, 252, 252);
+	
+	private Color lineNumberColour = new Color(255, 255, 255);
 
 	private SimpleAttributeSet reservedWords;
 	private SimpleAttributeSet defaultColour;
@@ -35,6 +44,7 @@ public class ThemeSettings {
 		StyleConstants.setForeground(comments, Color.GREEN);
 		
 		editorColour = new Color(72,72,72);
+		lineNumberColour = new Color(255, 255, 255);
 	}
 	
 	public void setDefaultTheme() {
@@ -44,6 +54,11 @@ public class ThemeSettings {
 		StyleConstants.setForeground(comments, Color.GREEN);
 	
 		editorColour = new Color(252,252,252);
+		lineNumberColour = new Color(0, 0, 0);
+	}
+	
+	public Color getLineNumberColour() {
+		return lineNumberColour;
 	}
 
 	public Color getBackgroundColour() {

@@ -36,6 +36,8 @@ public class ThemePicker extends JFrame{
 
 	private ThemeSettings themeSettings;
 	
+	private TextLineNumber tln;
+	
 	private TextEditorDocument textarea = new TextEditorDocument();
 	private JTextPane editor = new JTextPane(textarea);
 	
@@ -109,11 +111,12 @@ public class ThemePicker extends JFrame{
 		mainScroll.setPreferredSize(new Dimension(350, 300));	
 		mainScroll.setBackground(new Color(217, 217, 217));
 
-		TextLineNumber tln = new TextLineNumber(editor);
+		tln = new TextLineNumber(editor);
 		tln.setBackground(themeSettings.getBackgroundColour());
 		mainScroll.setRowHeaderView(tln);
 		
 		editor.setText(textString);
+		editor.setCaretPosition(0);
 		
 		constraint.gridx = 0;
 		constraint.gridy = 1;
@@ -159,9 +162,13 @@ public class ThemePicker extends JFrame{
 			textarea.setReservedWords(themeSettings.getReservedWords());
 			textarea.setComments(themeSettings.getComments());
 			textarea.setDefaultColour(themeSettings.getDefaultColour());
-
+			
+			tln.setBackground(themeSettings.getBackgroundColour());
+			tln.setForeground(themeSettings.getLineNumberColour());
+			
 			editor.setBackground(themeSettings.getBackgroundColour());
 			editor.setText(textString);
+			editor.setCaretPosition(0);
 			
 			repaint();
 			revalidate();

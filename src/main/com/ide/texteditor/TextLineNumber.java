@@ -76,15 +76,15 @@ public class TextLineNumber extends JPanel
 	public TextLineNumber(JTextComponent component, int minimumDisplayDigits) {
 		this.component = component;
 
-		setFont( component.getFont() );
+		setFont(component.getFont());
 
-		setBorderGap( 5 );
-		setCurrentLineForeground( Color.RED );
-		setDigitAlignment( CENTER );
+		setBorderGap(5);
+		setCurrentLineForeground(Color.RED);
+		setDigitAlignment(CENTER);
 		setMinimumDisplayDigits( minimumDisplayDigits );
 
 		component.getDocument().addDocumentListener(this);
-		component.addCaretListener( this );
+		component.addCaretListener(this);
 		component.addPropertyChangeListener("font", this);
 	}
 
