@@ -118,6 +118,9 @@ public class WorkBench extends JFrame {
 		JMenuItem buildScript = new JMenuItem("Build Script");
 		JMenuItem packageLoader = new JMenuItem("Set Package Imports");
 		
+		JMenu options = new JMenu("Options");
+		JMenuItem editorThemes = new JMenuItem("Themes");
+		
 		JMenu help = new JMenu("Help");
 		JMenuItem javaDocHelp = new JMenuItem("View Library Javadoc");
 		JMenuItem appHelp = new JMenuItem("General Help");
@@ -144,6 +147,20 @@ public class WorkBench extends JFrame {
 		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
 
+		menu.add(options);
+		options.add(editorThemes);
+		
+		editorThemes.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		            public void run() {
+		                new ThemePicker();
+		            }
+		        });
+			}
+		});
+		
 		menu.add(help);
 		help.add(appHelp);
 		help.add(javaDocHelp);

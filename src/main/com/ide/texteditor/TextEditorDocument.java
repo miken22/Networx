@@ -202,6 +202,23 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		}
 		return index;
 	}
+	
+	public void setReservedWords(SimpleAttributeSet reservedWords) {
+		this.reservedWords = reservedWords;
+	}
+
+	public void setDefaultColour(SimpleAttributeSet defaultColour) {
+		this.defaultColour = defaultColour;
+	}
+
+	public void setQuotations(SimpleAttributeSet quotations) {
+		this.quotations = quotations;
+	}
+
+	public void setComments(SimpleAttributeSet comments) {
+		this.comments = comments;
+	}
+
 
 	/**
 	 * 
