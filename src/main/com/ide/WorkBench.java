@@ -33,6 +33,7 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import main.com.ide.mouse.RightClickListener;
 import main.com.ide.texteditor.TextEditorDocument;
@@ -188,6 +189,10 @@ public class WorkBench extends JFrame {
 
 				}
 
+				/*
+				 * Important, this will not work in Eclipse or an IDE, it is for the built
+				 * version ONLY!!
+				 */
 				// this has to change if being run in eclipse, shouldn't need it though
 				path = path.substring(0, path.length()-11);
 
@@ -237,8 +242,12 @@ public class WorkBench extends JFrame {
 				this.getWidth()-12, (int)(this.getHeight()/1.4)));
 
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(
-						Color.LIGHT_GRAY,1,true), "Current Script:"));
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				"Script:", 
+				TitledBorder.LEFT, 
+				TitledBorder.LEFT, 
+				new Font("Normal", Font.PLAIN, 12), 
+				settings.getBuildLogColour()));
 
 		mainScroll.setBackground(settings.getEnvironmentColour());
 
@@ -263,9 +272,15 @@ public class WorkBench extends JFrame {
 		outputScroll.setPreferredSize(new Dimension(
 				getWidth()-12, (int)(getHeight()/5)));
 
+
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(
-						Color.LIGHT_GRAY,1,true), "Build Log:"));
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				"Build Log:", 
+				TitledBorder.LEFT, 
+				TitledBorder.LEFT, 
+				new Font("Normal", Font.PLAIN, 12), 
+				settings.getBuildLogColour()));
+		
 		outputScroll.setBackground(settings.getEnvironmentColour());
 
 		constraint.gridx = 0;
@@ -365,6 +380,22 @@ public class WorkBench extends JFrame {
 		mainScroll.setBackground(settings.getEnvironmentColour());
 		outputScroll.setBackground(settings.getEnvironmentColour());
 		
+		mainScroll.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				"Script:", 
+				TitledBorder.LEFT, 
+				TitledBorder.LEFT, 
+				new Font("Normal", Font.PLAIN, 12), 
+				settings.getBuildLogColour()));
+		
+		outputScroll.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				"Build Log:", 
+				TitledBorder.LEFT, 
+				TitledBorder.LEFT, 
+				new Font("Normal", Font.PLAIN, 12), 
+				settings.getBuildLogColour()));
+		
 		// Update text colouring for editor
 		textarea.setQuotations(settings.getQuotations());
 		textarea.setReservedWords(settings.getReservedWords());
@@ -411,7 +442,7 @@ public class WorkBench extends JFrame {
 				// Open file, check to save first
 				if (textarea.documentHasChanged()) {
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog (null,
+					int dialogResult = JOptionPane.showConfirmDialog(null,
 							"Would You Like to Save your Work?","Warning",dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFileButton.doClick();
@@ -428,7 +459,7 @@ public class WorkBench extends JFrame {
 
 				if (textarea.documentHasChanged()) {
 					dialogButton = JOptionPane.YES_NO_OPTION;
-					dialogResult = JOptionPane.showConfirmDialog (null,
+					dialogResult = JOptionPane.showConfirmDialog(null,
 							"Would You Like to Save your Work?","Warning",dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFileButton.doClick();
@@ -449,7 +480,8 @@ public class WorkBench extends JFrame {
 	
 	
 	/**
-	 * Trivial listener to create a new file
+	 * Trivial listener to create a new file, clears
+	 * the text area and starts new.
 	 * 
 	 * @author Mike Nowicki
 	 *
@@ -458,9 +490,11 @@ public class WorkBench extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent click) {
 
+			// This checks if modifications have been made,
+			// if so prompt the user to save their work.
 			if (textarea.documentHasChanged()) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
-				int dialogResult = JOptionPane.showConfirmDialog (null, 
+				int dialogResult = JOptionPane.showConfirmDialog(null, 
 						"Would You Like to Save your Work?","Warning", dialogButton);
 				if(dialogResult == JOptionPane.YES_OPTION){
 					saveFileButton.doClick();
@@ -469,6 +503,8 @@ public class WorkBench extends JFrame {
 			}
 
 			editor.setText("");
+			// Must remove action listeners to prevent redundant behaviour,
+			// since only one exists it must be at array index 0
 			saveFileButton.removeActionListener(saveFileButton.getActionListeners()[0]);
 			saveFileButton.addActionListener(new SaveFileListener(editor, properties));
 			properties.clearArguments();
@@ -476,6 +512,14 @@ public class WorkBench extends JFrame {
 		}
 	}
 	
+	/**
+	 * ActionListener that creates the frame that allows
+	 * the user to pick which colour theme they would
+	 * like to use.
+	 * 
+	 * @author Michael Nowicki
+	 *
+	 */
 	private class ThemeListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
@@ -491,6 +535,7 @@ public class WorkBench extends JFrame {
 	
 	/**
 	 * Listener passed to ThemePicker to update environment settings
+	 * and repaints the component when it performs its' action
 	 * 
 	 * @author Michael  Nowicki
 	 *
