@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -50,7 +51,12 @@ public class WorkBench extends JFrame {
 
 	private JTextPane editor;
 	private JTextArea buildlog;
-
+	private TextLineNumber tln;
+	
+	private JScrollPane mainScroll;
+	private JScrollPane outputScroll;
+	
+	private JPanel toolbar;
 	private JButton newFileButton;
 	private CompileButton compilerButton;
 	private SaveButton saveFileButton;
@@ -59,14 +65,20 @@ public class WorkBench extends JFrame {
 	// Custom style for editor environment
 	private TextEditorDocument textarea;
 
+	// Properties of script for compiler
 	private Properties properties;
+	
+	// Settings for the editors theme
+	private ThemeSettings settings;
 
 	public WorkBench() {
 
 		// Change this after sharing
 		super("Grapher");
 
-		properties = new Properties();	
+		properties = new Properties();
+
+		settings = new ThemeSettings();
 
 		textarea = new TextEditorDocument();
 		editor = new JTextPane(textarea);	
@@ -79,6 +91,8 @@ public class WorkBench extends JFrame {
 	 * Main method to load all components on the frame
 	 */
 	public void loadWorkbench() {	
+		
+		settings.loadEnvironmentSettings();
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
@@ -89,8 +103,7 @@ public class WorkBench extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize((int) width/2, (int)(height/1.2));
 		this.setResizable(true);
-		this.setLocationRelativeTo(null);
-		this.setBackground(new Color(217, 217, 217));		
+		this.setLocationRelativeTo(null);	
 
 		// Load all components for the workbench
 		buildToolbar();
@@ -126,7 +139,7 @@ public class WorkBench extends JFrame {
 		JMenuItem javaDocHelp = new JMenuItem("View Library Javadoc");
 		JMenuItem appHelp = new JMenuItem("General Help");
 
-		menu.setBackground(new Color(217,217,217));
+		menu.setBackground(new Color(217, 217, 217));
 		menu.add(file);
 		file.add(open);
 		file.add(save);
@@ -152,23 +165,17 @@ public class WorkBench extends JFrame {
 		options.add(editorThemes);
 
 		// When clicked create the new frame to pick the theme
-		editorThemes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Runnable task = new Runnable(){
-					@Override
-					public void run() {
-						new ThemePicker();
-					}
-				};
-				EventQueue.invokeLater(task);
-			}
-		});
+		editorThemes.addActionListener(new ThemeListener());
 
 		menu.add(help);
 		help.add(appHelp);
 		help.add(javaDocHelp);
 
+		/**
+		 * This listener finds the path to the JavaDocs for the supplied
+		 * libraries, and attempts to launch them in the users default
+		 * browser
+		 */
 		javaDocHelp.addActionListener(new ActionListener() {
 
 			@Override
@@ -214,8 +221,8 @@ public class WorkBench extends JFrame {
 		Font font = new Font("Normal", Font.PLAIN, 14);
 		font = font.deriveFont(Font.PLAIN, 14);
 
-		JScrollPane mainScroll = new JScrollPane(editor);
-		JScrollPane outputScroll = new JScrollPane(buildlog);
+		mainScroll = new JScrollPane(editor);
+		outputScroll = new JScrollPane(buildlog);
 
 		GridBagConstraints constraint = new GridBagConstraints();
 
@@ -233,9 +240,9 @@ public class WorkBench extends JFrame {
 				BorderFactory.createLineBorder(
 						Color.LIGHT_GRAY,1,true), "Current Script:"));
 
-		mainScroll.setBackground(new Color(217, 217, 217));
+		mainScroll.setBackground(settings.getEnvironmentColour());
 
-		TextLineNumber tln = new TextLineNumber(editor);
+		tln = new TextLineNumber(editor);
 		mainScroll.setRowHeaderView(tln);
 
 		constraint.gridx = 0;
@@ -259,7 +266,7 @@ public class WorkBench extends JFrame {
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(
 						Color.LIGHT_GRAY,1,true), "Build Log:"));
-		outputScroll.setBackground(new Color(217, 217, 217));
+		outputScroll.setBackground(settings.getEnvironmentColour());
 
 		constraint.gridx = 0;
 		constraint.gridy = 2;
@@ -275,14 +282,14 @@ public class WorkBench extends JFrame {
 
 		GridBagConstraints constraint = new GridBagConstraints();
 
-		JPanel toolbar = new JPanel();
+		toolbar = new JPanel();
 		newFileButton = new JButton();
 		openFileButton = new OpenButton();
 		saveFileButton = new SaveButton();
 		compilerButton = new CompileButton();
 
-		toolbar.setPreferredSize(new Dimension((int)this.getWidth(), 25));
-		toolbar.setMaximumSize(new Dimension((int)this.getWidth(), 25));
+		toolbar.setPreferredSize(new Dimension((int)this.getWidth(), 30));
+		toolbar.setMaximumSize(new Dimension((int)this.getWidth(), 30));
 		toolbar.setLayout(null);
 		toolbar.setBackground(new Color(217, 217, 217));
 
@@ -292,7 +299,7 @@ public class WorkBench extends JFrame {
 		saveFileButton.addActionListener(new SaveFileListener(editor, properties));
 		compilerButton.addActionListener(new CompileButtonListener(editor, buildlog, properties));
 
-		Image img;
+		Image img = null;
 		
 		try {
 			img = ImageIO.read(getClass().getResource("/res/rsz_newfile.png"));
@@ -300,7 +307,7 @@ public class WorkBench extends JFrame {
 		} catch (IOException ex) {
 			System.exit(-1);
 		}
-		newFileButton.setBounds(2, 0, 20, 20);
+		newFileButton.setBounds(2, 0, 30, 30);
 		newFileButton.setToolTipText("New File");
 		toolbar.add(newFileButton);
 
@@ -310,7 +317,7 @@ public class WorkBench extends JFrame {
 		} catch (IOException ex) {
 			System.exit(-1);
 		}
-		saveFileButton.setBounds(22, 0, 20, 20);
+		saveFileButton.setBounds(32, 0, 30, 30);
 		saveFileButton.setToolTipText("Save File As");
 		toolbar.add(saveFileButton);
 
@@ -320,7 +327,7 @@ public class WorkBench extends JFrame {
 		} catch (IOException ex) {
 			System.exit(-1);
 		}
-		openFileButton.setBounds(44, 0, 20, 20);
+		openFileButton.setBounds(64, 0, 30, 30);
 		openFileButton.setToolTipText("Open File");
 		toolbar.add(openFileButton);
 
@@ -330,7 +337,7 @@ public class WorkBench extends JFrame {
 		} catch (IOException ex) {
 			System.exit(-1);
 		}
-		compilerButton.setBounds(66, 0, 20, 20);
+		compilerButton.setBounds(96, 0, 30, 30);
 		compilerButton.setToolTipText("Compile Script");
 		toolbar.add(compilerButton);	
 
@@ -344,6 +351,38 @@ public class WorkBench extends JFrame {
 
 		this.getContentPane().add(toolbar, constraint);
 
+	}
+	/**
+	 * Overriding method that paints the frame, updates the themes
+	 * 
+	 * @param g The graphics for the component.
+	 */
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+
+		// Update environment theme
+		mainScroll.setBackground(settings.getEnvironmentColour());
+		outputScroll.setBackground(settings.getEnvironmentColour());
+		
+		// Update text colouring for editor
+		textarea.setQuotations(settings.getQuotations());
+		textarea.setReservedWords(settings.getReservedWords());
+		textarea.setComments(settings.getComments());
+		textarea.setDefaultColour(settings.getDefaultColour());
+		
+		editor.setText(editor.getText());
+		
+		// Update line number colouring
+		tln.setBackground(settings.getEditorColour());
+		tln.setForeground(settings.getLineNumberColour());
+		
+		// Update the background colour
+		editor.setBackground(settings.getEditorColour());
+		
+		// Update the build log colours
+		buildlog.setBackground(settings.getEditorColour());
+		buildlog.setForeground(settings.getBuildLogColour());
 	}
 
 	/**
@@ -407,7 +446,8 @@ public class WorkBench extends JFrame {
 			}
 		}
 	}
-
+	
+	
 	/**
 	 * Trivial listener to create a new file
 	 * 
@@ -433,6 +473,34 @@ public class WorkBench extends JFrame {
 			saveFileButton.addActionListener(new SaveFileListener(editor, properties));
 			properties.clearArguments();
 			properties.clearImports();
+		}
+	}
+	
+	private class ThemeListener implements ActionListener {
+		
+		public void actionPerformed(ActionEvent e) {
+			Runnable task = new Runnable(){
+				@Override
+				public void run() {
+					new ThemePicker(settings, new ApplyListener());
+				}
+			};
+			EventQueue.invokeLater(task);
+		}
+	}
+	
+	/**
+	 * Listener passed to ThemePicker to update environment settings
+	 * 
+	 * @author Michael  Nowicki
+	 *
+	 */
+	private class ApplyListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			settings.updateEnvironmentSettings();
+			repaint();
 		}
 	}
 }

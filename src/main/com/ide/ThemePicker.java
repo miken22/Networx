@@ -18,7 +18,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import main.com.ide.mouse.RightClickListener;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
 
@@ -34,6 +33,7 @@ public class ThemePicker extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
+	// Internal settings for updating the example text pane
 	private ThemeSettings themeSettings;
 	
 	private TextLineNumber tln;
@@ -41,13 +41,16 @@ public class ThemePicker extends JFrame{
 	private TextEditorDocument textarea = new TextEditorDocument();
 	private JTextPane editor = new JTextPane(textarea);
 	
+	private ActionListener applyListener;
+	
 	private final String textString = "// This is a comment \n\r" +
 									  "public static void main(String[] args) { \r\n" +
 									  "    System.out.println(\"Hello World\");\r\n" +
 									  "}\r\n";
 
-	public ThemePicker() {
-		themeSettings = new ThemeSettings();		
+	public ThemePicker(ThemeSettings themeSettings, ActionListener applyListener) {
+		this.themeSettings = themeSettings;		
+		this.applyListener = applyListener;
 		createFrame();
 	}
 		
@@ -74,14 +77,23 @@ public class ThemePicker extends JFrame{
 		
 		JButton applyButton = new JButton("Apply");
 		
-		applyButton.addActionListener(new ApplyListener());
+		// This is ugly but....
+		// Applies the settings to the main JFrame, and
+		// the second disposes this frame
+		applyButton.addActionListener(applyListener);
+		applyButton.addActionListener(new DisposeFrame());
+
 		radioPanel.setLayout(new GridLayout(1,3));
 		
 		radioPanel.add(defaultSetting);
 		radioPanel.add(darkSetting);
 		radioPanel.add(applyButton);
 		
-		defaultSetting.setSelected(true);
+		if(themeSettings.isDefaultTheme()) {
+			defaultSetting.setSelected(true);
+		} else {
+			darkSetting.setSelected(true);
+		}
 		
 		ThemeListener listener = new ThemeListener(themeSettings);
 		defaultSetting.addActionListener(listener);
@@ -105,14 +117,13 @@ public class ThemePicker extends JFrame{
 		editor.setEditable(false);
 		editor.setFont(font);
 
-		editor.setBackground(themeSettings.getBackgroundColour());
-		editor.addMouseListener(new RightClickListener());
+		editor.setBackground(themeSettings.getEditorColour());
 		
 		mainScroll.setPreferredSize(new Dimension(350, 300));	
 		mainScroll.setBackground(new Color(217, 217, 217));
 
 		tln = new TextLineNumber(editor);
-		tln.setBackground(themeSettings.getBackgroundColour());
+		tln.setBackground(themeSettings.getEditorColour());
 		mainScroll.setRowHeaderView(tln);
 		
 		editor.setText(textString);
@@ -163,10 +174,10 @@ public class ThemePicker extends JFrame{
 			textarea.setComments(themeSettings.getComments());
 			textarea.setDefaultColour(themeSettings.getDefaultColour());
 			
-			tln.setBackground(themeSettings.getBackgroundColour());
+			tln.setBackground(themeSettings.getEditorColour());
 			tln.setForeground(themeSettings.getLineNumberColour());
 			
-			editor.setBackground(themeSettings.getBackgroundColour());
+			editor.setBackground(themeSettings.getEditorColour());
 			editor.setText(textString);
 			editor.setCaretPosition(0);
 			
@@ -174,14 +185,12 @@ public class ThemePicker extends JFrame{
 			revalidate();
 		}
 	}
-
-	private class ApplyListener implements ActionListener {
-		
+	
+	private class DisposeFrame implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO: Have effect the actual environment
+			dispose();
 		}
 	}
-	
 }

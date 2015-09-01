@@ -53,5 +53,19 @@ public abstract class PackagePane extends JPanel {
 	 * Call this method to update the selected checkboxes to
 	 * present the user with their current selections
 	 */
-	public abstract void updatePackageSelection();
+	public void updatePackageSelection() {
+
+		if (packageGroup == null) {
+			return;
+		}
+		
+		for (Checkbox packageBox : packageGroup){
+			String thePackage = packageBox.getName();
+			
+			if (properties.getPackagesToImport().contains(thePackage)) {
+				packageBox.setState(true);
+			}
+		}
+	}
+	
 }

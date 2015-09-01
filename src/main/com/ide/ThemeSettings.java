@@ -1,7 +1,14 @@
 package main.com.ide;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
@@ -18,10 +25,16 @@ public class ThemeSettings {
 	
 	private Color lineNumberColour = new Color(255, 255, 255);
 
+	private Color buildLogFontColour = new Color(0, 0, 0);
+	
+	private Color environmentColour = new Color(217, 217, 217);
+		
 	private SimpleAttributeSet reservedWords;
 	private SimpleAttributeSet defaultColour;
 	private SimpleAttributeSet quotations;
 	private SimpleAttributeSet comments;
+	
+	private boolean isDefault;
 
 	public ThemeSettings() {
 
@@ -35,6 +48,8 @@ public class ThemeSettings {
 		StyleConstants.setForeground(quotations, Color.BLUE);
 		StyleConstants.setForeground(comments, Color.GREEN);
 		
+		isDefault = true;
+		
 	}
 	
 	public void setDarkTheme() {
@@ -43,8 +58,12 @@ public class ThemeSettings {
 		StyleConstants.setForeground(quotations, Color.ORANGE);
 		StyleConstants.setForeground(comments, Color.GREEN);
 		
-		editorColour = new Color(72,72,72);
+		editorColour = new Color(72, 72, 72);
+		environmentColour = new Color(72, 72, 72);
 		lineNumberColour = new Color(255, 255, 255);
+		buildLogFontColour = new Color(255, 255, 255);
+		
+		isDefault = false;
 	}
 	
 	public void setDefaultTheme() {
@@ -53,15 +72,19 @@ public class ThemeSettings {
 		StyleConstants.setForeground(quotations, Color.BLUE);
 		StyleConstants.setForeground(comments, Color.GREEN);
 	
-		editorColour = new Color(252,252,252);
+		editorColour = new Color(252, 252, 252);
+		environmentColour = new Color(217, 217, 217);
 		lineNumberColour = new Color(0, 0, 0);
+		buildLogFontColour = new Color(0, 0, 0);
+
+		isDefault = true;
 	}
 	
 	public Color getLineNumberColour() {
 		return lineNumberColour;
 	}
 
-	public Color getBackgroundColour() {
+	public Color getEditorColour() {
 		return editorColour;
 	}
 	
@@ -80,5 +103,92 @@ public class ThemeSettings {
 	public SimpleAttributeSet getComments() {
 		return comments;
 	}
+	
+	public Color getBuildLogColour() {
+		return buildLogFontColour;
+	}
 
+	public boolean isDefaultTheme() {
+		return isDefault;
+	}
+
+	public Color getEnvironmentColour() {
+		return environmentColour;
+	}
+	
+	/**
+	 * When the editor loads this is called to read the settings
+	 * for the environment and is applied when created.
+	 */
+	public void loadEnvironmentSettings() {
+
+		File settingFile = new File(".settings.txt");
+		
+		// On first launch it won't exist so create it
+		if(!settingFile.exists()) {
+			try {
+				
+				FileWriter outputStream = new FileWriter(settingFile);
+				outputStream.write("default");				
+				outputStream.close();
+				
+				setDefaultTheme();
+				return;
+					
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(new JFrame(), "Could not load settings.", 
+						"Error",
+				        JOptionPane.ERROR_MESSAGE);
+			}
+			
+		}
+	
+		try {
+			FileReader reader = new FileReader(settingFile);
+			BufferedReader bufferedReader = new BufferedReader(reader);
+			
+
+			String fileText = bufferedReader.readLine();
+			
+			if (fileText == null || fileText.equals("default")) {
+				setDefaultTheme();
+			} else {
+				setDarkTheme();
+			}
+			
+			bufferedReader.close();
+			
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(new JFrame(), "Could not load settings.", 
+					"Error",
+			        JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
+	}
+	
+	/**
+	 * Writes the modified settings back to a file
+	 */
+	public void updateEnvironmentSettings() {
+		
+		try {
+			
+			File settingFile = new File(".settings.txt");		
+			FileWriter outputStream = new FileWriter(settingFile);
+			
+			if (isDefault) {
+				outputStream.write("default");		
+			} else {
+				outputStream.write("dark");		
+			}
+			
+			outputStream.close();
+			
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(new JFrame(), "Could not load settings.", 
+					"Error",
+			        JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }
