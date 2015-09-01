@@ -14,7 +14,9 @@ import javax.swing.text.StyleConstants;
 
 /**
  * Class that sets the attributes for the text editor for the
- * theme picking environment.
+ * theme picking environment. The settings are relatively trivial
+ * right now, only dark or default, and is stored as a string of
+ * text in a .settings text file
  * 
  * @author Michael Nowicki
  *
@@ -84,6 +86,10 @@ public class ThemeSettings {
 		return lineNumberColour;
 	}
 
+	/**
+	 * 
+	 * @return The colour for the background of the text panes
+	 */
 	public Color getEditorColour() {
 		return editorColour;
 	}
@@ -103,7 +109,10 @@ public class ThemeSettings {
 	public SimpleAttributeSet getComments() {
 		return comments;
 	}
-	
+	/**
+	 * 
+	 * @return The colour for the build log
+	 */
 	public Color getBuildLogColour() {
 		return buildLogFontColour;
 	}
@@ -112,6 +121,10 @@ public class ThemeSettings {
 		return isDefault;
 	}
 
+	/**
+	 * 
+	 * @return The colour for the main window
+	 */
 	public Color getEnvironmentColour() {
 		return environmentColour;
 	}

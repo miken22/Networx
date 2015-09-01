@@ -104,8 +104,8 @@ public class CommandLineArgument extends JMenuItem {
 			cancel.setBounds(275, 420, 100, 25);
 			cancel.addActionListener(new CancelListener(this));
 			
-			this.getContentPane().add(save);
-			this.getContentPane().add(cancel);
+			this.add(save);
+			this.add(cancel);
 			
 			arguments.setText(properties.getCommandArguments());
 			

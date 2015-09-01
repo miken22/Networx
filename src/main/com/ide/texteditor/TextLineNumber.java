@@ -1,7 +1,6 @@
 package main.com.ide.texteditor;
 import java.awt.*;
 import java.beans.*;
-import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -10,15 +9,10 @@ import javax.swing.text.*;
 
 /**
  *  This class will display line numbers for a related text component. The text
- *  component must use the same line height for each line. TextLineNumber
- *  supports wrapped lines and will highlight the line number of the current
- *  line in the text component.
+ *  component must use the same line height for each line. 
  *
- *  This class was designed to be used as a component added to the row header
- *  of a JScrollPane.
+ *  This class is added to the row header of a JScrollPane.
  *  
- *  Not original work, taken from:
- *  https://tips4java.wordpress.com/2009/05/23/text-component-line-number/
  *  
  *  
  */
@@ -26,9 +20,7 @@ public class TextLineNumber extends JPanel
 	implements CaretListener, DocumentListener, PropertyChangeListener {
 	
 	private static final long serialVersionUID = 1L;
-	public final static float LEFT = 0.0f;
 	public final static float CENTER = 0.5f;
-	public final static float RIGHT = 1.0f;
 
 	private final static Border OUTER = BorderFactory.createTitledBorder(
 			BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true));
@@ -36,11 +28,9 @@ public class TextLineNumber extends JPanel
 	private final static int HEIGHT = Integer.MAX_VALUE - 1000000;
 
 	//  Text component this TextTextLineNumber component is in sync with
-
 	private JTextComponent component;
 
 	//  Properties that can be changed
-
 	private boolean updateFont;
 	private int borderGap;
 	private Color currentLineForeground;
@@ -53,8 +43,6 @@ public class TextLineNumber extends JPanel
     private int lastDigits;
     private int lastHeight;
     private int lastLine;
-
-	private HashMap<String, FontMetrics> fonts;
 
 	/**
 	 *	Create a line number component for a text component. This minimum
@@ -311,42 +299,13 @@ public class TextLineNumber extends JPanel
 		//  Get the bounding rectangle of the row
 
 		Rectangle r = component.modelToView( rowStartOffset );
-		int lineHeight = fontMetrics.getHeight();
+//		int lineHeight = fontMetrics.getHeight();
 		int y = r.y + r.height;
 		int descent = 0;
 
 		//  The text needs to be positioned above the bottom of the bounding
 		//  rectangle based on the descent of the font(s) contained on the row.
-
-		if (r.height == lineHeight) { // default font is being used
-			descent = fontMetrics.getDescent();
-		} else { // We need to check all the attributes for font changes
-		
-			if (fonts == null)
-				fonts = new HashMap<String, FontMetrics>();
-
-			Element root = component.getDocument().getDefaultRootElement();
-			int index = root.getElementIndex( rowStartOffset );
-			Element line = root.getElement( index );
-
-			for (int i = 0; i < line.getElementCount(); i++) {
-				Element child = line.getElement(i);
-				AttributeSet as = child.getAttributes();
-				String fontFamily = (String)as.getAttribute(StyleConstants.FontFamily);
-				Integer fontSize = (Integer)as.getAttribute(StyleConstants.FontSize);
-				String key = fontFamily + fontSize;
-
-				FontMetrics fm = fonts.get( key );
-
-				if (fm == null)	{
-					Font font = new Font(fontFamily, Font.PLAIN, fontSize);
-					fm = component.getFontMetrics( font );
-					fonts.put(key, fm);
-				}
-
-				descent = Math.max(descent, fm.getDescent());
-			}
-		}
+		descent = fontMetrics.getDescent();
 
 		return y - descent;
 	}

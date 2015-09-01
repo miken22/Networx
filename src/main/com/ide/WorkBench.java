@@ -50,14 +50,32 @@ public class WorkBench extends JFrame {
 
 	private static final long serialVersionUID = -8731589343197836723L;
 
+	/**
+	 * Where the user enters their script
+	 */
 	private JTextPane editor;
+	/**
+	 * TextArea displays error messages or scirpt output
+	 */
 	private JTextArea buildlog;
+	/**
+	 * Line Numbering for the editor text pane
+	 */
 	private TextLineNumber tln;
-	
+	/*
+	 * The two scroll panes that will contain the editor and build log
+	 */
 	private JScrollPane mainScroll;
 	private JScrollPane outputScroll;
 	
+	/**
+	 * Panel that will hold all the buttons available to the user
+	 */
 	private JPanel toolbar;
+	
+	/*
+	 * Collection of buttons that will be on the toolbar
+	 */
 	private JButton newFileButton;
 	private CompileButton compilerButton;
 	private SaveButton saveFileButton;
@@ -73,8 +91,7 @@ public class WorkBench extends JFrame {
 	private ThemeSettings settings;
 
 	public WorkBench() {
-
-		// Change this after sharing
+		
 		super("Grapher");
 
 		properties = new Properties();
@@ -93,6 +110,7 @@ public class WorkBench extends JFrame {
 	 */
 	public void loadWorkbench() {	
 		
+		// Read settings file to determine how to decorate the editor
 		settings.loadEnvironmentSettings();
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -119,7 +137,9 @@ public class WorkBench extends JFrame {
 
 	}
 
-	// Create all menu bar lists and items
+	/**
+	 *  Create all menu bar menus and items
+	 */
 	private void createMenuBar() {
 
 		JMenuBar menu = new JMenuBar();
@@ -184,22 +204,25 @@ public class WorkBench extends JFrame {
 				// Get path to jar location
 				String path  = "";
 				try {
+					// I don't think there's a way to reduce how grossly long this is...
 					path = WorkBench.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 				} catch (URISyntaxException e1) {
 
 				}
 
 				/*
-				 * Important, this will not work in Eclipse or an IDE, it is for the built
-				 * version ONLY!!
+				 * Important, this will not work in Eclipse or an IDE, 
+				 * it is for the built version ONLY!!
 				 */
-				// this has to change if being run in eclipse, shouldn't need it though
+				// this has to change if being run in eclipse
 				path = path.substring(0, path.length()-11);
 
 				// Launch the users default browser.
 				if(Desktop.isDesktopSupported()) {
 					try {
-						Desktop.getDesktop().browse(new URI("file://" + path + "doc/index.html"));
+						Desktop.getDesktop().browse(new URI("file://" + 
+								path + 
+								"doc/index.html"));
 					} catch (IOException | URISyntaxException e1) {
 						buildlog.append("Could not find the path to your Javadocs.");
 					}
@@ -310,10 +333,17 @@ public class WorkBench extends JFrame {
 
 		// Setup listeners
 		newFileButton.addActionListener(new NewFileListener());
-		openFileButton.addActionListener(new OpenButtonListener(editor, properties));
-		saveFileButton.addActionListener(new SaveFileListener(editor, properties));
-		compilerButton.addActionListener(new CompileButtonListener(editor, buildlog, properties));
+		openFileButton.addActionListener(new OpenButtonListener(
+				editor, properties));
+		saveFileButton.addActionListener(new SaveFileListener(
+				editor, properties));
+		compilerButton.addActionListener(new CompileButtonListener(
+				editor, buildlog, properties));
 
+		/*
+		 * Load all images for the buttons, place each button on the toolbar
+		 */
+		
 		Image img = null;
 		
 		try {
@@ -442,8 +472,11 @@ public class WorkBench extends JFrame {
 				// Open file, check to save first
 				if (textarea.documentHasChanged()) {
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(null,
-							"Would You Like to Save your Work?","Warning",dialogButton);
+					int dialogResult = JOptionPane.showConfirmDialog(
+							null,
+							"Would You Like to Save your Work?",
+							"Warning",
+							dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFileButton.doClick();
 						textarea.isSaved();
@@ -459,16 +492,20 @@ public class WorkBench extends JFrame {
 
 				if (textarea.documentHasChanged()) {
 					dialogButton = JOptionPane.YES_NO_OPTION;
-					dialogResult = JOptionPane.showConfirmDialog(null,
-							"Would You Like to Save your Work?","Warning",dialogButton);
+					dialogResult = JOptionPane.showConfirmDialog(
+							null,
+							"Would You Like to Save your Work?",
+							"Warning",
+							dialogButton);
 					if(dialogResult == JOptionPane.YES_OPTION){
 						saveFileButton.doClick();
 						textarea.isSaved();
 					}
 				}
-				// If the document has not changed, and the user does not click yes then the app
-				// can exit
-				if (!textarea.documentHasChanged() || dialogResult == JOptionPane.NO_OPTION) {
+				// If the document has not changed, and the user does 
+				// not click yes then the program can exit
+				if (!textarea.documentHasChanged() || 
+						dialogResult == JOptionPane.NO_OPTION) {
 					System.exit(0);
 				}
 				// Compile script

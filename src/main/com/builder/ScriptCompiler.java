@@ -82,7 +82,7 @@ public class ScriptCompiler {
 			}
 			
 			buildFailed = true;
-			// Play error sound (Windows)
+			// Play error sound (Windows, need to test unix)
 			java.awt.Toolkit.getDefaultToolkit().beep();
 			runtimeProcess.waitFor();
 			return;

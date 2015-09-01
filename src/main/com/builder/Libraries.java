@@ -3,18 +3,19 @@ package main.com.builder;
 import java.io.File;
 
 /**
- * List of libraries to add for compiling, formatted for linux or windows
+ * List of libraries to add for compiling, formatted for Linux or windows
+ *
  * @author Mike Nowicki
  *
  */
 public final class Libraries {
 
 	/**
-	 * Gets all libraries that need to be added to the classpath
+	 * Gets all libraries that need to be added to the class path
 	 * when the user application is compiled
 	 * 
 	 * @param OS String indicating the operating system. From System.getProperty("os");
-	 * @return The list of libraries to add to the compilers classpath.
+	 * @return The list of libraries to add to the compilers class path.
 	 */
 	public static String getLibraries(String OS) {
 		
@@ -41,6 +42,8 @@ public final class Libraries {
 			}
 		}
 		
+		// Scan all files and folders within the library folder to
+		// find all jar files that must be added to the classpath
 		for (File subFile : libFolder.listFiles()) {
 			
 			if (subFile.isDirectory()) {
@@ -80,6 +83,8 @@ public final class Libraries {
 			}
 		}
 		
+		// Same idea as above for windows, only difference is the
+		// delimiter between library names
 		for (File subFile : libFolder.listFiles()) {
 			
 			if (subFile.isDirectory()) {
@@ -104,6 +109,14 @@ public final class Libraries {
 		return libraries;
 	}
 	
+	/**
+	 * Verify the file is not a javadoc or source file, and
+	 * that is it is a jar file.
+	 * 
+	 * @param file The file to check
+	 * @return True if the file is a non javadoc/source jar, false
+	 * 		   otherwise.
+	 */
 	private static boolean isDocOrSource(File file) {
 		if (file.toString().contains("javadoc")) {
 			return true;
