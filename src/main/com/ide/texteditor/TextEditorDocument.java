@@ -138,6 +138,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 			e.printStackTrace();
 		}
 
+		defaultColour.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.FALSE);
+		
 		StringReader strReader = new StringReader(text);
 		BufferedReader reader = new BufferedReader(strReader);
 
