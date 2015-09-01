@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
@@ -43,7 +45,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		hasChanged = false;
 
 	}
-	
+
 	/**
 	 * Inserts the string and performs necessary decorations
 	 */
@@ -51,46 +53,15 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		if (str.equals("\t")){
 			str = "    ";
 		}
-		
+
 		super.insertString(offset, str, a);
-
-		hasChanged = true;
-
-		String text = getText(0, getLength());
-		// Find the last character index
-		int before = findLastNonWordChar(text, offset);
-		if (before < 0) {
-			before = 0;
-		}
-		// Find the first word character from the insert
-		int after = findFirstNonWordChar(text, offset + str.length());
-		int wordL = before;
-		int wordR = before;
-
-		// Scan until the end of the word
-		while (wordR <= after) {
-			// Check the boundary to see if its a word
-			if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
-				// If its a word that matches a reserved word fild the whole word
-				if (text.substring(wordL, wordR).matches("(\\W)*(" + ReservedWords.reservedWords + ")")) {
-					// Only colour the word itself, not brackets, other words, etc
-					while (!String.valueOf(text.charAt(wordL)).matches("[a-zA-Z]")) {
-						wordL++;
-					}
-					setCharacterAttributes(wordL, wordR - wordL, reservedWords, false);             	    	            	
-				} else {
-					// Otherwise colour by character with the default colour
-					setCharacterAttributes(wordL, wordR - wordL, defaultColour, false);
-				}
-				wordL = wordR;
-			}
-			wordR++;
-		}       
-		// Look for other types to colour
+		
+		updateTextStyles();
 		colourQuotes();
 		colourComments();
+
 	}
-	
+
 	private void colourQuotes() {
 		String text = "";
 		try {
@@ -139,7 +110,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		}
 
 		defaultColour.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.FALSE);
-		
+
 		StringReader strReader = new StringReader(text);
 		BufferedReader reader = new BufferedReader(strReader);
 
@@ -172,67 +143,15 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	public void remove(int offset, int length) throws BadLocationException {
 		super.remove(offset, length);
 
-		hasChanged = true;
-
-		String text = this.getText(0, getLength());
-		// Get the end of the word from the index
-		int before = findLastNonWordChar(text, offset);
-		if (before < 0) {
-			before = 0;
-		}
-		// Get the beginning index of the word
-		int after = findFirstNonWordChar(text, offset);
-
-		if (text.substring(before, after).matches("(\\W)*(" + ReservedWords.reservedWords + ")")) {
-			// Find the entirty of the word for colouring
-			while (!String.valueOf(text.charAt(before)).matches("[a-zA-Z]")) {
-				before++;
-			}
-			setCharacterAttributes(before, after - before, reservedWords, false);
-		} else {
-			// Otherwise colour each character as the default colouring
-			setCharacterAttributes(before, after - before, defaultColour, false);
-		}
-
+		updateTextStyles();
+		colourQuotes();
 		colourComments();
-
 	}
 	
-	/**
-	 * Scans the text backwards from the given index to find the first
-	 * instance of a word character (Aa-Zz0-9_]
-
-	 * @param text The text from the document
-	 * @param index The index to begin searching from
-	 * @return The index where a word begins.
+	/*
+	 * The following are used to update which style to use
 	 */
-	private int findLastNonWordChar(String text, int index) {
-		while (--index >= 0) {
-			if (String.valueOf(text.charAt(index)).matches("\\W")) {
-				break;
-			}
-		}
-		return index;
-	}
 
-	/**
-	 * Scans the text from the given index to find the first
-	 * instance of a word character (Aa-Zz0-9_]
-
-	 * @param text The text from the document
-	 * @param index The index to begin searching from
-	 * @return The index where a word begins.
-	 */
-	private int findFirstNonWordChar(String text, int index) {
-		while (index < text.length()) {
-			if (String.valueOf(text.charAt(index)).matches("\\W")) {
-				break;
-			}
-			index++;
-		}
-		return index;
-	}
-	
 	public void setReservedWords(SimpleAttributeSet reservedWords) {
 		this.reservedWords = reservedWords;
 	}
@@ -262,5 +181,42 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	 */
 	public void isSaved() {
 		hasChanged = false;
+	}
+
+	/**
+	 * Builds a regex pattern of all words to search for
+	 * @return The regex experession
+	 */
+	private Pattern buildPattern() {
+
+		StringBuilder sb = new StringBuilder();
+		for (String token : ReservedWords.reservedWords) {
+			sb.append("\\b"); // Start of word boundary
+			sb.append(token);
+			sb.append("\\b|"); // End of word boundary and an or for the next word
+		}
+		// Remove the trailing "|"
+		if (sb.length() > 0) {
+			sb.deleteCharAt(sb.length() - 1);
+		}
+
+		return Pattern.compile(sb.toString());
+
+	}
+
+
+	private void updateTextStyles() throws BadLocationException {
+
+		// Clear existing styles
+		this.setCharacterAttributes(0, getText(0, getLength()).length(), defaultColour, true);
+		
+		Pattern pattern = buildPattern();
+
+		// Look for tokens and highlight them
+		Matcher matcher = pattern.matcher(getText(0, getLength()));
+		while (matcher.find()) {
+			// Change the color of recognized tokens
+			this.setCharacterAttributes(matcher.start(), matcher.end() - matcher.start(), reservedWords, false);
+		}
 	}
 }
