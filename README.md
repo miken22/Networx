@@ -25,6 +25,9 @@ the zip file to a location of your choice.
 1. Open the Command Line or Shell and navigate to where the project was extracted
 2. Type `ant` and hit enter to install
 
+After using either version to install the application a new folder will be created in the same
+directory where the zip file was extracted into.
+
 ---
 
 ##Running Grapher
@@ -103,7 +106,7 @@ Using either loader, the JUNG2 Graph class, and Edge class are members of extern
 #Searching Graphs
 The packaged library include some common graph search algorithms. 
 
-###Breadth/Depth First Searches
+### Example Breadth First Search
 
 These searches are implementations of an uniformed search. There are two methods that can be used to run BFS/DFS, *search(graph, root)* or *visualizeSearch(graph, root)*. Below is a simple example to illustrate how you can apply BFS to a graph.
 
@@ -114,14 +117,4 @@ Graph<Vertex, Edge> graph = gml.loadGraphFile(0); // Load as default graph type,
 BreadthFirstSearch bfs = new BreadthFirstSearch();
 Vertex root = graph.getVertices().iterator().next(); // Pick first vertex iterator points to as root
 List<Vertex> results = bfs.search(graph, root);
-```
-
-###Uniform Cost Search
-
-A simple, partially informed search algorithm. Assuming we continue using the script from above, a goal vertex must be determined for the search. We will continue the script below.
-
-```java
-UniformCostSearch<Vertex, Edge> ucs = new UniformCostSearch<>();
-Vertex goal = results.get( results.size() - 1 );
-results = ucs.search(graph, root, goal);
 ```
