@@ -21,12 +21,13 @@ public class Launch {
 			public void run() {
 				
 				String OS = System.getProperty("os.name");
-				
+				// Mac is not supported, exit program
 				if (OS.indexOf("mac") >= 0) {
-					JOptionPane.showMessageDialog(null, "Sorry, only Windows and Linux currently supported.");
+					JOptionPane.showMessageDialog(null,
+							"Sorry, only Windows and Linux currently supported.");
 					System.exit(-1);			
 				}
-				
+				// Launch the program
 				WorkBench pane = new WorkBench();
 			    pane.loadWorkbench();
 			}

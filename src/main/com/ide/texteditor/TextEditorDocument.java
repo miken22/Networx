@@ -106,7 +106,6 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				if (line.contains("\"")) {
 					int offset = lineLengthCounter + line.indexOf("\"");
 					int endOfQuote = lineLengthCounter + line.lastIndexOf("\"");
-					// TODO: Support multi-line quotes
 					setCharacterAttributes(offset, endOfQuote - offset + 1, quotations, false);
 				}
 				// Keep track of length of each line so offset lines up, add +1 for each
@@ -120,7 +119,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	}
 
 	/**
-	 * Does not currently function 100%
+	 * Does not currently function 100%, deleting comment markers
+	 * causes issues if leaving the line behind.
 	 */
 	private void colourComments() {
 
@@ -202,6 +202,23 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		}
 		return index;
 	}
+	
+	public void setReservedWords(SimpleAttributeSet reservedWords) {
+		this.reservedWords = reservedWords;
+	}
+
+	public void setDefaultColour(SimpleAttributeSet defaultColour) {
+		this.defaultColour = defaultColour;
+	}
+
+	public void setQuotations(SimpleAttributeSet quotations) {
+		this.quotations = quotations;
+	}
+
+	public void setComments(SimpleAttributeSet comments) {
+		this.comments = comments;
+	}
+
 
 	/**
 	 * 

@@ -18,8 +18,8 @@ public class UserDefinitionHandler {
 	 * Finds all user defined classes and methods and extracts them from the
 	 * script
 	 * 
-	 * @param theScript - The text from the editor environment
-	 * @return
+	 * @param theScript The text from the editor environment
+	 * @return The list of all user defined methods and classes
 	 */
 	public ArrayList<String> findUserDefinitions(String theScript) {
 		

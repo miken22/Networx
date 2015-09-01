@@ -17,7 +17,8 @@ import main.com.ide.Properties;
 /**
  * Class that takes the user script and generates the necessary
  * class files and adds imports to the java file
- * @author mike
+ * 
+ * @author Mike Nowicki
  *
  */
 public class ScriptBuilder {
@@ -30,7 +31,7 @@ public class ScriptBuilder {
 		userMethods = new ArrayList<>();
 	}
 
-	// Uses the file chooser to save the file
+
 	/**
 	 * Takes the user script and generates the appropriate Java files for compiling
 	 * 
@@ -77,9 +78,6 @@ public class ScriptBuilder {
 			// Get the script with all user defined methods/classes
 			// removed
 			script = userDefHandler.getCleanedScript();
-			
-			// TODO: Let user type in imports, find and move them to the top
-			//       of the class file.
 
 			// User class and open user class bracket
 			outputStream.write("public class UserScript { \r\n");
@@ -126,6 +124,9 @@ public class ScriptBuilder {
 		
 		ClassHandler classWriter = new ClassHandler(properties);
 		
+		// If the string for a user definition has class in it, write the class
+		// to a separate file, otherwise write it in the main class outside
+		// the main method.
 		for (String userMethod : userMethods) {
 			if (userMethod.contains("class")) {
 				classWriter.generateUserClass(userMethod);

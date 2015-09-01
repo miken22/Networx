@@ -1,6 +1,5 @@
 package main.com.ide.packages;
 
-import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.GridLayout;
 
@@ -22,18 +21,4 @@ public class JavaPackagePane  extends PackagePane {
         
 	}
 	
-	public void updatePackageSelection() {
-
-		if (packageGroup == null) {
-			return;
-		}
-		
-		for (Checkbox packageBox : packageGroup){
-			String thePackage = packageBox.getName();
-			
-			if (properties.getPackagesToImport().contains(thePackage)) {
-				packageBox.setState(true);
-			}
-		}
-	}
 }

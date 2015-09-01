@@ -2,6 +2,8 @@ package main.com.toolbar.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
@@ -27,7 +29,7 @@ public class CompileButtonListener implements ActionListener {
 	 * Class that extracts the text from the worksheet and build
 	 * class(es) as needed that can be compiled and executed.
 	 */
-	
+
 	private Properties properties;
 
 	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog, Properties properties) {
@@ -41,14 +43,10 @@ public class CompileButtonListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		
-		// Set first file for class path / compiling. Currently not needed
-//		String programFiles = ".UserFiles/UserScript.java";
-//		String programClasses = "UserScript";
-		
+
 		ScriptBuilder sb = new ScriptBuilder(properties);
 		ScriptCompiler compiler = new ScriptCompiler(properties, worksheet, buildlog);
-		
+
 		// Don't compile anything if the script is blank
 		if (worksheet.getText().length() == 0) {
 			buildlog.setText("Nothing to compile!");
@@ -60,7 +58,16 @@ public class CompileButtonListener implements ActionListener {
 			try {
 				sb.buildScript(worksheet);
 				compiler.compileAndRun();
-			} catch (Exception e) { /* Should not have issues here */ }
+			} catch (Exception e) {
+				// If an error occurs compiling or running it is
+				// due to java or javac not being runnable on the command
+				// line, tell the user to verify that.
+				JOptionPane.showMessageDialog(null, 
+						"Error compiling or running script, verify javac and" +
+						"java can be invoked from the command line.",
+						"Execution Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 }

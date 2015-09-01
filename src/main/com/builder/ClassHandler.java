@@ -15,16 +15,13 @@ import main.com.ide.Properties;
 
 /**
  * This class handles the user code to identify any user defined classes.
- * Any classes are extracted and written to a seperate user file
+ * Any classes are extracted and written to a separate user file
  * 
  * @author Mike Nowicki
  *
  */
 public class ClassHandler {
-	
-	/**
-	 * Properties object
-	 */
+
 	private Properties properties;
 	
 	private List<String> fileList;

@@ -63,14 +63,8 @@ public class MessageHandler {
 		String script = worksheet.getText();
 		String[] scriptLines = script.split("\n");
 
-		File directory = null;
-		if (System.getProperty("os.name").contains("windows")) {
-			directory = new File("UserFiles");
-		} else {
-			directory = new File(".UserFiles");
-		}
+		File directory = new File(".UserFiles");
 		
-		directory.deleteOnExit();
 		// Get file to scan
 		String errorFile = "";
 		try {
@@ -115,5 +109,4 @@ public class MessageHandler {
 		bufferedReader.close();
 		return errorMessage;
 	}
-
 }
