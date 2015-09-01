@@ -36,7 +36,7 @@ public final class Libraries {
 		File libFolder = new File("lib");
 		if (!libFolder.isDirectory()) {
 			try {
-				throw new LibraryLoadingError("Could not find library directory");
+				throw new Exception("Could not find library directory");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -77,7 +77,7 @@ public final class Libraries {
 		File libFolder = new File("lib");
 		if (!libFolder.isDirectory()) {
 			try {
-				throw new LibraryLoadingError("Could not find library directory");
+				throw new Exception("Could not find library directory");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

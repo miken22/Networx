@@ -18,24 +18,25 @@ import javax.swing.text.DefaultEditorKit;
 public class RightClickMenu {
 	
 	private JPopupMenu popupMenu;
-	private JMenuItem cut;
-	private JMenuItem copy;
-	private JMenuItem paste;
 	
-
 	public RightClickMenu() {
+		
 		popupMenu = new JPopupMenu();
-		cut = new JMenuItem(new DefaultEditorKit.CutAction());
-		copy = new JMenuItem(new DefaultEditorKit.CopyAction());
-		paste = new JMenuItem(new DefaultEditorKit.PasteAction());
+		
+		JMenuItem cut = new JMenuItem(new DefaultEditorKit.CutAction());
+		JMenuItem copy = new JMenuItem(new DefaultEditorKit.CopyAction());
+		JMenuItem paste = new JMenuItem(new DefaultEditorKit.PasteAction());
 		
 		cut.setText("Cut");
 		copy.setText("Copy");
 		paste.setText("Paste");
 
-		cut.setAccelerator(KeyStroke.getKeyStroke('X', KeyEvent.CTRL_DOWN_MASK));
-		copy.setAccelerator(KeyStroke.getKeyStroke('C', KeyEvent.CTRL_DOWN_MASK));
-		paste.setAccelerator(KeyStroke.getKeyStroke('V', KeyEvent.CTRL_DOWN_MASK));
+		cut.setAccelerator(KeyStroke.getKeyStroke('X', 
+				KeyEvent.CTRL_DOWN_MASK));
+		copy.setAccelerator(KeyStroke.getKeyStroke('C', 
+				KeyEvent.CTRL_DOWN_MASK));
+		paste.setAccelerator(KeyStroke.getKeyStroke('V', 
+				KeyEvent.CTRL_DOWN_MASK));
 		
 		popupMenu.add(cut);
 		popupMenu.add(copy);

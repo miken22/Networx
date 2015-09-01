@@ -31,9 +31,9 @@ public class PackageLoader extends JFrame {
 	
 	private JPanel topPanel;
 	
-	private LibraryPackagePane libPackagePane;
-	private JavaPackagePane javaPackagePane;
-	private JungPackagePane jungPackagePane;
+	private PackagePane libPackagePane;
+	private PackagePane javaPackagePane;
+	private PackagePane jungPackagePane;
 	
 	private Properties properties;
 	
@@ -50,9 +50,9 @@ public class PackageLoader extends JFrame {
 		
 		topPanel = new JPanel();
 		
-		libPackagePane = new LibraryPackagePane(properties);
-		javaPackagePane = new JavaPackagePane(properties);
-		jungPackagePane = new JungPackagePane(properties);
+		libPackagePane = new PackagePane(properties, "LIB");
+		javaPackagePane = new PackagePane(properties, "JAVA");
+		jungPackagePane = new PackagePane(properties, "JUNG");
 		
 		initialize();
 		

@@ -1,6 +1,8 @@
 package main.com.ide.packages;
 
 import java.awt.Checkbox;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,16 +10,45 @@ import javax.swing.JPanel;
 
 import main.com.ide.Properties;
 
-public abstract class PackagePane extends JPanel {
+public class PackagePane extends JPanel {
 
+	// Used to determine which should be pre-checked
 	Properties properties;
-	
+	// List of checkboxes that have been selected
 	List<Checkbox> packageGroup;
 	
 	private static final long serialVersionUID = 1L;
 
-	public PackagePane(Properties properties) {
+	public PackagePane(Properties properties, String type) {
 		this.properties = properties;
+
+		int rows = 0;
+		
+		if (type.equals("LIB")) {
+			rows = Packages.libraries.length;
+
+			setSize(590,450);
+			setLayout(new GridLayout(rows,1));
+			setBackground(new Color(217, 217, 217));
+
+			addPanelPackageList(Packages.libraries);
+		} else if (type.equals("JUNG")){
+			rows = Packages.jungPackages.length;
+
+			setSize(590,450);
+			setLayout(new GridLayout(rows,1));
+			setBackground(new Color(217, 217, 217));
+
+			addPanelPackageList(Packages.jungPackages);
+		} else if (type.equals("JAVA")) {
+			rows = Packages.javaPackages.length;
+
+			setSize(590,450);
+			setLayout(new GridLayout(rows,1));
+			setBackground(new Color(217, 217, 217));
+
+			addPanelPackageList(Packages.javaPackages);
+		}
 	}
 
 	/**

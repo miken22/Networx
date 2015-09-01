@@ -2,7 +2,9 @@ package main.com.ide.texteditor;
 
 /**
  * A static class that can be used to identify key words
- * that should be highlighted in the text editting pane
+ * that should be highlighted in the text editting pane.
+ * 
+ * NOT USED AT THE MOMENT (Sept 1)
  */
 public final class KeyWords {
 	/**

@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -92,7 +93,7 @@ public class WorkBench extends JFrame {
 
 	public WorkBench() {
 		
-		super("Fuzzy-Runner");
+		super("Grapher");
 
 		properties = new Properties();
 
@@ -204,8 +205,8 @@ public class WorkBench extends JFrame {
 				// Get path to jar location
 				String path  = "";
 				try {
-					// I don't think there's a way to reduce how grossly long this is...
-					path = WorkBench.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+					URL url = WorkBench.class.getProtectionDomain().getCodeSource().getLocation();
+					path = url.toURI().getPath();
 				} catch (URISyntaxException e1) {
 
 				}
@@ -244,7 +245,7 @@ public class WorkBench extends JFrame {
 	// Create editor environment and console
 	private void loadConsoles() {
 
-		Border b = new LineBorder(Color.LIGHT_GRAY, 1, true);
+		Border border = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
 		Font font = new Font("Normal", Font.PLAIN, 14);
 		font = font.deriveFont(Font.PLAIN, 14);
@@ -257,7 +258,7 @@ public class WorkBench extends JFrame {
 		// Create the script area
 		editor.setEditable(true);
 		editor.setFont(font);
-		editor.setBorder(b);
+		editor.setBorder(border);
 		editor.setBackground(new Color(252, 252, 252));
 		editor.addMouseListener(new RightClickListener());
 
@@ -265,7 +266,7 @@ public class WorkBench extends JFrame {
 				this.getWidth()-12, (int)(this.getHeight()/1.4)));
 
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				border,
 				"Script:", 
 				TitledBorder.LEFT, 
 				TitledBorder.LEFT, 
@@ -288,7 +289,7 @@ public class WorkBench extends JFrame {
 		// To display build logs
 		buildlog.setLineWrap(true);
 		buildlog.setEditable(false);
-		buildlog.setBorder(b);
+		buildlog.setBorder(border);
 		buildlog.setBackground(new Color(252, 252, 252));
 		buildlog.setFont(font);
 
@@ -297,7 +298,7 @@ public class WorkBench extends JFrame {
 
 
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				border,
 				"Build Log:", 
 				TitledBorder.LEFT, 
 				TitledBorder.LEFT, 
@@ -405,13 +406,15 @@ public class WorkBench extends JFrame {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
+		
+		Border border = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
 		// Update environment theme
 		mainScroll.setBackground(settings.getEnvironmentColour());
 		outputScroll.setBackground(settings.getEnvironmentColour());
 		
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				border,
 				"Script:", 
 				TitledBorder.LEFT, 
 				TitledBorder.LEFT, 
@@ -419,7 +422,7 @@ public class WorkBench extends JFrame {
 				settings.getBuildLogColour()));
 		
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+				border,
 				"Build Log:", 
 				TitledBorder.LEFT, 
 				TitledBorder.LEFT, 
@@ -447,7 +450,8 @@ public class WorkBench extends JFrame {
 	}
 
 	/**
-	 * Main menu listener for the File options
+	 * Main menu listener for the File options, identified
+	 * by integers
 	 * 
 	 * @author Mike Nowicki
 	 *
@@ -505,7 +509,7 @@ public class WorkBench extends JFrame {
 				// If the document has not changed, and the user does 
 				// not click yes then the program can exit
 				if (!textarea.documentHasChanged() || 
-						dialogResult == JOptionPane.NO_OPTION) {
+						dialogResult != JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
 				// Compile script
@@ -540,8 +544,8 @@ public class WorkBench extends JFrame {
 			}
 
 			editor.setText("");
-			// Must remove action listeners to prevent redundant behaviour,
-			// since only one exists it must be at array index 0
+			// Must remove action listeners to prevent redundant behaviour, since
+			// only one exists it must be at array index 0
 			saveFileButton.removeActionListener(saveFileButton.getActionListeners()[0]);
 			saveFileButton.addActionListener(new SaveFileListener(editor, properties));
 			properties.clearArguments();
@@ -581,6 +585,7 @@ public class WorkBench extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// Update settings file before repainting the frame
 			settings.updateEnvironmentSettings();
 			repaint();
 		}
