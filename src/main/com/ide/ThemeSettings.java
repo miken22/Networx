@@ -50,6 +50,8 @@ public class ThemeSettings {
 		StyleConstants.setForeground(quotations, Color.BLUE);
 		StyleConstants.setForeground(comments, Color.GREEN);
 		
+		reservedWords.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
+		
 		isDefault = true;
 		
 	}
