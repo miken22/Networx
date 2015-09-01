@@ -16,6 +16,10 @@ public class RightClickListener implements MouseListener {
 		}
 	}
 
+	/*
+	 * Methods below not needed, they do nothing 
+	 */
+	
 	@Override
 	public void mousePressed(MouseEvent e) { }
 
