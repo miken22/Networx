@@ -32,9 +32,13 @@ public class TextLineNumber extends JPanel
 
 	//  Properties that can be changed
 	private boolean updateFont;
+
 	private int borderGap;
+	
 	private Color currentLineForeground;
+	
 	private float digitAlignment;
+	
 	private int minimumDisplayDigits;
 
 	//  Keep history information to reduce the number of times the component

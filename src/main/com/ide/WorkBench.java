@@ -93,7 +93,7 @@ public class WorkBench extends JFrame {
 
 	public WorkBench() {
 		
-		super("Grapher");
+		super("Fuzzy-Runner");
 
 		properties = new Properties();
 
