@@ -81,9 +81,15 @@ public class ScriptBuilder {
 
 			// User class and open user class bracket
 			outputStream.write("public class UserScript { \r\n");
-			// Main method for program entry, open method bracket
+			// Main method for program entry, open method bracket, create an instance
+			// of the method class to invoke a starting method for the users script
 			outputStream.write("	public static void main(String[] args) { \r\n");
-			// Write user code for main method and close main method bracket
+			outputStream.write("		UserScript us = new UserScript();\r\n" +
+							   "		us.start();\r\n" +
+							   "\r\n	} \r\n");
+			
+			outputStream.write("	public void start() { \r\n");
+			// Write user code for starting method and close method bracket
 			outputStream.write("		" + script + "\r\n	} \r\n");
 
 			// Add supporting user methods
@@ -134,6 +140,5 @@ public class ScriptBuilder {
 			}
 			outputStream.write(userMethod + "\r\n");
 		}
-	}
-	
+	}	
 }

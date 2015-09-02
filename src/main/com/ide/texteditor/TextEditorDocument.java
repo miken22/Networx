@@ -11,7 +11,9 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
+
 
 /**
  * The document style for the scripts, this class defines the
@@ -27,6 +29,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	private SimpleAttributeSet defaultColour;
 	private SimpleAttributeSet quotations;
 	private SimpleAttributeSet comments;
+	
+	private Element root;
 
 	private boolean hasChanged;
 
@@ -48,11 +52,15 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		quotations = new SimpleAttributeSet();
 		comments = new SimpleAttributeSet();
 
+
+		root = this.getDefaultRootElement();
+
 		StyleConstants.setForeground(reservedColour, Color.RED);
 		StyleConstants.setForeground(defaultColour, Color.BLACK);
 		StyleConstants.setForeground(quotations, Color.BLUE);
 		StyleConstants.setForeground(comments, Color.GREEN);
 
+		
 		hasChanged = false;
 
 	}
@@ -63,6 +71,10 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
 		if (str.equals("\t")){
 			str = "    ";
+		} else if (str.equals("(")) {
+			str = addCloseBracket(offset);
+		} else if (str.equals("{")) {
+			str = addCloseBrace(offset);
 		}
 
 		super.insertString(offset, str, a);
@@ -148,6 +160,31 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 	}
 
+	private String addCloseBracket(int offset) {
+		return "()";
+	}
+	
+	private String addCloseBrace(int offset) {
+		String padding = "";
+		int line = root.getElementIndex(offset);
+		int index = root.getElement(line).getStartOffset();
+		
+		while(true) {
+			try {
+				String test = getText(index,1);
+				if (test.equals(" ")) {
+					padding += " ";
+				} else {
+					break;
+				}
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return "{\n" + padding + "    \n" + padding + "}";
+	}
+	
 	/**
 	 * Removes the string and performs necessary decorations
 	 */
