@@ -34,7 +34,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	 * Since these words are reserved an enum type cannot be used, instead string
 	 * comparisons must be done
 	 */
-	public static final String[] reservedWords = {
+	private static final String[] reservedWords = {
 			"private","public","protected","final","super","if","while","do","void"+
 			"true","null","false","else","System","static","throws","int","double" +
 			"float","byte","interface","new","boolean","class","for" 
