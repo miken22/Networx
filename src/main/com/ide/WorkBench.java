@@ -87,12 +87,12 @@ public class WorkBench extends JFrame {
 
 	// Properties of script for compiler
 	private Properties properties;
-	
+
 	// Settings for the editors theme
 	private ThemeSettings settings;
 
 	public WorkBench() {
-		
+
 		super("Grapher");
 
 		properties = new Properties();
@@ -105,12 +105,11 @@ public class WorkBench extends JFrame {
 
 	}
 
-
 	/**
 	 * Main method to load all components on the frame
 	 */
 	public void loadWorkbench() {	
-		
+
 		// Read settings file to determine how to decorate the editor
 		settings.loadEnvironmentSettings();
 
@@ -304,7 +303,7 @@ public class WorkBench extends JFrame {
 				TitledBorder.LEFT, 
 				new Font("Normal", Font.PLAIN, 12), 
 				settings.getBuildLogColour()));
-		
+
 		outputScroll.setBackground(settings.getEnvironmentColour());
 
 		constraint.gridx = 0;
@@ -312,7 +311,8 @@ public class WorkBench extends JFrame {
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.weightx = 1;
 		constraint.weighty = .2;
-		this.getContentPane().add(outputScroll, constraint);
+		
+		this.add(outputScroll, constraint);
 
 	}
 
@@ -344,58 +344,48 @@ public class WorkBench extends JFrame {
 		/*
 		 * Load all images for the buttons, place each button on the toolbar
 		 */
-		
+
 		Image img = null;
-		
+
 		try {
 			img = ImageIO.read(getClass().getResource("/res/rsz_newfile.png"));
 			newFileButton.setIcon(new ImageIcon(img));
-		} catch (IOException ex) {
-			System.exit(-1);
-		}
-		newFileButton.setBounds(2, 0, 30, 30);
-		newFileButton.setToolTipText("New File");
-		toolbar.add(newFileButton);
+			newFileButton.setBounds(2, 0, 30, 30);
+			newFileButton.setToolTipText("New File");
+			toolbar.add(newFileButton);
 
-		try {
 			img = ImageIO.read(getClass().getResource("/res/rsz_save.png"));
 			saveFileButton.setIcon(new ImageIcon(img));
-		} catch (IOException ex) {
-			System.exit(-1);
-		}
-		saveFileButton.setBounds(32, 0, 30, 30);
-		saveFileButton.setToolTipText("Save File As");
-		toolbar.add(saveFileButton);
+			saveFileButton.setBounds(32, 0, 30, 30);
+			saveFileButton.setToolTipText("Save File As");
+			toolbar.add(saveFileButton);
 
-		try {
 			img = ImageIO.read(getClass().getResource("/res/rsz_open.png"));
 			openFileButton.setIcon(new ImageIcon(img));
-		} catch (IOException ex) {
-			System.exit(-1);
-		}
-		openFileButton.setBounds(64, 0, 30, 30);
-		openFileButton.setToolTipText("Open File");
-		toolbar.add(openFileButton);
+			openFileButton.setBounds(64, 0, 30, 30);
+			openFileButton.setToolTipText("Open File");
+			toolbar.add(openFileButton);
 
-		try {
+
 			img = ImageIO.read(getClass().getResource("/res/rsz_play.png"));
 			compilerButton.setIcon(new ImageIcon(img));
+			compilerButton.setBounds(96, 0, 30, 30);
+			compilerButton.setToolTipText("Compile Script");
+			toolbar.add(compilerButton);	
+
+			constraint.fill = GridBagConstraints.BOTH;
+			constraint.gridx = 0;
+			constraint.gridy = 0;
+			constraint.weightx = 1;
+			constraint.weighty = .1;
+
 		} catch (IOException ex) {
 			System.exit(-1);
 		}
-		compilerButton.setBounds(96, 0, 30, 30);
-		compilerButton.setToolTipText("Compile Script");
-		toolbar.add(compilerButton);	
-
-		constraint.fill = GridBagConstraints.BOTH;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		constraint.weightx = 1;
-		constraint.weighty = .1;
 
 		toolbar.setLocation(0, 0);
 
-		this.getContentPane().add(toolbar, constraint);
+		this.add(toolbar, constraint);
 
 	}
 	/**
@@ -406,13 +396,13 @@ public class WorkBench extends JFrame {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+
 		Border border = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
 		// Update environment theme
 		mainScroll.setBackground(settings.getEnvironmentColour());
 		outputScroll.setBackground(settings.getEnvironmentColour());
-		
+
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
 				border,
 				"Script:", 
@@ -420,7 +410,7 @@ public class WorkBench extends JFrame {
 				TitledBorder.LEFT, 
 				new Font("Normal", Font.PLAIN, 12), 
 				settings.getBuildLogColour()));
-		
+
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
 				border,
 				"Build Log:", 
@@ -428,22 +418,22 @@ public class WorkBench extends JFrame {
 				TitledBorder.LEFT, 
 				new Font("Normal", Font.PLAIN, 12), 
 				settings.getBuildLogColour()));
-		
+
 		// Update text colouring for editor
 		textarea.setQuotations(settings.getQuotations());
 		textarea.setReservedWords(settings.getReservedWords());
 		textarea.setComments(settings.getComments());
 		textarea.setDefaultColour(settings.getDefaultColour());
-		
+
 		editor.setText(editor.getText());
-		
+
 		// Update line number colouring
 		tln.setBackground(settings.getEditorColour());
 		tln.setForeground(settings.getLineNumberColour());
-		
+
 		// Update the background colour
 		editor.setBackground(settings.getEditorColour());
-		
+
 		// Update the build log colours
 		buildlog.setBackground(settings.getEditorColour());
 		buildlog.setForeground(settings.getBuildLogColour());
@@ -518,8 +508,8 @@ public class WorkBench extends JFrame {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * Trivial listener to create a new file, clears
 	 * the text area and starts new.
@@ -552,7 +542,7 @@ public class WorkBench extends JFrame {
 			properties.clearImports();
 		}
 	}
-	
+
 	/**
 	 * ActionListener that creates the frame that allows
 	 * the user to pick which colour theme they would
@@ -562,7 +552,7 @@ public class WorkBench extends JFrame {
 	 *
 	 */
 	private class ThemeListener implements ActionListener {
-		
+
 		public void actionPerformed(ActionEvent e) {
 			Runnable task = new Runnable(){
 				@Override
@@ -573,7 +563,7 @@ public class WorkBench extends JFrame {
 			EventQueue.invokeLater(task);
 		}
 	}
-	
+
 	/**
 	 * Listener passed to ThemePicker to update environment settings
 	 * and repaints the component when it performs its' action
@@ -582,7 +572,7 @@ public class WorkBench extends JFrame {
 	 *
 	 */
 	private class ApplyListener implements ActionListener {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Update settings file before repainting the frame

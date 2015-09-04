@@ -89,6 +89,7 @@ public class CommandLineArgument extends JMenuItem {
 			setSize(500, 500);
 			setLayout(null);
 			setLocationRelativeTo(null);
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 			JLabel title = new JLabel("Set Arguments");
 			title.setBounds(0, 0, 250, 50);
@@ -108,7 +109,8 @@ public class CommandLineArgument extends JMenuItem {
 			this.add(cancel);
 			
 			arguments.setText(properties.getCommandArguments());
-			
+
+			setAlwaysOnTop(true);
 			setResizable(false);
 			setVisible(true);
 						

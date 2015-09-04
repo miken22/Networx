@@ -139,7 +139,7 @@ public class ThemePicker extends JFrame{
 		
 		this.validate();
 		this.pack();
-		
+		this.isAlwaysOnTop();
 		this.setVisible(true);
 	}
 	

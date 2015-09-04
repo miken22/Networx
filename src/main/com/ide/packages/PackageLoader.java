@@ -63,6 +63,8 @@ public class PackageLoader extends JFrame {
 		setSize(550,700);
 		setLayout(null);
 		setResizable(false);
+		setAlwaysOnTop(true);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		add(topPanel);
 
@@ -98,7 +100,7 @@ public class PackageLoader extends JFrame {
 		
 		add(ok);
 		add(cancel);	
-		
+
 	}
 
 	/**
@@ -112,7 +114,6 @@ public class PackageLoader extends JFrame {
 		
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
 	}
 	
 	/**

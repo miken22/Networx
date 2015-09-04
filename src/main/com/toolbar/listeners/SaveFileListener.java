@@ -89,8 +89,6 @@ public class SaveFileListener  implements ActionListener {
 				document.isSaved();
 			}
 			
-			// TODO: Save user properties (imports etc)
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
