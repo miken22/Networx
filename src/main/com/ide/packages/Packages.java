@@ -119,7 +119,9 @@ public final class Packages {
 		   "algorithms.search.tools",
 		   "algorithms.spanningtree",
 		   "core.components",
-		   "core.visualizer"
+		   "core.stocks",
+		   "core.visualizer",
+		   "core.webcrawler"
 	};
 	
 }
