@@ -30,13 +30,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import main.com.ide.mouse.RightClickListener;
+import main.com.ide.texteditor.TextEditor;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
 import main.com.toolbar.CompileButton;
@@ -54,7 +54,8 @@ public class WorkBench extends JFrame {
 	/**
 	 * Where the user enters their script
 	 */
-	private JTextPane editor;
+//	private JTextPane editor;
+	private TextEditor editor;
 	/**
 	 * TextArea displays error messages or scirpt output
 	 */
@@ -100,7 +101,7 @@ public class WorkBench extends JFrame {
 		settings = new ThemeSettings();
 
 		textarea = new TextEditorDocument();
-		editor = new JTextPane(textarea);	
+		editor = new TextEditor(textarea);	
 		buildlog = new JTextArea();
 
 	}
@@ -319,8 +320,6 @@ public class WorkBench extends JFrame {
 	// Create and place all buttons on the toolbar
 	private void buildToolbar() {
 
-		GridBagConstraints constraint = new GridBagConstraints();
-
 		toolbar = new JPanel();
 		newFileButton = new JButton();
 		openFileButton = new OpenButton();
@@ -347,41 +346,47 @@ public class WorkBench extends JFrame {
 
 		Image img = null;
 
+		// HTML Formatting used on tooltip text to enable multiline
+		// support to indicate hotkeys.
+		
 		try {
 			img = ImageIO.read(getClass().getResource("/res/rsz_newfile.png"));
 			newFileButton.setIcon(new ImageIcon(img));
 			newFileButton.setBounds(2, 0, 30, 30);
-			newFileButton.setToolTipText("New File");
+			newFileButton.setToolTipText("<html>New File <br>(Ctrl + N)</html>");
 			toolbar.add(newFileButton);
 
 			img = ImageIO.read(getClass().getResource("/res/rsz_save.png"));
 			saveFileButton.setIcon(new ImageIcon(img));
 			saveFileButton.setBounds(32, 0, 30, 30);
-			saveFileButton.setToolTipText("Save File As");
+			saveFileButton.setToolTipText("<html>Save File As <br>(Ctrl + S)</html>");
 			toolbar.add(saveFileButton);
 
 			img = ImageIO.read(getClass().getResource("/res/rsz_open.png"));
 			openFileButton.setIcon(new ImageIcon(img));
 			openFileButton.setBounds(64, 0, 30, 30);
-			openFileButton.setToolTipText("Open File");
+			openFileButton.setToolTipText("<html>Open File <br>(Ctrl + O)</html>");
 			toolbar.add(openFileButton);
 
 
 			img = ImageIO.read(getClass().getResource("/res/rsz_play.png"));
 			compilerButton.setIcon(new ImageIcon(img));
 			compilerButton.setBounds(96, 0, 30, 30);
-			compilerButton.setToolTipText("Compile Script");
+			compilerButton.setToolTipText("<html>Compile Script <br>(F5)</html>");
 			toolbar.add(compilerButton);	
-
-			constraint.fill = GridBagConstraints.BOTH;
-			constraint.gridx = 0;
-			constraint.gridy = 0;
-			constraint.weightx = 1;
-			constraint.weighty = .1;
 
 		} catch (IOException ex) {
 			System.exit(-1);
 		}
+
+		// Set constraints for layout of toolbar, set location and
+		// add to the workbench frame.
+		GridBagConstraints constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.BOTH;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		constraint.weightx = 1;
+		constraint.weighty = .1;
 
 		toolbar.setLocation(0, 0);
 

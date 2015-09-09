@@ -75,8 +75,7 @@ public class ScriptBuilder {
 			UserDefinitionHandler userDefHandler = new UserDefinitionHandler();
 			// Get all user declared methods and classes
 			userMethods = userDefHandler.findUserDefinitions(script);
-			// Get the script with all user defined methods/classes
-			// removed
+			// Get the script with all user defined methods/classes removed
 			script = userDefHandler.getCleanedScript();
 
 			// User class and open user class bracket
@@ -87,7 +86,7 @@ public class ScriptBuilder {
 			outputStream.write("		UserScript us = new UserScript();\r\n" +
 							   "		us.start();\r\n" +
 							   "\r\n	} \r\n");
-			
+			// Create the start() function which invokes the users code
 			outputStream.write("	public void start() { \r\n");
 			// Write user code for starting method and close method bracket
 			outputStream.write("		" + script + "\r\n	} \r\n");
@@ -122,20 +121,19 @@ public class ScriptBuilder {
 	 * Moves user methods to the correct locations in the java code
 	 * 
 	 * @param outputStream
-	 * @param programFiles
 	 * @param programClasses
 	 * @throws IOException
 	 */
 	private void insertUserMethods(Writer outputStream) throws IOException {
 		
-		ClassHandler classWriter = new ClassHandler(properties);
+		ClassHandler classHandler = new ClassHandler(properties);
 		
 		// If the string for a user definition has class in it, write the class
 		// to a separate file, otherwise write it in the main class outside
 		// the main method.
 		for (String userMethod : userMethods) {
 			if (userMethod.contains("class")) {
-				classWriter.generateUserClass(userMethod);
+				classHandler.generateUserClass(userMethod);
 				continue;
 			}
 			outputStream.write(userMethod + "\r\n");

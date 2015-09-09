@@ -32,10 +32,13 @@ public class CompileButtonListener implements ActionListener {
 
 	private Properties properties;
 
-	public CompileButtonListener(JTextPane worksheet, JTextArea buildlog, Properties properties) {
+	public CompileButtonListener(JTextPane worksheet, 
+			JTextArea buildlog, Properties properties) {
+		
 		this.worksheet = worksheet;
 		this.buildlog = buildlog;	
 		this.properties = properties;
+	
 	}
 
 	/**
@@ -45,7 +48,9 @@ public class CompileButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 
 		ScriptBuilder sb = new ScriptBuilder(properties);
-		ScriptCompiler compiler = new ScriptCompiler(properties, worksheet, buildlog);
+		ScriptCompiler compiler = new ScriptCompiler(properties, 
+													 worksheet,
+													 buildlog);
 
 		// Don't compile anything if the script is blank
 		if (worksheet.getText().length() == 0) {
@@ -63,8 +68,8 @@ public class CompileButtonListener implements ActionListener {
 				// due to java or javac not being runnable on the command
 				// line, tell the user to verify that.
 				JOptionPane.showMessageDialog(null, 
-						"Error compiling or running script, verify javac and" +
-						"java can be invoked from the command line.",
+						"Error compiling or running script, verify javac " +
+						"and java can be invoked from the command line.",
 						"Execution Error",
 						JOptionPane.ERROR_MESSAGE);
 			}

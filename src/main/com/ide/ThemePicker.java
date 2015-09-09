@@ -77,11 +77,15 @@ public class ThemePicker extends JFrame{
 		
 		JButton applyButton = new JButton("Apply");
 		
-		// This is ugly but....
 		// Applies the settings to the main JFrame, and
 		// the second disposes this frame
 		applyButton.addActionListener(applyListener);
-		applyButton.addActionListener(new DisposeFrame());
+		applyButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 
 		radioPanel.setLayout(new GridLayout(1,3));
 		
@@ -158,11 +162,12 @@ public class ThemePicker extends JFrame{
 		
 		public ThemeListener(ThemeSettings themeSettings) {
 			this.settings = themeSettings;
+			
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-	
+
 			if (e.getActionCommand().equals("default")) {
 				settings.setDefaultTheme();
 			} else {
@@ -186,11 +191,4 @@ public class ThemePicker extends JFrame{
 		}
 	}
 	
-	private class DisposeFrame implements ActionListener {
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			dispose();
-		}
-	}
 }

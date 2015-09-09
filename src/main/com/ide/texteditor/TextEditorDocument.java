@@ -11,7 +11,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 
 
@@ -30,8 +29,6 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	private SimpleAttributeSet quotations;
 	private SimpleAttributeSet comments;
 	
-	private Element root;
-
 	private boolean hasChanged;
 
 	/**
@@ -52,14 +49,10 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		quotations = new SimpleAttributeSet();
 		comments = new SimpleAttributeSet();
 
-
-		root = this.getDefaultRootElement();
-
 		StyleConstants.setForeground(reservedColour, Color.RED);
 		StyleConstants.setForeground(defaultColour, Color.BLACK);
 		StyleConstants.setForeground(quotations, Color.BLUE);
 		StyleConstants.setForeground(comments, Color.GREEN);
-
 		
 		hasChanged = false;
 
@@ -69,26 +62,44 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	 * Inserts the string and performs necessary decorations
 	 */
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+
+		// Convert tables to four spaces
 		if (str.equals("\t")){
 			str = "    ";
-		} else if (str.equals("(")) {
-			str = addCloseBracket(offset);
-		} else if (str.equals("{")) {
-			str = addCloseBrace(offset);
 		}
 
 		super.insertString(offset, str, a);
 		
+		// Colour comments, then quotes, then the rest
+		// of the text
 		updateTextStyles();
 		colourQuotes();
 		colourComments();
+		
+		
+	}
+
+	/**
+	 * Removes the string and performs necessary decorations
+	 */
+	public void remove(int offset, int length) throws BadLocationException {
+		super.remove(offset, length);
+
+		updateTextStyles();
+		colourComments();
+		colourQuotes();
 
 	}
 
+	/**
+	 * This method scans each line of text and looks for the " character,
+	 * changes the colouring pattern to blue until another " character is
+	 * encountered to end the quote.
+	 */
 	private void colourQuotes() {
 		String text = "";
 		try {
-			text = getText(0, this.getLength());
+			text = getText(0, getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
@@ -107,7 +118,11 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					int offset = lineLengthCounter + line.indexOf("\"");
 					// Find the end of the quote
 					int endOfQuote = lineLengthCounter + line.lastIndexOf("\"");
-					setCharacterAttributes(offset, endOfQuote - offset + 1, quotations, false);
+					setCharacterAttributes(
+							offset, 
+							endOfQuote - offset + 1, 
+							quotations, 
+							false);
 				}
 				// Keep track of length of each line so offset lines up, add +1 for each
 				// new line character not including in line length.
@@ -120,19 +135,18 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	}
 
 	/**
-	 * Does not currently function 100%, deleting comment markers
-	 * causes issues if leaving the line behind.
+	 * This method scans the text looking for occurances of // within
+	 * the text to change the colouring from the // characters to the
+	 * end of the line as green
 	 */
 	private void colourComments() {
 
 		String text = "";
 		try {
-			text = this.getText(0, this.getLength());
+			text = this.getText(0, getLength());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-
-		defaultColour.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.FALSE);
 
 		StringReader strReader = new StringReader(text);
 		BufferedReader reader = new BufferedReader(strReader);
@@ -143,13 +157,20 @@ public class TextEditorDocument extends DefaultStyledDocument {
 			int position = 0;
 			line = reader.readLine();
 			while (line != null) {
+				// If the line starts with // then colour the whole line
 				if (line.startsWith("//")) {
 					int length = line.length();
-					setCharacterAttributes(position, length, comments, false);     
+					setCharacterAttributes(position, length, comments, false); 
 				} else if (line.contains("//")) {
+					// Otherwise find where the characters appear and colour the
+					// remaining portion of the line.
 					int offset = line.indexOf("//");
 					// Otherwise only colour from the // to the end of the line
-					setCharacterAttributes(offset, line.length() - offset, comments, false);
+					setCharacterAttributes(
+							offset, 
+							line.length() - offset, 
+							comments, 
+							false);
 				}
 				position += line.length()+1;
 				line = reader.readLine();
@@ -157,49 +178,16 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	private String addCloseBracket(int offset) {
-		return "()";
-	}
-	
-	private String addCloseBrace(int offset) {
-		String padding = "";
-		int line = root.getElementIndex(offset);
-		int index = root.getElement(line).getStartOffset();
-		
-		while(true) {
-			try {
-				String test = getText(index,1);
-				if (test.equals(" ")) {
-					padding += " ";
-				} else {
-					break;
-				}
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return "{\n" + padding + "    \n" + padding + "}";
-	}
-	
-	/**
-	 * Removes the string and performs necessary decorations
-	 */
-	public void remove(int offset, int length) throws BadLocationException {
-		super.remove(offset, length);
-
-		updateTextStyles();
-		colourQuotes();
-		colourComments();
 	}
 
 	private void updateTextStyles() throws BadLocationException {
 
 		// Clear existing styles
-		this.setCharacterAttributes(0, getText(0, getLength()).length(), defaultColour, true);
+		this.setCharacterAttributes(
+				0, 
+				getText(0, getLength()).length(), 
+				defaultColour, 
+				true);
 		
 		Pattern pattern = buildPattern();
 
@@ -207,12 +195,17 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		Matcher matcher = pattern.matcher(getText(0, getLength()));
 		while (matcher.find()) {
 			// Change the color of recognized tokens
-			this.setCharacterAttributes(matcher.start(), matcher.end() - matcher.start(), reservedColour, false);
+			this.setCharacterAttributes(
+					matcher.start(), 
+					matcher.end() - matcher.start(), 
+					reservedColour, 
+					false);
 		}
 	}
 	
 	/**
 	 * Builds a regex pattern of all words to search for
+	 * 
 	 * @return The regex experession
 	 */
 	private Pattern buildPattern() {
