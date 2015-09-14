@@ -38,7 +38,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	public static final String[] reservedWords = {
 			"private","public","protected","final","super","if","while","do","void"+
 			"true","null","false","else","System","static","throws","int","double" +
-			"float","byte","interface","new","boolean","class","for" 
+			"float","byte","interface","new","boolean","class","for", "return" 
 			};
 	
 	public TextEditorDocument() {
@@ -70,12 +70,11 @@ public class TextEditorDocument extends DefaultStyledDocument {
 
 		super.insertString(offset, str, a);
 		
-		// Colour comments, then quotes, then the rest
-		// of the text
+		// Colour the text, then highlight quotes
+		// and comments.
 		updateTextStyles();
-		colourQuotes();
 		colourComments();
-		
+		colourQuotes();
 		
 	}
 
@@ -114,10 +113,29 @@ public class TextEditorDocument extends DefaultStyledDocument {
 			int lineLengthCounter = 0;
 			while (line != null) {
 				if (line.contains("\"")) {
+					
+					// If comment symbols appear before quotation marks
+					// move on to the next line.
+					if (line.indexOf("//") != -1 && 
+							line.indexOf("//") < line.indexOf("\"")) {
+						lineLengthCounter += line.length() + 1;
+						line = reader.readLine();
+						continue;
+					}
+					
 					// Find the index of the quotation mark
 					int offset = lineLengthCounter + line.indexOf("\"");
 					// Find the end of the quote
 					int endOfQuote = lineLengthCounter + line.lastIndexOf("\"");
+					setCharacterAttributes(
+							offset, 
+							endOfQuote - offset + 1, 
+							quotations, 
+							false);
+				} else if (line.contains("\'")) {
+					// Do the same for character literals in single quotes
+					int offset = lineLengthCounter + line.indexOf("\'");
+					int endOfQuote = lineLengthCounter + line.lastIndexOf("\'");
 					setCharacterAttributes(
 							offset, 
 							endOfQuote - offset + 1, 
@@ -162,6 +180,14 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					int length = line.length();
 					setCharacterAttributes(position, length, comments, false); 
 				} else if (line.contains("//")) {
+					// If quotes are around the comment symbol move on to the
+					// next line.
+					if (line.contains("\"")) {
+						position += line.length()+1;
+						line = reader.readLine();
+						continue;
+					}
+					
 					// Otherwise find where the characters appear and colour the
 					// remaining portion of the line.
 					int offset = line.indexOf("//");

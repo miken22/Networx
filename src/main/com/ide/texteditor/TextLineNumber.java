@@ -13,7 +13,8 @@ import javax.swing.text.*;
  *
  *  This class is added to the row header of a JScrollPane.
  *  
- *  
+ *  Based on the example provided at 
+ *  https://tips4java.wordpress.com/2009/05/23/text-component-line-number/
  *  
  */
 public class TextLineNumber extends JPanel
@@ -127,7 +128,8 @@ public class TextLineNumber extends JPanel
 	 *  @return the Color used to render the current line number
 	 */
 	public Color getCurrentLineForeground() {
-		return currentLineForeground == null ? getForeground() : currentLineForeground;
+		return currentLineForeground == null ? getForeground() : 
+			currentLineForeground;
 	}
 
 	/**
@@ -160,7 +162,9 @@ public class TextLineNumber extends JPanel
 	 */
 	public void setDigitAlignment(float digitAlignment) {
 		this.digitAlignment =
-			digitAlignment > 1.0f ? 1.0f : digitAlignment < 0.0f ? -1.0f : digitAlignment;
+			digitAlignment > 1.0f ? 1.0f : 
+				digitAlignment < 0.0f ? -1.0f :
+					digitAlignment;
 	}
 
 	/**
@@ -278,12 +282,13 @@ public class TextLineNumber extends JPanel
 		int index = root.getElementIndex( rowStartOffset );
 		Element line = root.getElement( index );
 
-		if (line.getStartOffset() == rowStartOffset)
+		if (line.getStartOffset() == rowStartOffset) {
 			return String.valueOf(index + 1);
-		else
+		} else {
 			return "";
+		}
 	}
-
+	
 	/*
 	 *  Determine the X offset to properly align the line number when drawn
 	 */

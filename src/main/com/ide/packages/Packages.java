@@ -117,6 +117,7 @@ public final class Packages {
 		   "algorithms.graphloader", 
 		   "algorithms.search", 
 		   "algorithms.search.tools",
+		   "algoirthms.sorting",
 		   "algorithms.spanningtree",
 		   "core.components",
 		   "core.visualizer"

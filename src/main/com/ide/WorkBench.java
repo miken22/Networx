@@ -247,8 +247,7 @@ public class WorkBench extends JFrame {
 
 		Border border = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
-		Font font = new Font("Normal", Font.PLAIN, 14);
-		font = font.deriveFont(Font.PLAIN, 14);
+		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 14);
 
 		mainScroll = new JScrollPane(editor);
 		outputScroll = new JScrollPane(buildlog);
