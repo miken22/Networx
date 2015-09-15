@@ -36,6 +36,8 @@ public class ThemeSettings {
 	private SimpleAttributeSet quotations;
 	private SimpleAttributeSet comments;
 	
+	private int fontSize = 14;
+	
 	private boolean isDefault;
 
 	public ThemeSettings() {
@@ -83,6 +85,12 @@ public class ThemeSettings {
 
 		isDefault = true;
 	}
+
+	public void setFontSize(int size) {
+		this.fontSize = size;
+	}
+
+	public int getFontSize() { return fontSize; }
 	
 	public Color getLineNumberColour() {
 		return lineNumberColour;
@@ -144,7 +152,8 @@ public class ThemeSettings {
 			try {
 				
 				FileWriter outputStream = new FileWriter(settingFile);
-				outputStream.write("default");				
+				outputStream.write("default\r\n");		
+				outputStream.write("14");
 				outputStream.close();
 				
 				setDefaultTheme();
@@ -160,8 +169,7 @@ public class ThemeSettings {
 	
 		try {
 			FileReader reader = new FileReader(settingFile);
-			BufferedReader bufferedReader = new BufferedReader(reader);
-			
+			BufferedReader bufferedReader = new BufferedReader(reader);	
 
 			String fileText = bufferedReader.readLine();
 			
@@ -171,6 +179,9 @@ public class ThemeSettings {
 				setDarkTheme();
 			}
 			
+			fileText = bufferedReader.readLine();
+			fontSize = Integer.valueOf(fileText);
+			
 			bufferedReader.close();
 			
 		} catch (IOException e) {
@@ -178,7 +189,6 @@ public class ThemeSettings {
 					"Error",
 			        JOptionPane.ERROR_MESSAGE);
 		}
-		
 		
 	}
 	
@@ -198,6 +208,8 @@ public class ThemeSettings {
 				outputStream.write("dark");		
 			}
 			
+			outputStream.write("\r\n" + fontSize);
+			
 			outputStream.close();
 			
 		} catch (IOException e) {
@@ -206,4 +218,5 @@ public class ThemeSettings {
 			        JOptionPane.ERROR_MESSAGE);
 		}
 	}
+
 }

@@ -80,29 +80,31 @@ public class CommandLineArgument extends JMenuItem {
 			save = new JButton("Save Arguments");
 			cancel = new JButton("Cancel");
 			
-			loadWindow();
-			
+			loadWindow();			
 		}
 		
 		private void loadWindow() {
 			
-			setSize(500, 500);
+			setSize(450, 140);
 			setLayout(null);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
-			JLabel title = new JLabel("Set Arguments");
-			title.setBounds(0, 0, 250, 50);
+			JLabel title = new JLabel("Set Arguments:");
+			title.setBounds(15, 10, 250, 25);
 			this.getContentPane().add(title);
 			
-			arguments.setBounds(1,50,490, 350);
+			arguments.setBounds(15, 40, 415, 25);
 			arguments.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.LIGHT_GRAY,1,true)));
-			this.getContentPane().add(arguments);
+			this.add(arguments);
 			
-			save.setBounds(75, 420, 150, 25);
+			save.setBounds(75, 80, 150, 25);
+			save.setBackground(new Color(252, 252, 252));	
 			save.addActionListener(new SaveListener(this,properties));
-			cancel.setBounds(275, 420, 100, 25);
+			
+			cancel.setBounds(255, 80, 100, 25);
+			cancel.setBackground(new Color(239, 54, 54).brighter());
 			cancel.addActionListener(new CancelListener(this));
 			
 			this.add(save);
@@ -140,7 +142,13 @@ public class CommandLineArgument extends JMenuItem {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			properties.addCommandLineArgument(window.getArguments().getText());
+			properties.clearArguments();
+			
+			String args = window.getArguments().getText();
+			// No arguments, do nothing
+			if (args.length() != 0) {
+				properties.addCommandLineArgument(args);
+			}
 			window.dispose();
 		}
 		

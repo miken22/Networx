@@ -34,10 +34,14 @@ public class TextEditor extends JTextPane {
 
 			if (event.isControlDown() && event.getKeyCode() == 47){
 				int position = getCaretPosition();
+				
+				if (position == 0) {
+					setText("//" + getText());
+					return;
+				}
+				
 				String text = getText();
 			
-//				System.out.println(position);
-						
 				// Buffer the text to iterate through faster
 				BufferedReader bufReader = new BufferedReader(new StringReader(text));
 				int scanPosition = 0;
@@ -51,16 +55,11 @@ public class TextEditor extends JTextPane {
 						}
 						line = bufReader.readLine();
 					}
-					
-					if (scanPosition == 0) {
-						setText(text + "//");
-						return;
-					}
-					
+										
 					if (line.startsWith("//")) {
 						line = line.substring(1, line.length());
 						setCaretPosition(scanPosition - line.length());
-						setText(text.substring(0, scanPosition + 2 - line.length()) +
+						setText(text.substring(0, scanPosition - 2 - line.length()) +
 								line +
 								text.substring(scanPosition, text.length()));
 					} else {

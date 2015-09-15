@@ -49,6 +49,7 @@ public class PackagePane extends JPanel {
 
 			addPanelPackageList(Packages.javaPackages);
 		}
+		
 	}
 
 	/**

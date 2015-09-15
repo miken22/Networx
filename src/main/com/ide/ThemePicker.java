@@ -12,12 +12,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 
+import main.com.ide.texteditor.TextEditor;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
 
@@ -39,7 +42,7 @@ public class ThemePicker extends JFrame{
 	private TextLineNumber tln;
 	
 	private TextEditorDocument textarea = new TextEditorDocument();
-	private JTextPane editor = new JTextPane(textarea);
+	private TextEditor editor = new TextEditor(textarea);
 	
 	private ActionListener applyListener;
 	
@@ -86,9 +89,11 @@ public class ThemePicker extends JFrame{
 				dispose();
 			}
 		});
-
-		radioPanel.setLayout(new GridLayout(1,3));
+		applyButton.setBackground(new Color(252, 252, 252));
 		
+		// Create the panel for the radio buttons and place each
+		// component
+		radioPanel.setLayout(new GridLayout(1,3));
 		radioPanel.add(defaultSetting);
 		radioPanel.add(darkSetting);
 		radioPanel.add(applyButton);
@@ -103,27 +108,40 @@ public class ThemePicker extends JFrame{
 		defaultSetting.addActionListener(listener);
 		darkSetting.addActionListener(listener);
 		
+		this.add(radioPanel);
+		
+		// Create the font size options
+		JPanel fontPanel = new JPanel();
+		JLabel fontLabel = new JLabel("Font size: ");
+		
+		JComboBox<Integer> fontSizes = new JComboBox<>();
+		for (int i = 2; i < 40; i += 2) {
+//			fontSizes.add();
+		}
+		
+		fontPanel.add(fontLabel);
+		
 		constraint.gridx = 0;
-		constraint.gridy = 0;
+		constraint.gridy = 1;
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		
-		this.add(radioPanel);
+		this.add(fontPanel, constraint);
 		
 		// Create editor window
 		JScrollPane mainScroll = new JScrollPane(editor);
 		
-		Font font = new Font("Normal", Font.PLAIN, 14);
-		font = font.deriveFont(Font.PLAIN, 14);
+		Font font = new Font(Font.MONOSPACED,
+							 Font.PLAIN, 
+							 themeSettings.getFontSize());
 
 		// Create the script area
 		editor.setEditable(false);
 		editor.setFont(font);
-
 		editor.setBackground(themeSettings.getEditorColour());
 		
-		mainScroll.setPreferredSize(new Dimension(350, 300));	
+		mainScroll.setPreferredSize(new Dimension(400, 200));	
 		mainScroll.setBackground(new Color(217, 217, 217));
 
 		tln = new TextLineNumber(editor);
@@ -134,7 +152,7 @@ public class ThemePicker extends JFrame{
 		editor.setCaretPosition(0);
 		
 		constraint.gridx = 0;
-		constraint.gridy = 1;
+		constraint.gridy = 2;
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
@@ -150,7 +168,6 @@ public class ThemePicker extends JFrame{
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
 		this.revalidate();
 		this.repaint();
 		
@@ -178,6 +195,10 @@ public class ThemePicker extends JFrame{
 			textarea.setReservedWords(themeSettings.getReservedWords());
 			textarea.setComments(themeSettings.getComments());
 			textarea.setDefaultColour(themeSettings.getDefaultColour());
+			
+			editor.setFont(new Font(Font.MONOSPACED,
+						   			Font.PLAIN,
+						   			themeSettings.getFontSize()));
 			
 			tln.setBackground(themeSettings.getEditorColour());
 			tln.setForeground(themeSettings.getLineNumberColour());

@@ -154,7 +154,7 @@ public class WorkBench extends JFrame {
 		JMenuItem buildScript = new JMenuItem("Build Script");
 		JMenuItem packageLoader = new JMenuItem("Set Package Imports");
 
-		JMenu options = new JMenu("Options");
+		JMenu options = new JMenu("Preferences");
 		JMenuItem editorThemes = new JMenuItem("Themes");
 
 		JMenu help = new JMenu("Help");
@@ -247,7 +247,9 @@ public class WorkBench extends JFrame {
 
 		Border border = new LineBorder(Color.LIGHT_GRAY, 1, true);
 
-		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 14);
+		Font font = new Font(Font.MONOSPACED, 
+							 Font.PLAIN,
+							 settings.getFontSize());
 
 		mainScroll = new JScrollPane(editor);
 		outputScroll = new JScrollPane(buildlog);
@@ -352,18 +354,21 @@ public class WorkBench extends JFrame {
 			img = ImageIO.read(getClass().getResource("/res/rsz_newfile.png"));
 			newFileButton.setIcon(new ImageIcon(img));
 			newFileButton.setBounds(2, 0, 30, 30);
+			newFileButton.setBackground(new Color(252,252,252));
 			newFileButton.setToolTipText("<html>New File <br>(Ctrl + N)</html>");
 			toolbar.add(newFileButton);
 
 			img = ImageIO.read(getClass().getResource("/res/rsz_save.png"));
 			saveFileButton.setIcon(new ImageIcon(img));
 			saveFileButton.setBounds(32, 0, 30, 30);
+			saveFileButton.setBackground(new Color(252,252,252));
 			saveFileButton.setToolTipText("<html>Save File As <br>(Ctrl + S)</html>");
 			toolbar.add(saveFileButton);
 
 			img = ImageIO.read(getClass().getResource("/res/rsz_open.png"));
 			openFileButton.setIcon(new ImageIcon(img));
 			openFileButton.setBounds(64, 0, 30, 30);
+			openFileButton.setBackground(new Color(252,252,252));
 			openFileButton.setToolTipText("<html>Open File <br>(Ctrl + O)</html>");
 			toolbar.add(openFileButton);
 
@@ -371,10 +376,18 @@ public class WorkBench extends JFrame {
 			img = ImageIO.read(getClass().getResource("/res/rsz_play.png"));
 			compilerButton.setIcon(new ImageIcon(img));
 			compilerButton.setBounds(96, 0, 30, 30);
+			compilerButton.setBackground(new Color(252,252,252));
 			compilerButton.setToolTipText("<html>Compile Script <br>(F5)</html>");
 			toolbar.add(compilerButton);	
 
-		} catch (IOException ex) {
+		} catch (Exception ex) {
+			// If something fails to load have the user verify the directory is there
+			// and exit the application.
+			JOptionPane.showMessageDialog(
+					null,
+					"Error loading resources, ensure the lib folder is in your directory.",
+					"Error",
+					JOptionPane.ERROR_MESSAGE);
 			System.exit(-1);
 		}
 
@@ -423,6 +436,13 @@ public class WorkBench extends JFrame {
 				TitledBorder.LEFT, 
 				new Font("Normal", Font.PLAIN, 12), 
 				settings.getBuildLogColour()));
+		
+
+		Font font = new Font(Font.MONOSPACED, 
+							 Font.PLAIN,
+							 settings.getFontSize());
+		
+		editor.setFont(font);
 
 		// Update text colouring for editor
 		textarea.setQuotations(settings.getQuotations());
