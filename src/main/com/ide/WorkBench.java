@@ -394,6 +394,7 @@ public class WorkBench extends JFrame {
 	}
 	/**
 	 * Overriding method that paints the frame, updates the themes
+	 * according to what was specified in the settings
 	 * 
 	 * @param g The graphics for the component.
 	 */

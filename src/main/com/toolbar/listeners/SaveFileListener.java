@@ -46,11 +46,10 @@ public class SaveFileListener  implements ActionListener {
 		try {
 
 			JFileChooser fileChooser = new JFileChooser();
-
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-
+			
+			// Set and add filter
 			FileNameExtensionFilter scriptFilter = new FileNameExtensionFilter("Networx Script files (*.scrt)", "scrt");
-			// add filter
 			fileChooser.setFileFilter(scriptFilter);
 
 			if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {				
@@ -60,7 +59,8 @@ public class SaveFileListener  implements ActionListener {
 
 				if (userScript.getName().contains(".scrt")) {
 					outputStream = new FileWriter(userScript);
-				} else { // Otherwise we need to add correct fileExtention
+				} else {
+					// Otherwise we need to add correct fileExtention
 					outputStream = new FileWriter(userScript + ".scrt");
 				}
 
@@ -69,18 +69,16 @@ public class SaveFileListener  implements ActionListener {
 				// If there are set properties add them to the file
 				if (properties.getPackagesToImport().size() != 0) {
 
-					outputStream.write("\r\n");
-					outputStream.write("#Imports");
-					outputStream.write("\r\n");
+					outputStream.write("\r\n#Imports\r\n");
 					
 					for (String toImport : properties.getPackagesToImport()) {
 						outputStream.write(toImport + "\r\n");
 					}
 				}
 				
+				// Write any saved command line args to the file
 				if (properties.getCommandArguments().length() != 0) {
-					outputStream.write("#Arguments");
-					outputStream.write("\r\n");
+					outputStream.write("#Arguments\r\n");
 					outputStream.write(properties.getCommandArguments());
 				}
 				
