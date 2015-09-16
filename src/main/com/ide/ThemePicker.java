@@ -3,7 +3,6 @@ package main.com.ide;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -85,16 +84,16 @@ public class ThemePicker extends JFrame implements ActionListener {
 
 		// Load list of sizes
 		Integer[] sizes = new Integer[20];
-		for (int i = 2; i < 40; i += 2) {
+		for (int i = 2; i < 41; i += 2) {
 			int index = (i-2)/2;
 			sizes[index] = i;
 		}
 
 		JComboBox<Integer> fontSizes = new JComboBox<>(sizes);
-		fontSizes.setEditable(true);
+		fontSizes.setEditable(false);
 		fontSizes.addActionListener(this);
 		fontSizes.setSelectedItem(settings.getFontSize());
-
+		
 		fontPanel.add(fontLabel);
 		fontPanel.add(fontSizes);
 		this.add(fontPanel);
@@ -177,18 +176,9 @@ public class ThemePicker extends JFrame implements ActionListener {
 		this.add(mainScroll, constraint);
 		
 		this.validate();
-//		this.pack();
 		this.setAlwaysOnTop(true);
 		this.setVisible(true);
 	
-		applyButton.requestFocus();
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		this.revalidate();
-		this.repaint();
 	}
 
 	/**
@@ -200,33 +190,25 @@ public class ThemePicker extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		// Make sure the action event is from the combo box
-		if (!(e.getSource() instanceof JComboBox<?>)) {
-			return;
-		}
-
+		// We know this will be safe since it will never be used
+		// as a listener to any other class, and this class uses
+		// an uneditible combobox of integers.  
+		
 		// Cast to generic
 		JComboBox<?> cb = (JComboBox<?>) e.getSource();
-
-		// Make sure it is an integer, reset to currently set
-		// value if it is not an integer.
-		if (!(cb.getSelectedItem() instanceof Integer)) {
-			cb.setSelectedIndex(settings.getFontSize());
-			return;
-		}
-
 		fontSize = (Integer)cb.getSelectedItem();
 		settings.setFontSize(fontSize);
 
-		// This needs to be done so the editor gets repainted
-		// and the font size changes
-		editor.setBackground(settings.getEditorColour());
-		editor.setText(textString);
-		editor.setCaretPosition(0);
-
+		Font font = new Font(Font.MONOSPACED,
+				 			 Font.PLAIN,
+				 			 fontSize);
+		
+		// Update editor font
+		editor.setFont(font);
+		
 		// Update the frame
-		this.repaint();
-		this.revalidate();
+		repaint();
+		revalidate();
 	}
 
 	/**
@@ -252,20 +234,22 @@ public class ThemePicker extends JFrame implements ActionListener {
 			textarea.setComments(settings.getComments());
 			textarea.setDefaultColour(settings.getDefaultColour());
 
-			editor.setFont(new Font(Font.MONOSPACED,
-					Font.PLAIN,
-					settings.getFontSize()));
+			Font font = new Font(Font.MONOSPACED,
+								 Font.PLAIN,
+								 settings.getFontSize());
 
+			
 			tln.setBackground(settings.getEditorColour());
 			tln.setForeground(settings.getLineNumberColour());
+			tln.setFont(font);
 
+			editor.setFont(font);
 			editor.setBackground(settings.getEditorColour());
 			editor.setText(textString);
 			editor.setCaretPosition(0);
 
 			repaint();
 			revalidate();
-			pack();
 		}
 	}
 

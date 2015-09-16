@@ -129,7 +129,7 @@ public class WorkBench extends JFrame {
 		buildToolbar();
 		createMenuBar();
 		loadConsoles();
-
+		
 		// Reveal the frame
 		this.setVisible(true);
 		this.validate();
@@ -458,6 +458,7 @@ public class WorkBench extends JFrame {
 		// Update line number colouring
 		tln.setBackground(settings.getEditorColour());
 		tln.setForeground(settings.getLineNumberColour());
+		tln.setFont(font);
 
 		// Update the background colour
 		editor.setBackground(settings.getEditorColour());
@@ -544,6 +545,7 @@ public class WorkBench extends JFrame {
 		}// end method
 	
 	}
+	
 	/**
 	 * Trivial listener to create a new file, clears
 	 * the text area and starts new.
@@ -597,7 +599,7 @@ public class WorkBench extends JFrame {
 			EventQueue.invokeLater(task);
 		}
 	}
-
+	
 	/**
 	 * Listener passed to ThemePicker to update environment settings
 	 * and repaints the component when it performs its' action
