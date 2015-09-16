@@ -172,10 +172,76 @@ public class WorkBench extends JFrame {
 		build.add(packageLoader);	
 		build.add(new CommandLineArgument(properties));
 
-		save.addActionListener(new MenuListener(1));
-		open.addActionListener(new MenuListener(2));
-		exit.addActionListener(new MenuListener(3));
-		buildScript.addActionListener(new MenuListener(4));
+		// Implement each listener for the menu items below
+		
+		save.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Perform the save action 
+				saveFileButton.doClick();
+				textarea.isSaved();
+			}
+		});
+		
+		open.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Check if the document was modifed, prompt the
+				// user to save if it has been.
+				if (textarea.documentHasChanged()) {
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog(
+							null,
+							"Would You Like to Save your Work?",
+							"Warning",
+							dialogButton);
+					// If the say yes save it, otherwise move on and overwrite
+					if(dialogResult == JOptionPane.YES_OPTION){
+						saveFileButton.doClick();
+						textarea.isSaved();
+					}
+				}
+
+				openFileButton.doClick();
+				textarea.isSaved();
+			}
+		});
+		
+		exit.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Style for the dialog box
+				int dialogButton;
+				// Assume no, save if they click yes
+				int dialogResult = JOptionPane.NO_OPTION;
+				// If it has changed ask the user to save before exiting.
+				if (textarea.documentHasChanged()) {
+					dialogButton = JOptionPane.YES_NO_OPTION;
+					dialogResult = JOptionPane.showConfirmDialog(
+							null,
+							"Would You Like to Save your Work?",
+							"Warning",
+							dialogButton);
+					if(dialogResult == JOptionPane.YES_OPTION){
+						saveFileButton.doClick();
+						textarea.isSaved();
+					}
+				}
+				// If the document has not changed, and the user does 
+				// not click yes then the program can exit
+				if (!textarea.documentHasChanged() || 
+						dialogResult != JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
+		
+		buildScript.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				compilerButton.doClick();	// Run the "compiler"
+			}
+		});
 
 		packageLoader.addActionListener(new PropertiesButtonListener(properties));
 
@@ -208,7 +274,7 @@ public class WorkBench extends JFrame {
 					URL url = WorkBench.class.getProtectionDomain().getCodeSource().getLocation();
 					path = url.toURI().getPath();
 				} catch (URISyntaxException e1) {
-
+					e1.printStackTrace();
 				}
 
 				/*
@@ -466,84 +532,6 @@ public class WorkBench extends JFrame {
 		// Update the build log colours
 		buildlog.setBackground(settings.getEditorColour());
 		buildlog.setForeground(settings.getBuildLogColour());
-	}
-
-	/**
-	 * Main menu listener for the File options, identified
-	 * by integers
-	 * 
-	 * @author Mike Nowicki
-	 *
-	 */
-	private class MenuListener implements ActionListener {
-
-		private int listenerType;
-
-		public MenuListener(int id) { 
-			this.listenerType = id;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			switch(listenerType){ 
-			// Save file
-			case 1:
-
-				saveFileButton.doClick();
-				textarea.isSaved();
-			
-			// Open file, check to save first
-			case 2:
-				if (textarea.documentHasChanged()) {
-					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(
-							null,
-							"Would You Like to Save your Work?",
-							"Warning",
-							dialogButton);
-					if(dialogResult == JOptionPane.YES_OPTION){
-						saveFileButton.doClick();
-						textarea.isSaved();
-					}
-				}
-
-				openFileButton.doClick();
-				textarea.isSaved();
-
-			// Exit application, check if saved first				
-			case 3:
-				// Style for the dialog box
-				int dialogButton;
-				// Assume no, save if they click yes
-				int dialogResult = JOptionPane.NO_OPTION;
-
-				if (textarea.documentHasChanged()) {
-					dialogButton = JOptionPane.YES_NO_OPTION;
-					dialogResult = JOptionPane.showConfirmDialog(
-							null,
-							"Would You Like to Save your Work?",
-							"Warning",
-							dialogButton);
-					if(dialogResult == JOptionPane.YES_OPTION){
-						saveFileButton.doClick();
-						textarea.isSaved();
-					}
-				}
-				// If the document has not changed, and the user does 
-				// not click yes then the program can exit
-				if (!textarea.documentHasChanged() || 
-						dialogResult != JOptionPane.YES_OPTION) {
-					System.exit(0);
-				}
-				
-			// Compile script
-			case 4:
-				compilerButton.doClick();
-			}// end switch
-	
-		}// end method
-	
 	}
 	
 	/**
