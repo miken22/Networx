@@ -78,7 +78,7 @@ public class PackageLoader extends JFrame {
 
 	private void initialize() {
 
-		setSize(550,700);
+		setBounds(0, 0 ,550,700);
 		setLayout(null);
 		setResizable(false);
 		setAlwaysOnTop(true);

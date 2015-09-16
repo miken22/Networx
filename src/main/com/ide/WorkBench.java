@@ -484,14 +484,16 @@ public class WorkBench extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
+			switch(listenerType){ 
 			// Save file
-			if (listenerType == 1) {
+			case 1:
 
 				saveFileButton.doClick();
 				textarea.isSaved();
-
-			} else if (listenerType == 2) {
-				// Open file, check to save first
+			
+			// Open file, check to save first
+			case 2:
 				if (textarea.documentHasChanged()) {
 					int dialogButton = JOptionPane.YES_NO_OPTION;
 					int dialogResult = JOptionPane.showConfirmDialog(
@@ -507,9 +509,12 @@ public class WorkBench extends JFrame {
 
 				openFileButton.doClick();
 				textarea.isSaved();
-			} else if (listenerType == 3) {
-				// Exit application, check if saved first				
+
+			// Exit application, check if saved first				
+			case 3:
+				// Style for the dialog box
 				int dialogButton;
+				// Assume no, save if they click yes
 				int dialogResult = JOptionPane.NO_OPTION;
 
 				if (textarea.documentHasChanged()) {
@@ -530,14 +535,15 @@ public class WorkBench extends JFrame {
 						dialogResult != JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
-				// Compile script
-			} else if (listenerType == 4) {
+				
+			// Compile script
+			case 4:
 				compilerButton.doClick();
-			}
-		}
+			}// end switch
+	
+		}// end method
+	
 	}
-
-
 	/**
 	 * Trivial listener to create a new file, clears
 	 * the text area and starts new.
@@ -609,15 +615,12 @@ public class WorkBench extends JFrame {
 		}
 	}
 	
-	
-	
 	/**
 	 * Main entry point of the application.
 	 * 
 	 * @param args Program arguments
 	 */
-	public static void main(String[] args){	
-		
+	public static void main(String[] args){		
 		// Create a new runtime instance and have the swing event queue
 		// initialize the application.
 		EventQueue.invokeLater(new Runnable(){
@@ -637,8 +640,5 @@ public class WorkBench extends JFrame {
 			}
 		}); 
 	
-	}
-
-	
-	
+	}	
 }

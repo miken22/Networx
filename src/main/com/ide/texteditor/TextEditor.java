@@ -28,8 +28,13 @@ public class TextEditor extends JTextPane implements KeyListener{
 	/**
 	 * An attempt to implement a feature where CTRL + '/' places
 	 * comment symbols at the beginning of the line in the editor.
+	 * 
+	 * CURRENTLY DOES NOT WORK
+	 * 
 	 */
 	public void keyPressed(KeyEvent event) {
+		
+		/*
 		if (event.isControlDown() && event.getKeyCode() == 47){
 			int position = getCaretPosition();
 
@@ -71,6 +76,7 @@ public class TextEditor extends JTextPane implements KeyListener{
 				e.printStackTrace();
 			}
 		}
+		*/
 	}
 
 
