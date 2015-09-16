@@ -62,7 +62,7 @@ public class ThemeSettings {
 		StyleConstants.setForeground(reservedWords, new Color(239, 54, 54));
 		StyleConstants.setForeground(defaultColour, Color.WHITE);
 		StyleConstants.setForeground(quotations, Color.ORANGE);
-		StyleConstants.setForeground(comments, Color.GREEN);
+		StyleConstants.setForeground(comments, new Color(0, 128, 0));
 		
 		editorColour = new Color(72, 72, 72);
 		environmentColour = new Color(72, 72, 72);
@@ -76,7 +76,7 @@ public class ThemeSettings {
 		StyleConstants.setForeground(reservedWords, Color.RED);
 		StyleConstants.setForeground(defaultColour, Color.BLACK);
 		StyleConstants.setForeground(quotations, Color.BLUE);
-		StyleConstants.setForeground(comments, Color.GREEN);
+		StyleConstants.setForeground(comments, new Color(0, 128, 0));
 	
 		editorColour = new Color(252, 252, 252);
 		environmentColour = new Color(217, 217, 217);

@@ -1,13 +1,18 @@
 package main.com.ide.texteditor;
 
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 
 /**
  * Overriding JTextPane class to provide more
@@ -22,6 +27,18 @@ public class TextEditor extends JTextPane implements KeyListener{
 
 	public TextEditor(DefaultStyledDocument document) {
 		super(document);
+		this.addKeyListener(this);
+		
+		UndoManager manager = new UndoManager();
+	    getDocument().addUndoableEditListener(manager);
+
+	    UndoAction undoAction = new UndoAction(manager);
+	    RedoAction redoAction = new RedoAction(manager);
+	    
+	    registerKeyboardAction(undoAction, KeyStroke.getKeyStroke(
+	            KeyEvent.VK_Z, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
+	    registerKeyboardAction(redoAction, KeyStroke.getKeyStroke(
+	            KeyEvent.VK_Y, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
 	}
 
 	@Override
@@ -33,10 +50,14 @@ public class TextEditor extends JTextPane implements KeyListener{
 	 * 
 	 */
 	public void keyPressed(KeyEvent event) {
-		
+
 		/*
+		int oldCursorPosition = 0;
+
 		if (event.isControlDown() && event.getKeyCode() == 47){
+
 			int position = getCaretPosition();
+			oldCursorPosition = position;
 
 			if (position == 0) {
 				setText("//" + getText());
@@ -53,6 +74,11 @@ public class TextEditor extends JTextPane implements KeyListener{
 
 				while (line != null) {
 					scanPosition += line.length();
+
+					if (line.length() == 0) {
+						scanPosition++;
+					}
+
 					if (scanPosition >= position) {
 						break;
 					}
@@ -72,11 +98,14 @@ public class TextEditor extends JTextPane implements KeyListener{
 							text.substring(scanPosition, text.length()));
 				}
 
+				setCaretPosition(oldCursorPosition);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
 		}
-		*/
+		 */
 	}
 
 
@@ -88,7 +117,46 @@ public class TextEditor extends JTextPane implements KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent e) {}
-	
+
 	@Override
 	public void keyReleased(KeyEvent e) {}
+
+
+	// The Undo action
+	public class UndoAction extends AbstractAction {
+
+		private UndoManager manager;
+		
+		public UndoAction(UndoManager manager) {
+			this.manager = manager;
+		}
+
+		public void actionPerformed(ActionEvent evt) {
+			try {
+				manager.undo();
+			} catch (CannotUndoException e) {
+				Toolkit.getDefaultToolkit().beep();
+			}
+		}
+
+	}
+
+	// The Redo action
+	public class RedoAction extends AbstractAction {
+		public RedoAction(UndoManager manager) {
+			this.manager = manager;
+		}
+
+		public void actionPerformed(ActionEvent evt) {
+			try {
+				manager.redo();
+			} catch (CannotRedoException e) {
+				Toolkit.getDefaultToolkit().beep();
+			}
+		}
+
+		private UndoManager manager;
+
+	}
+
 }
