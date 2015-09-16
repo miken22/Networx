@@ -13,7 +13,7 @@
 	<property name="doc.dir" value="doc" />
 	<property name="jar.dir" value="../Grapher" />
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
-	<property name="main-class" value="main.com.launcher.Launch" />
+	<property name="main-class" value="main.com.ide.WorkBench" />
 
 	<path id="libraries.path">
 		<fileset dir="${lib.dir}">

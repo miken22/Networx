@@ -3,7 +3,6 @@ package main.com.ide;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -15,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -32,27 +30,43 @@ import main.com.ide.texteditor.TextLineNumber;
  * @author Mike Nowicki  
  *
  */
-public class ThemePicker extends JFrame{
+public class ThemePicker extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	// Internal settings for updating the example text pane
-	private ThemeSettings themeSettings;
+	/**
+	 * The theme settings for the main text editor environment
+	 */
+	private ThemeSettings settings;
 	
-	private TextLineNumber tln;
-	
+	/*
+	 * The components that make up the example editor to preview the
+	 * different theme. There are global because the action listener
+	 * for the radio buttons needs to be able to modify these settings
+	 * and it helps limit the amount of parameters that would need
+	 * to be passed. 
+	 */
 	private TextEditorDocument textarea = new TextEditorDocument();
 	private TextEditor editor = new TextEditor(textarea);
+	private TextLineNumber tln;
 	
+	/**
+	 * This is passed from the workbench as the action listener that initiates
+	 * the repaint of the main frame.
+	 */
 	private ActionListener applyListener;
 	
+	private Integer fontSize = null;
+	
 	private final String textString = "// This is a comment \n\r" +
-									  "public static void main(String[] args) { \r\n" +
-									  "    System.out.println(\"Hello World\");\r\n" +
+									  "public void testMethod() { \r\n" +
+									  "    int i = 0;\r\n" +
+									  "    System.out.println(\"i equals:\" + i);\r\n" +
+									  "    return;\r\n" +
 									  "}\r\n";
 
 	public ThemePicker(ThemeSettings themeSettings, ActionListener applyListener) {
-		this.themeSettings = themeSettings;		
+		this.settings = themeSettings;		
 		this.applyListener = applyListener;
 		createFrame();
 	}
@@ -98,13 +112,13 @@ public class ThemePicker extends JFrame{
 		radioPanel.add(darkSetting);
 		radioPanel.add(applyButton);
 		
-		if(themeSettings.isDefaultTheme()) {
+		if(settings.isDefaultTheme()) {
 			defaultSetting.setSelected(true);
 		} else {
 			darkSetting.setSelected(true);
 		}
 		
-		ThemeListener listener = new ThemeListener(themeSettings);
+		ThemeListener listener = new ThemeListener();
 		defaultSetting.addActionListener(listener);
 		darkSetting.addActionListener(listener);
 		
@@ -114,12 +128,19 @@ public class ThemePicker extends JFrame{
 		JPanel fontPanel = new JPanel();
 		JLabel fontLabel = new JLabel("Font size: ");
 		
-		JComboBox<Integer> fontSizes = new JComboBox<>();
+		Integer[] sizes = new Integer[20];
 		for (int i = 2; i < 40; i += 2) {
-//			fontSizes.add();
+			int index = (i-2)/2;
+			sizes[index] = i;
 		}
 		
+		JComboBox<Integer> fontSizes = new JComboBox<>(sizes);
+		fontSizes.setEditable(true);
+		fontSizes.addActionListener(this);
+		fontSizes.setSelectedItem(settings.getFontSize());
+		
 		fontPanel.add(fontLabel);
+		fontPanel.add(fontSizes);
 		
 		constraint.gridx = 0;
 		constraint.gridy = 1;
@@ -134,18 +155,18 @@ public class ThemePicker extends JFrame{
 		
 		Font font = new Font(Font.MONOSPACED,
 							 Font.PLAIN, 
-							 themeSettings.getFontSize());
+							 settings.getFontSize());
 
 		// Create the script area
 		editor.setEditable(false);
 		editor.setFont(font);
-		editor.setBackground(themeSettings.getEditorColour());
+		editor.setBackground(settings.getEditorColour());
 		
 		mainScroll.setPreferredSize(new Dimension(400, 200));	
 		mainScroll.setBackground(new Color(217, 217, 217));
 
 		tln = new TextLineNumber(editor);
-		tln.setBackground(themeSettings.getEditorColour());
+		tln.setBackground(settings.getEditorColour());
 		mainScroll.setRowHeaderView(tln);
 		
 		editor.setText(textString);
@@ -164,23 +185,53 @@ public class ThemePicker extends JFrame{
 		this.isAlwaysOnTop();
 		this.setVisible(true);
 	}
-	
+//	
+//	@Override
+//	public void paint(Graphics g) {
+//		super.paint(g);
+//		this.revalidate();
+//		this.repaint();
+//		
+//	}
+
+	/**
+	 * This method is used at the action listener for the combobox on the frame.
+	 * It should not be used as a listener for ANYTHING else.
+	 * 
+	 * @param e The event triggering the listener.
+	 */
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		this.revalidate();
-		this.repaint();
-		
-	}
-
-	private class ThemeListener implements ActionListener {
-
-		ThemeSettings settings;
-		
-		public ThemeListener(ThemeSettings themeSettings) {
-			this.settings = themeSettings;
-			
+	public void actionPerformed(ActionEvent e) {
+		// 
+		@SuppressWarnings("unchecked")
+		JComboBox<Integer> cb = (JComboBox<Integer>) e.getSource();
+        
+		if (!(cb.getSelectedItem() instanceof Integer)) {
+			return;
 		}
+		
+		fontSize = (Integer)cb.getSelectedItem();
+		settings.setFontSize(fontSize);
+		
+		// This needs to be done so the editor gets repainted
+		// and the font size changes
+		editor.setBackground(settings.getEditorColour());
+		editor.setText(textString);
+		editor.setCaretPosition(0);
+		
+		// Update the frame
+		repaint();
+		revalidate();
+	}
+	
+	/**
+	 * Nested inner class that updates the theme of the sample
+	 * text editor whenever the radio button is pressed
+	 * 
+	 * @author Michael Nowicki
+	 *
+	 */
+	private class ThemeListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -191,22 +242,22 @@ public class ThemePicker extends JFrame{
 				settings.setDarkTheme();				
 			}
 			
-			textarea.setQuotations(themeSettings.getQuotations());
-			textarea.setReservedWords(themeSettings.getReservedWords());
-			textarea.setComments(themeSettings.getComments());
-			textarea.setDefaultColour(themeSettings.getDefaultColour());
+			textarea.setQuotations(settings.getQuotations());
+			textarea.setReservedWords(settings.getReservedWords());
+			textarea.setComments(settings.getComments());
+			textarea.setDefaultColour(settings.getDefaultColour());
 			
 			editor.setFont(new Font(Font.MONOSPACED,
 						   			Font.PLAIN,
-						   			themeSettings.getFontSize()));
+						   			settings.getFontSize()));
 			
-			tln.setBackground(themeSettings.getEditorColour());
-			tln.setForeground(themeSettings.getLineNumberColour());
+			tln.setBackground(settings.getEditorColour());
+			tln.setForeground(settings.getLineNumberColour());
 			
-			editor.setBackground(themeSettings.getEditorColour());
+			editor.setBackground(settings.getEditorColour());
 			editor.setText(textString);
 			editor.setCaretPosition(0);
-			
+						
 			repaint();
 			revalidate();
 		}

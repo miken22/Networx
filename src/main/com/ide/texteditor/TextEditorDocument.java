@@ -35,7 +35,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	 * Since these words are reserved an enum type cannot be used, instead string
 	 * comparisons must be done
 	 */
-	public static final String[] reservedWords = {
+	private static final String[] reservedWords = {
 			"private","public","protected","final","super","if","while","do","void"+
 			"true","null","false","else","System","static","throws","int","double" +
 			"float","byte","interface","new","boolean","class","for", "return" 
@@ -206,6 +206,13 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		}
 	}
 
+	/**
+	 * This method builds a regex pattern for the reserved words,
+	 * then tries to find matches within the text and highlights
+	 * the text accordingly.
+	 * 
+	 * @throws BadLocationException
+	 */
 	private void updateTextStyles() throws BadLocationException {
 
 		// Clear existing styles
@@ -215,6 +222,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				defaultColour, 
 				true);
 		
+		// Builds the pattern of reserved words.
 		Pattern pattern = buildPattern();
 
 		// Look for tokens and highlight them
@@ -272,6 +280,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	}
 
 	/**
+	 * Method that indicates if the document has been edited since last saved
+	 * or loaded.
 	 * 
 	 * @return - True if the document was modified, False otherwise
 	 */
@@ -280,7 +290,8 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	}
 
 	/**
-	 * Mark the document as saved
+	 * Mark the document as saved. Is set when a document is saved,
+	 * a new document is created, or when a document is loaded.
 	 */
 	public void isSaved() {
 		hasChanged = false;

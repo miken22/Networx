@@ -59,7 +59,7 @@ public class ThemeSettings {
 	}
 	
 	public void setDarkTheme() {
-		StyleConstants.setForeground(reservedWords, Color.RED);
+		StyleConstants.setForeground(reservedWords, new Color(239, 54, 54));
 		StyleConstants.setForeground(defaultColour, Color.WHITE);
 		StyleConstants.setForeground(quotations, Color.ORANGE);
 		StyleConstants.setForeground(comments, Color.GREEN);

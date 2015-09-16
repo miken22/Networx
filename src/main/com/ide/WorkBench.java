@@ -263,6 +263,7 @@ public class WorkBench extends JFrame {
 		editor.setBackground(new Color(252, 252, 252));
 		editor.addMouseListener(new RightClickListener());
 
+		// Set the parameters for the scrollpage holding the editor
 		mainScroll.setPreferredSize(new Dimension(
 				this.getWidth()-12, (int)(this.getHeight()/1.4)));
 
@@ -294,9 +295,9 @@ public class WorkBench extends JFrame {
 		buildlog.setBackground(new Color(252, 252, 252));
 		buildlog.setFont(font);
 
+		// Set the parameters for the scrollpane holding the buildlog
 		outputScroll.setPreferredSize(new Dimension(
 				getWidth()-12, (int)(getHeight()/5)));
-
 
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
 				border,
@@ -385,7 +386,8 @@ public class WorkBench extends JFrame {
 			// and exit the application.
 			JOptionPane.showMessageDialog(
 					null,
-					"Error loading resources, ensure the lib folder is in your directory.",
+					"Error loading resources, ensure the lib folder is "+
+					"in your install directory.",
 					"Error",
 					JOptionPane.ERROR_MESSAGE);
 			System.exit(-1);
@@ -405,6 +407,7 @@ public class WorkBench extends JFrame {
 		this.add(toolbar, constraint);
 
 	}
+	
 	/**
 	 * Overriding method that paints the frame, updates the themes
 	 * according to what was specified in the settings
@@ -605,4 +608,37 @@ public class WorkBench extends JFrame {
 			repaint();
 		}
 	}
+	
+	
+	
+	/**
+	 * Main entry point of the application.
+	 * 
+	 * @param args Program arguments
+	 */
+	public static void main(String[] args){	
+		
+		// Create a new runtime instance and have the swing event queue
+		// initialize the application.
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				
+				String OS = System.getProperty("os.name");
+				// Mac is not supported, exit program
+				if (OS.indexOf("mac") >= 0) {
+					JOptionPane.showMessageDialog(null,
+							"Sorry, only Windows and Linux currently supported.");
+					System.exit(-1);			
+				}
+				// Launch the program
+				WorkBench pane = new WorkBench();
+			    pane.loadWorkbench();
+			}
+		}); 
+	
+	}
+
+	
+	
 }
