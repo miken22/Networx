@@ -118,7 +118,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					// move on to the next line.
 					if (line.indexOf("//") != -1 && 
 							line.indexOf("//") < line.indexOf("\"")) {
-						lineLengthCounter += line.length() + 1;
+						lineLengthCounter += line.length();
 						line = reader.readLine();
 						continue;
 					}
@@ -144,7 +144,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				}
 				// Keep track of length of each line so offset lines up, add +1 for each
 				// new line character not including in line length.
-				lineLengthCounter += line.length() + 1;
+				lineLengthCounter += line.length();
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
@@ -177,13 +177,13 @@ public class TextEditorDocument extends DefaultStyledDocument {
 			while (line != null) {
 				// If the line starts with // then colour the whole line
 				if (line.startsWith("//")) {
-					int length = line.length();
+					int length = line.length() + 1;
 					setCharacterAttributes(position, length, comments, false); 
 				} else if (line.contains("//")) {
 					// If quotes are around the comment symbol move on to the
 					// next line.
 					if (line.contains("\"")) {
-						position += line.length()+1;
+						position += line.length() + 1;
 						line = reader.readLine();
 						continue;
 					}
@@ -194,11 +194,12 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					// Otherwise only colour from the // to the end of the line
 					setCharacterAttributes(
 							offset, 
-							line.length() - offset, 
+							line.length() - offset + 1, 
 							comments, 
 							false);
-				}
-				position += line.length()+1;
+				} 
+				
+				position += line.length() + 1;
 				line = reader.readLine();
 			}
 		} catch (IOException e) {

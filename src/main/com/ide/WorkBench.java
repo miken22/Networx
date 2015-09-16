@@ -119,7 +119,8 @@ public class WorkBench extends JFrame {
 		this.setLayout(new GridBagLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize((int) width/2, (int)(height/1.2));
-		this.setResizable(true);
+		// This is disabled because resizing causes weird side effects.
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);	
 
 		// Load all components for the workbench
