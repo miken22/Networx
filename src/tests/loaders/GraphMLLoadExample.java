@@ -13,7 +13,7 @@ public class GraphMLLoadExample {
 		
 		Graph<Vertex, Edge> graph = new SparseGraph<>();
 		GraphMLReader graphBuilder = new GraphMLReader();
-		graphBuilder.loadGraphFile(graph);
+		graphBuilder.loadGraph(graph);
 		
 		BreadthFirstSearch<Vertex, Edge> bfs = new BreadthFirstSearch<>();
 		bfs.visualizeSearch(graph, graph.getVertices().iterator().next());

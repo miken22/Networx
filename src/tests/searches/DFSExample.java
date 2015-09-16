@@ -17,7 +17,7 @@ public class DFSExample {
 		// Load graph from GraphML file
 		Graph<Vertex, Edge> graph = new SparseGraph<>();
 		GraphMLReader graphBuilder = new GraphMLReader();
-		graphBuilder.loadGraphFile(graph);
+		graphBuilder.loadGraph(graph);
 		
 		DepthFirstSearch<Vertex, Edge> dfs = new DepthFirstSearch<>();
 		

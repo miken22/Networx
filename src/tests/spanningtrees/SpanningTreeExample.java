@@ -23,7 +23,7 @@ public class SpanningTreeExample {
 		// Load graph from GraphML file
 		Graph<Vertex, Edge> graph = new SparseGraph<>();
 		GraphMLReader graphBuilder = new GraphMLReader();
-		graphBuilder.loadGraphFile(graph);
+		graphBuilder.loadGraph(graph);
 		
 		KruskallMinimalSpanningTree<Vertex, Edge> mst = new KruskallMinimalSpanningTree<>();
 		// Use JUNG2 generic Forest, in case graph has multiple components

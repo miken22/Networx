@@ -21,7 +21,7 @@ public class ConnectComponentExample {
 		// Load graph from GraphML file
 		Graph<Vertex, Edge> graph = new SparseGraph<>();
 		GraphMLReader graphBuilder = new GraphMLReader();
-		graphBuilder.loadGraphFile(graph);
+		graphBuilder.loadGraph(graph);
 		
 		PathBasedComponents<Vertex, Edge> pbc = new PathBasedComponents<>();
 		pbc.findComponents(graph);

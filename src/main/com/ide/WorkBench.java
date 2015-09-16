@@ -36,16 +36,13 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import main.com.ide.mouse.RightClickListener;
+import main.com.ide.packages.PropertyMenuItem;
 import main.com.ide.texteditor.TextEditor;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
 import main.com.toolbar.CompileButton;
 import main.com.toolbar.OpenButton;
 import main.com.toolbar.SaveButton;
-import main.com.toolbar.listeners.CompileButtonListener;
-import main.com.toolbar.listeners.OpenButtonListener;
-import main.com.toolbar.listeners.PropertiesButtonListener;
-import main.com.toolbar.listeners.SaveFileListener;
 
 public class WorkBench extends JFrame {
 
@@ -152,7 +149,8 @@ public class WorkBench extends JFrame {
 
 		JMenu build = new JMenu("Build Tools");
 		JMenuItem buildScript = new JMenuItem("Build Script");
-		JMenuItem packageLoader = new JMenuItem("Set Package Imports");
+		PropertyMenuItem packageLoader = new PropertyMenuItem(properties,
+														"Set Package Imports");
 
 		JMenu options = new JMenu("Preferences");
 		JMenuItem editorThemes = new JMenuItem("Themes");
@@ -201,9 +199,6 @@ public class WorkBench extends JFrame {
 						textarea.isSaved();
 					}
 				}
-
-				openFileButton.doClick();
-				textarea.isSaved();
 			}
 		});
 		
@@ -243,11 +238,11 @@ public class WorkBench extends JFrame {
 			}
 		});
 
-		packageLoader.addActionListener(new PropertiesButtonListener(properties));
-
+		// Set hotkeys which are displayed in the menu
 		buildScript.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
+		exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
 
 		menu.add(options);
 		options.add(editorThemes);
@@ -301,7 +296,7 @@ public class WorkBench extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: Implement help function
+				// TODO: Implement help function similar to above
 			}
 		});
 
@@ -390,23 +385,17 @@ public class WorkBench extends JFrame {
 
 		toolbar = new JPanel();
 		newFileButton = new JButton();
-		openFileButton = new OpenButton();
-		saveFileButton = new SaveButton();
-		compilerButton = new CompileButton();
+		openFileButton = new OpenButton(editor, properties);
+		saveFileButton = new SaveButton(editor, properties);
+		compilerButton = new CompileButton(editor, buildlog, properties);
 
 		toolbar.setPreferredSize(new Dimension((int)this.getWidth(), 30));
 		toolbar.setMaximumSize(new Dimension((int)this.getWidth(), 30));
 		toolbar.setLayout(null);
 		toolbar.setBackground(new Color(217, 217, 217));
 
-		// Setup listeners
+		// Setup listener for new file
 		newFileButton.addActionListener(new NewFileListener());
-		openFileButton.addActionListener(new OpenButtonListener(
-				editor, properties));
-		saveFileButton.addActionListener(new SaveFileListener(
-				editor, properties));
-		compilerButton.addActionListener(new CompileButtonListener(
-				editor, buildlog, properties));
 
 		/*
 		 * Load all images for the buttons, place each button on the toolbar
@@ -532,6 +521,8 @@ public class WorkBench extends JFrame {
 		// Update the build log colours
 		buildlog.setBackground(settings.getEditorColour());
 		buildlog.setForeground(settings.getBuildLogColour());
+		buildlog.setFont(font);
+		
 	}
 	
 	/**
@@ -558,10 +549,8 @@ public class WorkBench extends JFrame {
 			}
 
 			editor.setText("");
-			// Must remove action listeners to prevent redundant behaviour, since
-			// only one exists it must be at array index 0
-			saveFileButton.removeActionListener(saveFileButton.getActionListeners()[0]);
-			saveFileButton.addActionListener(new SaveFileListener(editor, properties));
+			
+			// Clear properties for new script
 			properties.clearArguments();
 			properties.clearImports();
 		}
