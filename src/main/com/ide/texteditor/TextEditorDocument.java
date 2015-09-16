@@ -118,7 +118,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					// move on to the next line.
 					if (line.indexOf("//") != -1 && 
 							line.indexOf("//") < line.indexOf("\"")) {
-						lineLengthCounter += line.length();
+						lineLengthCounter += line.length() + 1;
 						line = reader.readLine();
 						continue;
 					}
@@ -144,7 +144,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				}
 				// Keep track of length of each line so offset lines up, add +1 for each
 				// new line character not including in line length.
-				lineLengthCounter += line.length();
+				lineLengthCounter += line.length() + 1;
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
