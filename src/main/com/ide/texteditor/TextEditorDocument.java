@@ -182,10 +182,19 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				} else if (line.contains("//")) {
 					// If quotes are around the comment symbol move on to the
 					// next line.
-					if (line.contains("\"")) {
-						position += line.length() + 1;
-						line = reader.readLine();
-						continue;
+					
+					int index = line.indexOf("\"");
+					// Check if there are quotes, if the quotes are before and close
+					// colour the comment.
+					if (index != -1) {
+						int index2 = line.indexOf("\"", index+1);
+						// If the end quote doesn't exist, or it sandwiches
+						// the comment symbol don't highlight it.
+						if (index2 == -1 || index2 > line.indexOf("//")) {
+							position += line.length() + 1;
+							line = reader.readLine();
+							continue;
+						}
 					}
 					
 					// Otherwise find where the characters appear and colour the
@@ -193,7 +202,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					int offset = line.indexOf("//");
 					// Otherwise only colour from the // to the end of the line
 					setCharacterAttributes(
-							offset, 
+							position + line.indexOf("//"), 
 							line.length() - offset + 1, 
 							comments, 
 							false);

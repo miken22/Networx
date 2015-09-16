@@ -60,6 +60,15 @@ public class OpenButton extends JButton implements ActionListener {
 
 			if (fileChooser.showOpenDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
 
+				// System dependent newline character, cannot insert both at the
+				// end of a line because it messes up the highlighting logic.
+				String newLineChar = "";
+				if (System.getProperty("os.name").contains("Windows")) {
+					newLineChar = "\n";
+				} else {
+					newLineChar = "\r";
+				}
+				
 				// Clear old settings (if any)
 				properties.clearImports();
 				properties.clearArguments();
@@ -73,7 +82,7 @@ public class OpenButton extends JButton implements ActionListener {
 				fileText = bufferedReader.readLine();
 				
 				while (fileText != null && !fileText.equals("#Imports")) {
-					doc.insertString(doc.getLength(), fileText + "\r\n", null);
+					doc.insertString(doc.getLength(), fileText + newLineChar, null);
 					fileText = bufferedReader.readLine();
 				}
 				
