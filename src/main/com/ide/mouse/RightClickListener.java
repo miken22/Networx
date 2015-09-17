@@ -5,6 +5,13 @@ import java.awt.event.MouseListener;
 
 import javax.swing.SwingUtilities;
 
+/**
+ * Trivial class for opening the right click menu
+ * in the editor 
+ * 
+ * @author Michael Nowicki
+ *
+ */
 public class RightClickListener implements MouseListener {
 
 	private RightClickMenu rightClickMenu = new RightClickMenu();

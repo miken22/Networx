@@ -38,7 +38,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 	private static final String[] reservedWords = {
 			"private","public","protected","final","super","if","while","do","void"+
 			"true","null","false","else","System","static","throws","int","double" +
-			"float","byte","interface","new","boolean","class","for", "return" 
+			"float","long","byte","interface","new","boolean","class","for", "return"
 			};
 	
 	public TextEditorDocument() {
@@ -138,7 +138,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 					int endOfQuote = lineLengthCounter + line.lastIndexOf("\'");
 					setCharacterAttributes(
 							offset, 
-							endOfQuote - offset + 1, 
+							endOfQuote - offset + 1,
 							quotations, 
 							false);
 				}
@@ -264,9 +264,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 		if (sb.length() > 0) {
 			sb.deleteCharAt(sb.length() - 1);
 		}
-
 		return Pattern.compile(sb.toString());
-
 	}
 
 	/*

@@ -50,7 +50,7 @@ public class ThemeSettings {
 		StyleConstants.setForeground(reservedWords, Color.RED);
 		StyleConstants.setForeground(defaultColour, Color.BLACK);
 		StyleConstants.setForeground(quotations, Color.BLUE);
-		StyleConstants.setForeground(comments, Color.GREEN);
+		StyleConstants.setForeground(comments, new Color(0, 128, 0));
 		
 		reservedWords.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 		
@@ -62,7 +62,7 @@ public class ThemeSettings {
 		StyleConstants.setForeground(reservedWords, new Color(239, 54, 54));
 		StyleConstants.setForeground(defaultColour, Color.WHITE);
 		StyleConstants.setForeground(quotations, Color.ORANGE);
-		StyleConstants.setForeground(comments, new Color(0, 128, 0));
+		StyleConstants.setForeground(comments, Color.GREEN);
 		
 		editorColour = new Color(72, 72, 72);
 		environmentColour = new Color(72, 72, 72);
@@ -213,7 +213,8 @@ public class ThemeSettings {
 			outputStream.close();
 			
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(new JFrame(), "Could not load settings.", 
+			JOptionPane.showMessageDialog(null, 
+					"Could not load settings.", 
 					"Error",
 			        JOptionPane.ERROR_MESSAGE);
 		}

@@ -36,7 +36,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import main.com.ide.mouse.RightClickListener;
-import main.com.ide.packages.PropertyMenuItem;
+import main.com.ide.packages.PackageMenuItem;
 import main.com.ide.texteditor.TextEditor;
 import main.com.ide.texteditor.TextEditorDocument;
 import main.com.ide.texteditor.TextLineNumber;
@@ -120,7 +120,7 @@ public class WorkBench extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize((int) width/2, (int)(height/1.2));
 		// This is disabled because resizing causes weird side effects.
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLocationRelativeTo(null);	
 
 		// Load all components for the workbench
@@ -150,7 +150,7 @@ public class WorkBench extends JFrame {
 
 		JMenu build = new JMenu("Build Tools");
 		JMenuItem buildScript = new JMenuItem("Build Script");
-		PropertyMenuItem packageLoader = new PropertyMenuItem(properties,
+		PackageMenuItem packageLoader = new PackageMenuItem(properties,
 														"Set Package Imports");
 
 		JMenu options = new JMenu("Preferences");

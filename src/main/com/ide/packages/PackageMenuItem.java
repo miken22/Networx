@@ -14,13 +14,13 @@ import main.com.ide.Properties;
  * @author Michael Nowicki
  *
  */
-public class PropertyMenuItem extends JMenuItem implements ActionListener {
+public class PackageMenuItem extends JMenuItem implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private Properties properties;
 
-	public PropertyMenuItem(Properties properties, String label) {
+	public PackageMenuItem(Properties properties, String label) {
 		super(label);
 		this.properties = properties;
 		addActionListener(this);

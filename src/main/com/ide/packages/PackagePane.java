@@ -10,6 +10,13 @@ import javax.swing.JPanel;
 
 import main.com.ide.Properties;
 
+/**
+ * Class that implements the panels to display the list of packages
+ * the user can import.
+ * 
+ * @author Michael Nowicki
+ *
+ */
 public class PackagePane extends JPanel {
 
 	// Used to determine which should be pre-checked

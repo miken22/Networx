@@ -5,6 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
@@ -29,12 +33,16 @@ public class TextEditor extends JTextPane implements KeyListener{
 		super(document);
 		this.addKeyListener(this);
 		
+		// Manager to handle undo/redo edits in the editor
 		UndoManager manager = new UndoManager();
 	    getDocument().addUndoableEditListener(manager);
 
+	    // Initialize the action to catch for undo/redo and
+	    // and it to the manager
 	    UndoAction undoAction = new UndoAction(manager);
 	    RedoAction redoAction = new RedoAction(manager);
 	    
+	    // Set hotkeys.
 	    registerKeyboardAction(undoAction, KeyStroke.getKeyStroke(
 	            KeyEvent.VK_Z, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
 	    registerKeyboardAction(redoAction, KeyStroke.getKeyStroke(
@@ -46,12 +54,12 @@ public class TextEditor extends JTextPane implements KeyListener{
 	 * An attempt to implement a feature where CTRL + '/' places
 	 * comment symbols at the beginning of the line in the editor.
 	 * 
-	 * CURRENTLY DOES NOT WORK
+	 * CURRENTLY REMOVING COMMENT SYMBOL DOES NOT WORK
 	 * 
 	 */
 	public void keyPressed(KeyEvent event) {
 
-		/*
+		
 		int oldCursorPosition = 0;
 
 		if (event.isControlDown() && event.getKeyCode() == 47){
@@ -73,7 +81,7 @@ public class TextEditor extends JTextPane implements KeyListener{
 				String line = bufReader.readLine();
 
 				while (line != null) {
-					scanPosition += line.length();
+					scanPosition += line.length() + 1;
 
 					if (line.length() == 0) {
 						scanPosition++;
@@ -86,14 +94,18 @@ public class TextEditor extends JTextPane implements KeyListener{
 				}
 
 				if (line.startsWith("//")) {
-					line = line.substring(1, line.length());
+					line = line.substring(2, line.length());
 					setCaretPosition(scanPosition - line.length());
-					setText(text.substring(0, scanPosition - 2 - line.length()) +
+					
+					int substringPos = scanPosition - line.length() - 1;
+					
+					setText(text.substring(0, substringPos) +
 							line +
-							text.substring(scanPosition, text.length()));
+							text.substring(substringPos + line.length() + 1,
+									       text.length()));
 				} else {
 					line = "//" + line;
-					setText(text.substring(0, scanPosition + 2 - line.length()) + 
+					setText(text.substring(0, scanPosition + 1 - line.length()) + 
 							line + 
 							text.substring(scanPosition, text.length()));
 				}
@@ -105,9 +117,56 @@ public class TextEditor extends JTextPane implements KeyListener{
 			}
 
 		}
-		 */
+		
 	}
 
+	/**
+	 * Nested class to implement the undo action
+	 * 
+	 * @author Michael Nowicki
+	 *
+	 */
+	private class UndoAction extends AbstractAction {
+
+		private static final long serialVersionUID = 1L;
+		private UndoManager manager;
+		
+		public UndoAction(UndoManager manager) {
+			this.manager = manager;
+		}
+
+		public void actionPerformed(ActionEvent event) {
+			try {
+				manager.undo();
+			} catch (CannotUndoException e) {
+				Toolkit.getDefaultToolkit().beep();
+			}
+		}
+	}
+
+	/**
+	 * Private nested class that implements the redo feature
+	 * 
+	 * @author Michael Nowicki
+	 *
+	 */
+	private class RedoAction extends AbstractAction {
+
+		private UndoManager manager;
+		private static final long serialVersionUID = 1L;
+
+		public RedoAction(UndoManager manager) {
+			this.manager = manager;
+		}
+
+		public void actionPerformed(ActionEvent event) {
+			try {
+				manager.redo();
+			} catch (CannotRedoException e) {
+				Toolkit.getDefaultToolkit().beep();
+			}
+		}
+	}
 
 	/**************************************************************
 	 * 
@@ -120,43 +179,5 @@ public class TextEditor extends JTextPane implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {}
-
-
-	// The Undo action
-	public class UndoAction extends AbstractAction {
-
-		private UndoManager manager;
-		
-		public UndoAction(UndoManager manager) {
-			this.manager = manager;
-		}
-
-		public void actionPerformed(ActionEvent evt) {
-			try {
-				manager.undo();
-			} catch (CannotUndoException e) {
-				Toolkit.getDefaultToolkit().beep();
-			}
-		}
-
-	}
-
-	// The Redo action
-	public class RedoAction extends AbstractAction {
-		public RedoAction(UndoManager manager) {
-			this.manager = manager;
-		}
-
-		public void actionPerformed(ActionEvent evt) {
-			try {
-				manager.redo();
-			} catch (CannotRedoException e) {
-				Toolkit.getDefaultToolkit().beep();
-			}
-		}
-
-		private UndoManager manager;
-
-	}
 
 }
