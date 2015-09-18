@@ -38,12 +38,13 @@ public class ScriptCompiler {
 	 */
 	public void compileAndRun() throws Exception {
 
+		buildlog.append("Building script...\r\n");
+		
 		String arguments = properties.getCommandArguments();
 		String OS = System.getProperty("os.name");
 		String libraries = Libraries.getLibraries(OS);
 		
 		// Compile code
-		buildlog.append("Building script...\r\n");
 		runProcess("javac -cp " + libraries + " .UserFiles/UserScript.java");
 		
 		if (buildFailed) {

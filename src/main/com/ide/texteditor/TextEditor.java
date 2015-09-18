@@ -31,7 +31,7 @@ public class TextEditor extends JTextPane implements KeyListener{
 
 	public TextEditor(DefaultStyledDocument document) {
 		super(document);
-		this.addKeyListener(this);
+//		this.addKeyListener(this);
 		
 		// Manager to handle undo/redo edits in the editor
 		UndoManager manager = new UndoManager();
@@ -94,30 +94,29 @@ public class TextEditor extends JTextPane implements KeyListener{
 				}
 
 				if (line.startsWith("//")) {
-					line = line.substring(2, line.length());
-					setCaretPosition(scanPosition - line.length());
-					
+					line = line.substring(2, line.length());					
 					int substringPos = scanPosition - line.length() - 1;
 					
 					setText(text.substring(0, substringPos) +
 							line +
 							text.substring(substringPos + line.length() + 1,
 									       text.length()));
+
+					// Set into new position, account for two new chars on line
+//					setCaretPosition(oldCursorPosition + 2);
 				} else {
 					line = "//" + line;
-					setText(text.substring(0, scanPosition + 1 - line.length()) + 
+					setText(text.substring(0, scanPosition + 1 - line.length() - 2) + 
 							line + 
 							text.substring(scanPosition, text.length()));
+					// Set caret to same position, account for removing 2 chars
+					setCaretPosition(oldCursorPosition-2);
 				}
-
-				setCaretPosition(oldCursorPosition);
-
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-		}
-		
+		}	
 	}
 
 	/**

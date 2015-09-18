@@ -90,7 +90,7 @@ public class CommandLineArgument extends JMenuItem {
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
-			JLabel title = new JLabel("Set Arguments:");
+			JLabel title = new JLabel("Set Virtual Machine Arguments:");
 			title.setBounds(15, 10, 250, 25);
 			this.getContentPane().add(title);
 			
