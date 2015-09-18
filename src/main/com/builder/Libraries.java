@@ -23,7 +23,7 @@ public final class Libraries {
 		
 		if (OS.startsWith("Windows")) {
 			libraries = loadWindowsLibaries(libraries);
-		} else if (OS.startsWith("Linux")) {
+		} else {
 			libraries = loadLinuxLibaries(libraries);
 		}		
 		return libraries;

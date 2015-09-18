@@ -608,11 +608,11 @@ public class WorkBench extends JFrame {
 			public void run() {
 				
 				String OS = System.getProperty("os.name");
-				// Mac is not supported, exit program
+				// Mac is not supported, warn the user
 				if (OS.indexOf("mac") >= 0) {
 					JOptionPane.showMessageDialog(null,
-							"Sorry, only Windows and Linux currently supported.");
-					System.exit(-1);			
+							"Warning, only tested on Windows and Linux. " +
+							"May behave unexpectedly on Mac OS's.");		
 				}
 				// Launch the program
 				WorkBench pane = new WorkBench();
