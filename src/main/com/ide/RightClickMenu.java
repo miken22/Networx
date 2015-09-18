@@ -1,4 +1,4 @@
-package main.com.ide.mouse;
+package main.com.ide;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;

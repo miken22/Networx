@@ -13,6 +13,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,11 +33,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import main.com.ide.mouse.RightClickListener;
 import main.com.ide.packages.PackageMenuItem;
 import main.com.ide.texteditor.TextEditor;
 import main.com.ide.texteditor.TextEditorDocument;
@@ -323,7 +325,25 @@ public class WorkBench extends JFrame {
 		editor.setFont(font);
 		editor.setBorder(border);
 		editor.setBackground(new Color(252, 252, 252));
-		editor.addMouseListener(new RightClickListener());
+		editor.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {	
+				if (SwingUtilities.isRightMouseButton(e)) {
+					RightClickMenu rightClickMenu = new RightClickMenu();
+					rightClickMenu.showRightClickMenu(e);
+				}
+			}
+			
+			/* Methods below not used for listener */
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+		});
 
 		// Set the parameters for the scrollpage holding the editor
 		mainScroll.setPreferredSize(new Dimension(
