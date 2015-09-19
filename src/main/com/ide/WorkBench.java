@@ -347,7 +347,7 @@ public class WorkBench extends JFrame {
 
 		// Set the parameters for the scrollpage holding the editor
 		mainScroll.setPreferredSize(new Dimension(
-				this.getWidth()-12, (int)(this.getHeight()/1.4)));
+				this.getWidth()-12, (int)(this.getHeight()/1.5)));
 
 		mainScroll.setBorder(BorderFactory.createTitledBorder(
 				border,
@@ -379,7 +379,7 @@ public class WorkBench extends JFrame {
 
 		// Set the parameters for the scrollpane holding the buildlog
 		outputScroll.setPreferredSize(new Dimension(
-				getWidth()-12, (int)(getHeight()/5)));
+				getWidth()-12, (int)(getHeight()/4)));
 
 		outputScroll.setBorder(BorderFactory.createTitledBorder(
 				border,
