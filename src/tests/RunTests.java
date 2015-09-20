@@ -23,9 +23,9 @@ public class RunTests {
 		
 //		ConnectComponentExample example = new ConnectComponentExample();
 		
-//		SpanningTreeExample example = new SpanningTreeExample();
+		SpanningTreeExample example = new SpanningTreeExample();
 		
-//		example.runExample();
+		example.runExample();
 
 	}
 
