@@ -46,6 +46,14 @@ import main.com.toolbar.CompileButton;
 import main.com.toolbar.OpenButton;
 import main.com.toolbar.SaveButton;
 
+/**
+ * This is the main class of the application. This class creates the editing
+ * environment users are able to work in, such as the menus, buttons, and 
+ * text editing tools.
+ * 
+ * @author Mike Nowicki
+ *
+ */
 public class WorkBench extends JFrame {
 
 	private static final long serialVersionUID = -8731589343197836723L;
@@ -53,7 +61,6 @@ public class WorkBench extends JFrame {
 	/**
 	 * Where the user enters their script
 	 */
-//	private JTextPane editor;
 	private TextEditor editor;
 	/**
 	 * TextArea displays error messages or scirpt output
