@@ -68,7 +68,7 @@ public class MessageHandler {
 		// Get file to scan
 		String errorFile = "";
 		try {
-			errorFile = parts[0].substring(parts[0].indexOf('/')+1,parts[0].length());			
+			errorFile = parts[0].substring(parts[0].indexOf('\\')+1,parts[0].length());			
 		} catch (StringIndexOutOfBoundsException e) {
 			return errorMessage;
 		}
