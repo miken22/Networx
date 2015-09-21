@@ -8,6 +8,7 @@ import java.io.FileReader;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -109,6 +110,11 @@ public class OpenButton extends JButton implements ActionListener {
 			
 		} catch (Exception exp) {
 			exp.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"Must select a valid Script (.scrt) file.",
+					"Error",
+					JOptionPane.ERROR_MESSAGE);	
+			
 			actionPerformed(e);
 		}
 	}
