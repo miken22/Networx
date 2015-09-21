@@ -563,7 +563,6 @@ public class WorkBench extends JFrame {
 	private class NewFileListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent click) {
-
 			// This checks if modifications have been made,
 			// if so prompt the user to save their work.
 			if (textarea.documentHasChanged()) {
@@ -593,7 +592,7 @@ public class WorkBench extends JFrame {
 	 *
 	 */
 	private class ThemeListener implements ActionListener {
-
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Runnable task = new Runnable(){
 				@Override
@@ -613,7 +612,6 @@ public class WorkBench extends JFrame {
 	 *
 	 */
 	private class ApplyListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Update settings file before repainting the frame
@@ -632,8 +630,7 @@ public class WorkBench extends JFrame {
 		// initialize the application.
 		EventQueue.invokeLater(new Runnable(){
 			@Override
-			public void run() {
-				
+			public void run() {	
 				String OS = System.getProperty("os.name");
 				// Mac is not supported, warn the user
 				if (OS.indexOf("mac") >= 0) {
@@ -646,6 +643,5 @@ public class WorkBench extends JFrame {
 			    pane.loadWorkbench();
 			}
 		}); 
-	
 	}	
 }

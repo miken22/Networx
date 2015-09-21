@@ -49,7 +49,9 @@ public class MessageHandler {
 	 * @param buildlog - The console to write to
 	 * @throws IOException
 	 */
-	public static void handleProgramMessaage(InputStream ins, JTextArea buildlog) throws IOException {
+	public static void handleProgramMessaage(InputStream ins, 
+			JTextArea buildlog) throws IOException {
+		
 		String line = null;
 		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
 		while ((line = in.readLine()) != null) {
@@ -57,7 +59,8 @@ public class MessageHandler {
 		}
 	}
 
-	private static String adjustErrorIndex(String errorMessage, JTextPane worksheet) throws IOException {
+	private static String adjustErrorIndex(String errorMessage, 
+			JTextPane worksheet) throws IOException {
 
 		String[] parts = errorMessage.split(":");
 		String script = worksheet.getText();
@@ -74,7 +77,6 @@ public class MessageHandler {
 		}
 		
 		File userScript = new File(directory, errorFile);
-		userScript.deleteOnExit();
 
 		FileReader reader = new FileReader(userScript);
 		BufferedReader bufferedReader = new BufferedReader(reader);
