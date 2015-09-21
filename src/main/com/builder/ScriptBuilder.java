@@ -65,8 +65,6 @@ public class ScriptBuilder {
 		try {
 
 			File userFile = new File(userFolder, "UserScript.java");
-			userFile.deleteOnExit();
-
 			Writer outputStream = new FileWriter(userFile);
 
 			// Import needed files from JARs
