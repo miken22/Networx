@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JTextPane;
+import javax.swing.JTextField;
 
 /**
  * Allows users to add custom arguments to the command line
@@ -69,14 +69,14 @@ public class CommandLineArgument extends JMenuItem {
 		 */
 		private static final long serialVersionUID = 1L;
 		
-		private JTextPane arguments;
+		private JTextField arguments;
 		private JButton save;
 		private JButton cancel;
 
 		public ArgumentWindow() {
 			super("Set Arguments");
 			
-			arguments = new JTextPane();
+			arguments = new JTextField();
 			save = new JButton("Save Arguments");
 			cancel = new JButton("Cancel");
 			
@@ -112,13 +112,14 @@ public class CommandLineArgument extends JMenuItem {
 			
 			arguments.setText(properties.getCommandArguments());
 
+			save.requestFocus();
 			setAlwaysOnTop(true);
 			setResizable(false);
 			setVisible(true);
 						
 		}
 		
-		public JTextPane getArguments() {
+		public JTextField getArguments() {
 			return arguments;
 		}
 		
