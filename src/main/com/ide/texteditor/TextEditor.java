@@ -1,22 +1,13 @@
 package main.com.ide.texteditor;
 
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoManager;
 
 /**
  * Overriding JTextPane class to provide more
@@ -31,22 +22,8 @@ public class TextEditor extends JTextPane implements KeyListener{
 
 	public TextEditor(DefaultStyledDocument document) {
 		super(document);
+		// Functionality currently does not work, to do later
 //		this.addKeyListener(this);
-		
-		// Manager to handle undo/redo edits in the editor
-		UndoManager manager = new UndoManager();
-	    getDocument().addUndoableEditListener(manager);
-
-	    // Initialize the action to catch for undo/redo and
-	    // and it to the manager
-	    UndoAction undoAction = new UndoAction(manager);
-	    RedoAction redoAction = new RedoAction(manager);
-	    
-	    // Set hotkeys.
-	    registerKeyboardAction(undoAction, KeyStroke.getKeyStroke(
-	            KeyEvent.VK_Z, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
-	    registerKeyboardAction(redoAction, KeyStroke.getKeyStroke(
-	            KeyEvent.VK_Y, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
 	}
 
 	@Override
@@ -117,54 +94,6 @@ public class TextEditor extends JTextPane implements KeyListener{
 				e.printStackTrace();
 			}
 		}	
-	}
-
-	/**
-	 * Nested class to implement the undo action
-	 * 
-	 * @author Michael Nowicki
-	 *
-	 */
-	private class UndoAction extends AbstractAction {
-
-		private static final long serialVersionUID = 1L;
-		private UndoManager manager;
-		
-		public UndoAction(UndoManager manager) {
-			this.manager = manager;
-		}
-
-		public void actionPerformed(ActionEvent event) {
-			try {
-				manager.undo();
-			} catch (CannotUndoException e) {
-				Toolkit.getDefaultToolkit().beep();
-			}
-		}
-	}
-
-	/**
-	 * Private nested class that implements the redo feature
-	 * 
-	 * @author Michael Nowicki
-	 *
-	 */
-	private class RedoAction extends AbstractAction {
-
-		private UndoManager manager;
-		private static final long serialVersionUID = 1L;
-
-		public RedoAction(UndoManager manager) {
-			this.manager = manager;
-		}
-
-		public void actionPerformed(ActionEvent event) {
-			try {
-				manager.redo();
-			} catch (CannotRedoException e) {
-				Toolkit.getDefaultToolkit().beep();
-			}
-		}
 	}
 
 	/**************************************************************

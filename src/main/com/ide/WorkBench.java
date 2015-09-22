@@ -298,7 +298,12 @@ public class WorkBench extends JFrame {
 					URL url = WorkBench.class.getProtectionDomain().getCodeSource().getLocation();
 					path = url.toURI().getPath();
 				} catch (URISyntaxException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(
+							null,
+							"Could not find the path to the Javadoc, verify that "+
+							"the doc folder is in your install directory.",
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 
 				/*
@@ -315,14 +320,18 @@ public class WorkBench extends JFrame {
 								path + 
 								"doc/index.html"));
 					} catch (IOException | URISyntaxException e1) {
-						buildlog.append("Could not find the path to your Javadocs.");
+						JOptionPane.showMessageDialog(
+								null,
+								"Could not find the path to the Javadoc, verify that "+
+								"the doc folder is in your install directory.",
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		});
 
 		appHelp.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO: Implement help function similar to above
