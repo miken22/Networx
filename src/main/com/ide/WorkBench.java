@@ -37,6 +37,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.UndoManager;
 
 import main.com.ide.packages.PackageMenuItem;
 import main.com.ide.texteditor.TextEditor;
@@ -77,6 +79,11 @@ public class WorkBench extends JFrame {
 	private JScrollPane outputScroll;
 	
 	/**
+	 * The manager that handles editor undo/redo's
+	 */
+	private UndoManager manager;
+	
+	/**
 	 * Panel that will hold all the buttons available to the user
 	 */
 	private JPanel toolbar;
@@ -109,6 +116,8 @@ public class WorkBench extends JFrame {
 		textarea = new TextEditorDocument();
 		editor = new TextEditor(textarea);	
 		buildlog = new JTextArea();
+		
+		manager = new UndoManager();
 
 	}
 
@@ -156,13 +165,17 @@ public class WorkBench extends JFrame {
 		JMenuItem open = new JMenuItem("Load Script");
 		JMenuItem save = new JMenuItem("Save Script");
 		JMenuItem exit = new JMenuItem("Exit");
+		
+		JMenu edit = new JMenu("Edit");
+		JMenuItem undo = new JMenuItem("Undo");
+		JMenuItem redo = new JMenuItem("Redo");
 
 		JMenu build = new JMenu("Build Tools");
 		JMenuItem buildScript = new JMenuItem("Build Script");
 		PackageMenuItem packageLoader = new PackageMenuItem(properties,
 														"Set Package Imports");
 
-		JMenu options = new JMenu("Preferences");
+		JMenu preferences = new JMenu("Preferences");
 		JMenuItem editorThemes = new JMenuItem("Themes");
 
 		JMenu help = new JMenu("Help");
@@ -170,18 +183,8 @@ public class WorkBench extends JFrame {
 		JMenuItem appHelp = new JMenuItem("General Help");
 
 		menu.setBackground(new Color(217, 217, 217));
-		menu.add(file);
-		file.add(open);
-		file.add(save);
-		file.add(exit);
-
-		menu.add(build);
-		build.add(buildScript);
-		build.add(packageLoader);	
-		build.add(new CommandLineArgument(properties));
 
 		// Implement each listener for the menu items below
-		
 		save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -241,6 +244,28 @@ public class WorkBench extends JFrame {
 			}
 		});
 		
+		undo.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					manager.undo();
+				} catch (CannotRedoException cantError) {
+					Toolkit.getDefaultToolkit().beep();
+				}
+			}
+		});
+		
+		redo.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					manager.redo();
+				} catch (CannotRedoException cantError) {
+					Toolkit.getDefaultToolkit().beep();
+				}	
+			}
+		});
+		
 		buildScript.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -248,22 +273,8 @@ public class WorkBench extends JFrame {
 			}
 		});
 
-		// Set hotkeys which are displayed in the menu
-		buildScript.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
-		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
-		exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
-
-		menu.add(options);
-		options.add(editorThemes);
-
-		// When clicked create the new frame to pick the theme
-		editorThemes.addActionListener(new ThemeListener());
-
-		menu.add(help);
-		help.add(appHelp);
-		help.add(javaDocHelp);
-
+		preferences.addActionListener(new ThemeListener());
+		
 		/**
 		 * This listener finds the path to the JavaDocs for the supplied
 		 * libraries, and attempts to launch them in the users default
@@ -310,6 +321,45 @@ public class WorkBench extends JFrame {
 			}
 		});
 
+		// Set hotkeys which are displayed in the menu
+		file.setMnemonic('f');
+		open.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_DOWN_MASK));
+		save.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_DOWN_MASK));
+		exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK));
+
+		edit.setMnemonic('e');
+		undo.setAccelerator(KeyStroke.getKeyStroke('Z', KeyEvent.CTRL_DOWN_MASK));
+		redo.setAccelerator(KeyStroke.getKeyStroke('Y', KeyEvent.CTRL_DOWN_MASK));
+		
+		preferences.setMnemonic('p');
+		
+		build.setMnemonic('b');
+		buildScript.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		
+		help.setMnemonic('h');
+				
+		// Add all the items to the menu bar
+		menu.add(file);
+		file.add(open);
+		file.add(save);
+		file.add(exit);
+		
+		menu.add(edit);
+		edit.add(undo);
+		edit.add(redo);
+
+		menu.add(build);
+		build.add(buildScript);
+		build.add(packageLoader);	
+		build.add(new CommandLineArgument(properties));
+
+		menu.add(preferences);
+		preferences.add(editorThemes);
+
+		menu.add(help);
+		help.add(appHelp);
+		help.add(javaDocHelp);
+		
 		this.setJMenuBar(menu);
 	}
 
