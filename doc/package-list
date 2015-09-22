@@ -2,6 +2,7 @@ algorithms.connectivity
 algorithms.graphloader
 algorithms.search
 algorithms.search.tools
+algorithms.sorting
 algorithms.spanningtree
 core.components
 core.visualizer

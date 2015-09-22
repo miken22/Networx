@@ -113,14 +113,14 @@ public final class Packages {
 	 * List of custom packages to import
 	 */
 	public static final String[] libraries = {
+		   "core.components",
+		   "core.visualizer",
 		   "algorithms.connectivity", 
 		   "algorithms.graphloader", 
 		   "algorithms.search", 
 		   "algorithms.search.tools",
 		   "algoirthms.sorting",
-		   "algorithms.spanningtree",
-		   "core.components",
-		   "core.visualizer"
+		   "algorithms.spanningtree"
 	};
 	
 }
