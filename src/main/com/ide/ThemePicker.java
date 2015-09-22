@@ -111,6 +111,7 @@ public class ThemePicker extends JFrame implements ActionListener {
 		group.add(darkSetting);
 
 		JButton applyButton = new JButton("Apply");
+		JButton cancelButton = new JButton("Cancel");
 
 		// Applies the settings to the main JFrame, and
 		// the second disposes this frame
@@ -123,12 +124,22 @@ public class ThemePicker extends JFrame implements ActionListener {
 		});
 		applyButton.setBackground(new Color(252, 252, 252));
 
+		// Do nothing, get rid of frame
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		cancelButton.setBackground(new Color(239, 54, 54).brighter());
+		
 		// Create the panel for the radio buttons and place each
 		// component
-		radioPanel.setLayout(new GridLayout(1,3));
+		radioPanel.setLayout(new GridLayout(1,4));
 		radioPanel.add(defaultSetting);
 		radioPanel.add(darkSetting);
 		radioPanel.add(applyButton);
+		radioPanel.add(cancelButton);
 
 		if(settings.isDefaultTheme()) {
 			defaultSetting.setSelected(true);
