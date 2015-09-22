@@ -72,14 +72,19 @@ public class WorkBench extends JFrame {
 	 * Line Numbering for the editor text pane
 	 */
 	private TextLineNumber tln;
-	/*
-	 * The two scroll panes that will contain the editor and build log
+	/**
+	 * The scroll pane that will contain the editor
 	 */
 	private JScrollPane mainScroll;
+	/**
+	 * The scroll pane that will contain the buid log
+	 */
 	private JScrollPane outputScroll;
 	
 	/**
-	 * The manager that handles editor undo/redo's
+	 * The manager that handles editor undo/redo's, the manager is pretty
+	 * slow though so finding another way with improved performance
+	 * would be ideal.
 	 */
 	private UndoManager manager;
 	
@@ -208,9 +213,12 @@ public class WorkBench extends JFrame {
 							dialogButton);
 					// If the say yes save it, otherwise move on and overwrite
 					if(dialogResult == JOptionPane.YES_OPTION){
-						saveFileButton.doClick();
+						openFileButton.doClick();
 						textarea.isSaved();
 					}
+				} else {
+					openFileButton.doClick();
+					textarea.isSaved();
 				}
 			}
 		});
@@ -273,7 +281,7 @@ public class WorkBench extends JFrame {
 			}
 		});
 
-		preferences.addActionListener(new ThemeListener());
+		editorThemes.addActionListener(new ThemeListener());
 		
 		/**
 		 * This listener finds the path to the JavaDocs for the supplied
@@ -330,6 +338,7 @@ public class WorkBench extends JFrame {
 		edit.setMnemonic('e');
 		undo.setAccelerator(KeyStroke.getKeyStroke('Z', KeyEvent.CTRL_DOWN_MASK));
 		redo.setAccelerator(KeyStroke.getKeyStroke('Y', KeyEvent.CTRL_DOWN_MASK));
+		editor.getDocument().addUndoableEditListener(manager);
 		
 		preferences.setMnemonic('p');
 		
