@@ -298,6 +298,7 @@ public class WorkBench extends JFrame {
 					URL url = WorkBench.class.getProtectionDomain().getCodeSource().getLocation();
 					path = url.toURI().getPath();
 				} catch (URISyntaxException e1) {
+					Toolkit.getDefaultToolkit().beep();
 					JOptionPane.showMessageDialog(
 							null,
 							"Could not find the path to the Javadoc, verify that "+
@@ -320,6 +321,7 @@ public class WorkBench extends JFrame {
 								path + 
 								"doc/index.html"));
 					} catch (IOException | URISyntaxException e1) {
+						Toolkit.getDefaultToolkit().beep();
 						JOptionPane.showMessageDialog(
 								null,
 								"Could not find the path to the Javadoc, verify that "+

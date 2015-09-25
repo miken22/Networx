@@ -1,6 +1,7 @@
 package main.com.ide.texteditor;
 
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -148,6 +149,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
+			Toolkit.getDefaultToolkit().beep();
 			e.printStackTrace();
 		}
 	}
@@ -212,6 +214,7 @@ public class TextEditorDocument extends DefaultStyledDocument {
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
+			Toolkit.getDefaultToolkit().beep();
 			e.printStackTrace();
 		}
 	}
