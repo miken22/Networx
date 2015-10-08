@@ -71,7 +71,11 @@ public class MessageHandler {
 		// Get file to scan
 		String errorFile = "";
 		try {
-			errorFile = parts[0].substring(parts[0].indexOf('\\')+1,parts[0].length());			
+			if (System.getProperty("os.name").contains("Windows")) {
+				errorFile = parts[0].substring(parts[0].indexOf('\\') + 1, parts[0].length());
+			} else {
+				errorFile = parts[0].substring(parts[0].indexOf('/') + 1, parts[0].length());
+			}
 		} catch (StringIndexOutOfBoundsException e) {
 			return errorMessage;
 		}

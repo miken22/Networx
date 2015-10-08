@@ -695,7 +695,9 @@ public class WorkBench extends JFrame {
 	 * 
 	 * @param args Program arguments
 	 */
-	public static void main(String[] args){		
+	public static void main(String[] args){
+
+		System.out.println();
 		// Create a new runtime instance and have the swing event queue
 		// initialize the application.
 		EventQueue.invokeLater(new Runnable(){
